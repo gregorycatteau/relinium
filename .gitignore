@@ -1,0 +1,16 @@
+*.log
+.env*
+node_modules/
+dist/
+__pycache__/
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+coverage/
+.nyc_output/
+build/
+tmp/
+temp/
