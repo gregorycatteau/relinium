@@ -33,7 +33,7 @@ Chaque test vise des **constats observables** : sécurité, souveraineté/local-
 ## 3) Jeu d'essai minimal (commun)
 
 - **Rôles** : `viewer`, `editor`, `admin`.
-- **Utilisateur de test** : `admin@example.org` / `Admin#Test123` (si auth interne).
+- **Utilisateur de test** : `contact@pixelprowlers.io` / `Admin#Test123` (si auth interne).
 - **Ressource** : `document` { id, title, tags[], visibility(`public|private`), body(markdown), created_at }.
 - **Fichiers** : un `.md` de 2–5 Ko + un upload de 20–50 Mo (généré localement).
 

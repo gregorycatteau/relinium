@@ -22,7 +22,7 @@ Relinium favorise un environnement bienveillant, respectueux et inclusif.
 
 En cas de violation du code de conduite :
 - Créer une **issue Security** (pour les problèmes graves)
-- Contacter par email : **contact [at] relinium.io**
+- Contacter par email : **contact@pixelprowlers.io**
 
 Tous les signalements seront traités avec sérieux et confidentialité.
 
