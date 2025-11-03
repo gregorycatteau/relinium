@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Document 001",
+    "tags": ["init", "relinium"],
+    "visibility": "public",
+    "body": "Contenu initial du document 001"
+  },
+  {
+    "title": "Document 002",
+    "tags": ["init", "relinium", "test"],
+    "visibility": "private",
+    "body": "Contenu initial du document 002"
+  }
+]
