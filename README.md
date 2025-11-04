@@ -150,7 +150,7 @@ Le projet sera conçu pour rester libre mais non exploitable commercialement san
 ## ✉️ Contact
 
 Pour toute question, suggestion ou contribution :  
-**contact [at] relinium.io**
+**contact@pixelprowlers.io**
 
 ---
 
