@@ -173,7 +173,7 @@ En contribuant, vous acceptez que vos contributions soient publiées sous la mê
 
 Pour toute question :
 - **Issues GitHub** (privilégié)
-- **Email** : contact [at] relinium.io
+- **Email** : contact@pixelprowlersgit add contributing.md.io
 
 ---
 
