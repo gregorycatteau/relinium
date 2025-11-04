@@ -35,7 +35,7 @@ Si vous découvrez une faille de sécurité :
 1. **NE PAS** créer d'issue publique
 2. **NE PAS** divulguer publiquement avant correction
 3. **Envoyer un rapport** par l'un de ces canaux :
-   - Email chiffré : **security [at] relinium.io** (clé PGP disponible sur demande)
+   - Email chiffré : **contact@pixelprowlers.io** (clé PGP disponible sur demande)
    - GitHub Security Advisories (onglet Security du dépôt)
    - Issue privée de type **Security vulnerability** (si disponible)
 
