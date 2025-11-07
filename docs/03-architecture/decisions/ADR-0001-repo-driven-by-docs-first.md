@@ -1,9 +1,16 @@
-# ADR-0001 – Repo Driven by Docs-First
+---
+id: "ADR-0001"
+type: "ADR"
+status: "Accepté"
+date: "2025-01-05"
+author: "Greg Catteau"
+version: "1.0.0"
+tags: ["governance", "methodology", "docs-first"]
+links:
+  cited_by: ["RFC-001", "RFC-002"]
+---
 
-- **Statut**: ✅ Accepté  
-- **Date**: 2025-11-03  
-- **Auteur**: Équipe Relinium Genesis  
-- **Version**: 1.0  
+# ADR-0001 – Repo Driven by Docs-First
 
 ---
 

@@ -1,0 +1,144 @@
+================================================================================
+VALIDATION LOG - FRONTMATTER RELINIUM
+================================================================================
+
+Date d'exécution: 2025-11-05T20:47:20.815196
+Schéma utilisé  : docs/01-genesis/document_schema_v1.json
+Répertoire scanné: docs
+
+--------------------------------------------------------------------------------
+RÉSULTATS PAR FICHIER
+--------------------------------------------------------------------------------
+
+[INVALIDE] docs/01-genesis/FRONTMATTER_GUIDE.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[VALIDE] docs/01-genesis/GENESIS_SUMMARY.md
+
+[INVALIDE] docs/03-architecture/decisions/ADR-0001-repo-driven-by-docs-first.md
+  Erreur:   • status: 'Accepté' is valid under each of {'enum': ['Ébauche', 'En discussion', 'Mature', 'Accepté', 'Abandonné'], 'description': 'Statuts valides pour les RFC'}, {'enum': ['Proposition', 'En discussion', 'Accepté', 'Rejeté', 'Supersédé'], 'description': 'Statuts valides pour les ADR'}
+  • links.cited_by.0: 'RFC-001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cited_by.1: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/03-architecture/observations/OBS-0001-backend-composants-inventaire.md
+  Erreur:   • links.cites.0: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/03-architecture/observations/OBS-0002-tests-initiaux.md
+  Erreur:   • links.cites.0: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/03-architecture/observations/OBS-0003-calibration-et-SLOs.md
+  Erreur:   • links.cites.0: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/03-architecture/rfcs/RFC-001-choix-stack-initiale.md
+  Erreur:   • id: 'RFC-001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • status: 'En discussion' is valid under each of {'enum': ['Ébauche', 'En discussion', 'Mature', 'Accepté', 'Abandonné'], 'description': 'Statuts valides pour les RFC'}, {'enum': ['Proposition', 'En discussion', 'Accepté', 'Rejeté', 'Supersédé'], 'description': 'Statuts valides pour les ADR'}
+  • id: 'RFC-001' does not match '^RFC-\\d{4}$'
+
+[INVALIDE] docs/03-architecture/rfcs/RFC-002-backend-et-composants-scoring-matrix.md
+  Erreur:   • id: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • status: 'En discussion' is valid under each of {'enum': ['Ébauche', 'En discussion', 'Mature', 'Accepté', 'Abandonné'], 'description': 'Statuts valides pour les RFC'}, {'enum': ['Proposition', 'En discussion', 'Accepté', 'Rejeté', 'Supersédé'], 'description': 'Statuts valides pour les ADR'}
+  • links.cites.1: 'RFC-001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/06-ops/email-normalization-report.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/observatory/OBS-CONFORMITY-0001-alignment-audit.md
+  Erreur:   • id: 'OBS-CONFORMITY-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.0: 'OBS-SCHEMA-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.1: 'OBS-GOVERNANCE-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/observatory/OBS-GOVERNANCE-0001-audit-exploration.md
+  Erreur:   • id: 'OBS-GOVERNANCE-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.1: 'RFC-001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.2: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/observatory/OBS-SCHEMA-0001-v1.1-exploration.md
+  Erreur:   • id: 'OBS-SCHEMA-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.0: 'OBS-GOVERNANCE-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.3: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/observatory/OBS-SSOT-EXPLORATION.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/observatory/SSOT_GOVERNANCE_FOUNDATIONS.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/observatory/SSOT_METADATA_EXPLORATION.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/observatory/SSOT_SCENARIOS_EXPLORATION.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/00-context/CONTEXT_SUMMARY.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/01-subsprints/S1_FRONTMATTER_SCHEMA.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/01-subsprints/S2_FRONTMATTER_INJECTION.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/01-subsprints/S3_VALIDATION_CI.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/01-subsprints/S4_REGISTRY_PROTOTYPE.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/01-subsprints/S5_AUDIT_CERTIFICATION.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/02-evidence/README.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/02-evidence/S1_VALIDATION_REPORT.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/02-evidence/S2_VALIDATION_REPORT.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/02-evidence/S3_VALIDATION_REPORT.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/02-evidence/S4_VALIDATION_REPORT.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/03-validation/PRE_EXECUTION_CHECK.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/03-validation/README.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/03-validation/S5_AUDIT_REPORT.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/03-validation/SSOT_V1_CERTIFICATION.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/README.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/SPRINT_GLOBAL_PLAN.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/SPRINT_SUMMARY.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/prompts_next/prompt_next_event_sourcing.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/prompts_next/prompt_next_full_migration.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/prompts_next/prompt_next_phase2_hybrid.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.0/prompts_next/prompt_next_s1_execution.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+--------------------------------------------------------------------------------
+STATISTIQUES
+--------------------------------------------------------------------------------
+Total de fichiers analysés: 38
+Fichiers valides         : 1
+Fichiers invalides       : 37
+Taux de conformité       : 2.6%

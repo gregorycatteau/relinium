@@ -1,0 +1,26 @@
+meta:
+  id: "VAL-ALIGN-PHASE1-SSOT-V1_1-0001"
+  version: "v1"
+  created_at: "2025-11-06T21:34:47+00:00"
+  generated_by: "codex"
+  commit_sha: "1073f0c8d2e8e2d70f1b053b72d8db2faa811214"
+
+coverage:
+  hash_alignment_phase1: 0.2
+  registry_alignment_phase1: 0.0
+  succession_fidelity_phase1: 0.4
+  proof_readiness_phase1: 0.0
+
+findings:
+  - type: "aligned_with_plan"
+    description: "Les 11 successeurs existent et tracent le bon previous_hash vis-à-vis des originaux."
+  - type: "partial_coverage"
+    description: "Front matters v1.1 incomplets, self_hash YAML incorrects et valeurs hash entre guillemets maintiennent des échecs partiels."
+  - type: "missing_alignment"
+    description: "Manifeste, progress et registre actifs ne référencent pas les successeurs Phase 1, le pipeline strict échoue toujours."
+
+verdict:
+  phase1_complete: false
+  comment: "Phase 1 non certifiable : pipeline strict S8 échoue encore sur les 11 fichiers critiques."
+
+self_hash: "sha256:db04fa434c82573e3ac566f7097e0ba8a2753ce076db2132d84358aa2cd85bc3"

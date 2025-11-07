@@ -1,0 +1,483 @@
+# Document DNA v0.1 - Proto-schéma minimal vivant
+# Relinium Documentary Genome
+# Ce fichier décrit les invariants détectés dans la matière documentaire de Relinium
+
+version: "0.1.0"
+date: "2025-01-04"
+status: "Proto-schéma descriptif (non normatif)"
+source: "OBS-SSOT-EXPLORATION.md"
+
+philosophy:
+  principle: "Déduit des observations, non imposé"
+  approach: "Descriptif plutôt que prescriptif"
+  evolution: "Vivant et révocable"
+
+# ═══════════════════════════════════════════════════════════════
+# INVARIANTS UNIVERSELS
+# Ce qui doit toujours rester vrai pour tout document Relinium
+# ═══════════════════════════════════════════════════════════════
+
+universal_invariants:
+  
+  existence:
+    - principle: "Tout document a une raison d'être explicite"
+      observation: "100% des documents observés ont un rôle clair"
+      verification: "Présence d'une section 'Objectif' ou 'Contexte'"
+  
+  traceability:
+    - principle: "Tout document a une trace temporelle"
+      observation: "100% des documents ADR/RFC/OBS ont une date"
+      verification: "Champ 'Date' en en-tête"
+    
+    - principle: "Tout document a un auteur identifiable"
+      observation: "100% des documents ADR/RFC/OBS ont un auteur"
+      verification: "Champ 'Auteur' en en-tête"
+    
+    - principle: "Tout document a un état observable"
+      observation: "ADR/RFC/OBS ont tous un statut (émoji + texte)"
+      verification: "Champ 'Statut' en en-tête"
+  
+  intent:
+    - principle: "Tout document documente une intention"
+      observation: "Pas de code sans document de référence (ADR-0001)"
+      verification: "Lien explicite ou implicite vers une intention"
+  
+  immutability_vs_evolution:
+    - principle: "Les décisions sont figées, les observations évoluent"
+      observation: "ADR immuables, OBS vivants, RFC fluides"
+      verification: "Type de document détermine la stabilité"
+
+# ═══════════════════════════════════════════════════════════════
+# INVARIANTS PAR TYPE DE DOCUMENT
+# Règles spécifiques selon le type documentaire
+# ═══════════════════════════════════════════════════════════════
+
+document_types:
+
+  ADR:  # Architecture Decision Record
+    nature: "Décision structurante actée"
+    stability: "Immuable après acceptation"
+    lifecycle:
+      states: ["Proposition", "Discussion", "Accepté", "Rejeté", "Supersédé"]
+      transitions:
+        - from: "Proposition"
+          to: ["Discussion", "Rejeté"]
+        - from: "Discussion"
+          to: ["Accepté", "Rejeté"]
+        - from: "Accepté"
+          to: ["Supersédé"]  # Par un ADR plus récent
+    
+    mandatory_fields:
+      - name: "Statut"
+        format: "Émoji + texte"
+        examples: ["✅ Accepté", "❌ Rejeté", "⚠️ Supersédé"]
+      - name: "Date"
+        format: "YYYY-MM-DD"
+      - name: "Auteur"
+        format: "Nom ou équipe"
+      - name: "Version"
+        format: "X.Y"
+    
+    mandatory_sections:
+      - "Contexte" # Pourquoi cette décision ?
+      - "Décision" # Qu'avons-nous choisi ?
+      - "Conséquences" # Quels impacts ?
+      - "Alternatives envisagées" # Qu'avons-nous écarté et pourquoi ?
+    
+    naming_pattern: "ADR-NNNN-titre-en-kebab-case.md"
+    location: "docs/03-architecture/decisions/"
+    
+    invariants:
+      - "Une fois accepté, un ADR n'est jamais modifié (sauf typo)"
+      - "Un ADR obsolète est marqué 'Supersédé' avec lien vers le nouveau"
+      - "Toute décision technique majeure génère un ADR"
+  
+  RFC:  # Request For Comments
+    nature: "Proposition ouverte à discussion"
+    stability: "Fluide pendant discussion, se cristallise en ADR"
+    lifecycle:
+      states: ["Ébauche", "En discussion", "Mature", "Accepté (→ADR)", "Abandonné"]
+      transitions:
+        - from: "Ébauche"
+          to: ["En discussion", "Abandonné"]
+        - from: "En discussion"
+          to: ["Mature", "Abandonné"]
+        - from: "Mature"
+          to: ["Accepté", "Abandonné"]
+    
+    mandatory_fields:
+      - name: "Statut"
+        format: "Émoji + texte"
+        examples: ["🟡 En discussion", "🟢 Mature", "✅ Accepté"]
+      - name: "Date"
+        format: "YYYY-MM-DD"
+      - name: "Auteur"
+        format: "Nom ou équipe"
+      - name: "Version"
+        format: "X.Y"
+    
+    mandatory_sections:
+      - "Résumé" # Vision synthétique
+      - "Motivation" # Pourquoi cette proposition ?
+      - "Périmètre" # Ce qui est couvert / non couvert
+      - "Alternatives" # Options comparées
+      - "Étapes suivantes" # Prochaines actions
+    
+    naming_pattern: "RFC-NNN-titre-en-kebab-case.md"
+    location: "docs/03-architecture/rfcs/"
+    
+    invariants:
+      - "Une RFC mature génère un ou plusieurs ADR"
+      - "Une RFC peut évoluer pendant la discussion"
+      - "Une RFC abandonée reste documentée (apprentissage)"
+  
+  OBS:  # Observation
+    nature: "Rapport d'observation technique, inventaire"
+    stability: "Vivant - s'enrichit au fil des découvertes"
+    lifecycle:
+      states: ["Ouvert", "En observation", "Synthétisé", "Archivé"]
+      transitions:
+        - from: "Ouvert"
+          to: ["En observation"]
+        - from: "En observation"
+          to: ["Synthétisé", "Archivé"]
+        - from: "Synthétisé"
+          to: ["Archivé"]
+    
+    mandatory_fields:
+      - name: "Statut"
+        format: "Émoji + texte"
+        examples: ["🟢 Ouvert", "🔍 En observation", "📊 Synthétisé"]
+      - name: "Date"
+        format: "YYYY-MM-DD"
+      - name: "Auteur"
+        format: "Nom ou équipe"
+      - name: "Version"
+        format: "X.Y"
+    
+    mandatory_sections:
+      - "Objectif" # Que cherchons-nous à observer ?
+      - "Méthodologie" # Comment observons-nous ?
+      - "Observations" # Que constatons-nous ?
+      - "Synthèse" # Que retenons-nous ?
+    
+    naming_pattern: "OBS-NNNN-titre-en-kebab-case.md"
+    location: "docs/03-architecture/observations/"
+    
+    invariants:
+      - "Une OBS peut alimenter une RFC"
+      - "Une OBS peut être enrichie sans limite temporelle"
+      - "Une OBS documente le 'quoi', pas le 'pourquoi décider'"
+  
+  POC_TRIPTYCH:  # Triptyque expérimental
+    nature: "Protocole + Résultat + Sécurité"
+    stability: "Figé après expérimentation"
+    
+    components:
+      POC:
+        file: "POC.md"
+        role: "Protocole expérimental"
+        mandatory_sections:
+          - "Contexte" # Famille, candidat, version
+          - "Objectifs" # Que testons-nous ?
+          - "Environnement" # Configuration technique
+          - "Installation & commandes" # Reproductibilité
+          - "Limitations connues"
+      
+      RESULTS:
+        file: "RESULTS.md"
+        role: "Résultats mesurés"
+        mandatory_sections:
+          - "Métriques" # Latence, RAM, CPU
+          - "Logs" # Observations runtime
+          - "Verdict" # PASS / WARN / KO
+      
+      SECURITY:
+        file: "SECURITY.md"
+        role: "Analyse de sécurité"
+        mandatory_sections:
+          - "Surface d'attaque"
+          - "Menaces identifiées"
+          - "Durcissements proposés"
+    
+    naming_pattern: "lab/pocs/{famille}/{candidat}/{POC|RESULTS|SECURITY}.md"
+    location: "lab/pocs/"
+    
+    invariants:
+      - "Toujours trois fichiers (triptyque complet)"
+      - "Un POC sans RESULTS est incomplet"
+      - "Un POC sans SECURITY est non conforme"
+      - "Les résultats sont bruts (pas d'interprétation)"
+
+# ═══════════════════════════════════════════════════════════════
+# PATTERNS D'ORGANISATION OBSERVÉS
+# Structure et conventions émergentes
+# ═══════════════════════════════════════════════════════════════
+
+organizational_patterns:
+
+  hierarchical_structure:
+    principle: "Organisation par domaine puis par type"
+    observed_structure:
+      docs:
+        by_domain:
+          - "00-overview"  # Vision, principes
+          - "01-genesis"   # Fondations
+          - "02-strategy"  # Roadmap
+          - "03-architecture"  # Décisions techniques
+          - "04-risk"      # Sécurité
+          - "05-governance"  # Processus
+          - "06-ops"       # Opérations
+          - "07-contrib"   # Contribution
+        by_type:
+          - "decisions/"   # ADR
+          - "rfcs/"        # RFC
+          - "observations/"  # OBS
+      
+      lab:
+        by_function:
+          - "pocs/"        # Tests unitaires composants
+          - "stacks/"      # Tests intégrés
+          - "scripts/"     # Utilitaires
+          - "seeds/"       # Données
+  
+  naming_conventions:
+    documents:
+      ADR: "ADR-NNNN-description-kebab-case.md"
+      RFC: "RFC-NNN-description-kebab-case.md"
+      OBS: "OBS-NNNN-description-kebab-case.md"
+      POC: "{POC|RESULTS|SECURITY}.md"
+    
+    numbering:
+      ADR: "Séquence à 4 chiffres (0001, 0002, ...)"
+      RFC: "Séquence à 3 chiffres (001, 002, ...)"
+      OBS: "Séquence à 4 chiffres (0001, 0002, ...)"
+    
+    casing:
+      files: "kebab-case pour titres descriptifs"
+      directories: "lowercase avec tirets si besoin"
+  
+  metadata_structure:
+    frontmatter_pattern:
+      observed: "En-tête Markdown avec tirets"
+      fields:
+        - "Statut"
+        - "Date"
+        - "Auteur"
+        - "Version"
+      potential_evolution: "YAML frontmatter pour automatisation"
+  
+  status_vocabulary:
+    ADR:
+      - "✅ Accepté"
+      - "🟡 Proposition"
+      - "❌ Rejeté"
+      - "⚠️ Supersédé"
+    RFC:
+      - "🟡 En discussion"
+      - "🟢 Mature"
+      - "✅ Accepté"
+      - "❌ Abandonné"
+    OBS:
+      - "🟢 Ouvert"
+      - "🔍 En observation"
+      - "📊 Synthétisé"
+      - "📦 Archivé"
+
+# ═══════════════════════════════════════════════════════════════
+# FLUX DOCUMENTAIRES OBSERVÉS
+# Comment les documents circulent et se transforment
+# ═══════════════════════════════════════════════════════════════
+
+documentary_flows:
+
+  experimentation_to_decision:
+    description: "Du test à la décision structurante"
+    steps:
+      - stage: 1
+        location: "lab/pocs/{famille}/{candidat}/POC.md"
+        action: "Définir le protocole expérimental"
+      
+      - stage: 2
+        location: "lab/pocs/{famille}/{candidat}/RESULTS.md"
+        action: "Documenter les résultats mesurés"
+      
+      - stage: 3
+        location: "docs/03-architecture/observations/OBS-NNNN.md"
+        action: "Synthétiser les observations comparatives"
+      
+      - stage: 4
+        location: "docs/03-architecture/rfcs/RFC-NNN.md"
+        action: "Proposer un choix basé sur les observations"
+      
+      - stage: 5
+        location: "docs/03-architecture/decisions/ADR-NNNN.md"
+        action: "Acter la décision finale"
+    
+    invariant: "Chaque étape peut référencer la précédente"
+  
+  governance_to_practice:
+    description: "Des principes à l'application technique"
+    steps:
+      - stage: 1
+        location: "GOVERNANCE.md"
+        action: "Définir les principes de décision"
+      
+      - stage: 2
+        location: "CONTRIBUTING.md"
+        action: "Traduire en processus contributif"
+      
+      - stage: 3
+        location: ".github/workflows/"
+        action: "Automatiser les validations"
+      
+      - stage: 4
+        location: "docs/03-architecture/decisions/"
+        action: "Appliquer aux décisions concrètes"
+  
+  observation_to_knowledge:
+    description: "De l'observation à la connaissance partagée"
+    steps:
+      - stage: 1
+        location: "lab/ ou terrain"
+        action: "Observer et expérimenter"
+      
+      - stage: 2
+        location: "docs/03-architecture/observations/"
+        action: "Documenter les constats"
+      
+      - stage: 3
+        location: "docs/03-architecture/rfcs/"
+        action: "Proposer des évolutions"
+      
+      - stage: 4
+        location: "docs/03-architecture/decisions/"
+        action: "Décider et acter"
+
+# ═══════════════════════════════════════════════════════════════
+# CE QUI PEUT VARIER LIBREMENT
+# Flexibilité vs. Contrainte
+# ═══════════════════════════════════════════════════════════════
+
+variable_aspects:
+
+  form:
+    principle: "Le format peut évoluer"
+    examples:
+      - "Markdown aujourd'hui, potentiellement enrichi demain"
+      - "En-têtes manuels → YAML frontmatter possible"
+      - "Structure de sections adaptable selon contexte"
+  
+  location:
+    principle: "L'emplacement peut changer si justifié"
+    constraints:
+      - "Doit être documenté (migration tracée)"
+      - "Compatibilité préservée (symlinks si nécessaire)"
+      - "Liens internes mis à jour"
+  
+  granularity:
+    principle: "Le niveau de détail est contextuel"
+    examples:
+      - "ADR court vs. ADR détaillé selon complexité"
+      - "OBS synthétique vs. OBS exhaustif selon besoin"
+      - "RFC légère vs. RFC massive selon impact"
+  
+  tooling:
+    principle: "Les outils peuvent évoluer"
+    examples:
+      - "Scripts de validation"
+      - "Générateurs de squelettes"
+      - "Automatisation des liens"
+    constraint: "Ne jamais sacrifier la lisibilité humaine"
+
+# ═══════════════════════════════════════════════════════════════
+# RELATIONS ET DÉPENDANCES
+# Comment les documents se lient entre eux
+# ═══════════════════════════════════════════════════════════════
+
+relationships:
+
+  explicit_links:
+    types:
+      - name: "Référence"
+        format: "[ADR-NNNN](../decisions/ADR-NNNN-titre.md)"
+        usage: "Pointer vers un document connexe"
+      
+      - name: "Supersession"
+        format: "Supersedes: ADR-NNNN"
+        usage: "Remplacer un ADR obsolète"
+      
+      - name: "Dépendance"
+        format: "Refs: RFC-NNN, OBS-NNNN"
+        usage: "Indiquer les sources d'une décision"
+  
+  implicit_links:
+    types:
+      - name: "Flux logique"
+        example: "POC → RESULTS → OBS → RFC → ADR"
+      
+      - name: "Hiérarchie"
+        example: "GOVERNANCE.md → docs/05-governance/*.md"
+      
+      - name: "Conformité"
+        example: "SECURITY.md (racine) → pocs/*/SECURITY.md"
+  
+  link_integrity:
+    principle: "Les liens doivent rester valides"
+    challenges:
+      - "Restructurations de répertoires"
+      - "Renommages de fichiers"
+      - "Archivage de documents"
+    solutions:
+      - "Validation automatique des liens (CI)"
+      - "Redirections si nécessaire"
+      - "Documentation des migrations"
+
+# ═══════════════════════════════════════════════════════════════
+# ÉVOLUTION DU DNA
+# Comment ce schéma peut lui-même évoluer
+# ═══════════════════════════════════════════════════════════════
+
+dna_evolution:
+  
+  versioning:
+    current: "0.1.0"
+    policy: "SemVer adapté"
+    meaning:
+      major: "Changement des invariants universels"
+      minor: "Ajout de types documentaires ou patterns"
+      patch: "Clarifications, corrections, enrichissements"
+  
+  update_triggers:
+    - "Nouvelle observation structurante"
+    - "Pattern émergent répété"
+    - "Besoin d'automatisation détecté"
+    - "Contradiction avec la pratique observée"
+  
+  validation_process:
+    - "Observation terrain → proposition DNA"
+    - "Validation par RFC si impact majeur"
+    - "Actée par ADR si changement d'invariant"
+    - "DNA mis à jour"
+  
+  non_prescriptive:
+    principle: "Le DNA décrit, il ne prescrit pas"
+    rationale: "Il émane de l'observation, pas de l'autorité"
+    consequence: "Si la pratique change, le DNA s'adapte"
+
+# ═══════════════════════════════════════════════════════════════
+# NOTES FINALES
+# ═══════════════════════════════════════════════════════════════
+
+notes:
+  - "Ce DNA est une photographie à l'instant T"
+  - "Il révèle la grammaire propre de Relinium, pas une norme externe"
+  - "Il doit être confronté à la réalité documentaire régulièrement"
+  - "Il est un outil de compréhension, pas une contrainte rigide"
+  - "Son rôle : faciliter l'émergence du SSOT v1.0, pas le remplacer"
+
+next_steps:
+  - "Confronter ce DNA aux scénarios d'organisation (SSOT_SCENARIOS)"
+  - "Identifier les gaps entre idéal et réalité"
+  - "Proposer des principes de gouvernance documentaire"
+  - "Évaluer la faisabilité de mécanismes d'intégrité (hash, registre)"

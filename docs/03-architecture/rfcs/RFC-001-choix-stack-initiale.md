@@ -1,9 +1,16 @@
-# RFC-001 – Choix de stack initiale (frontend / backend / infra)
+---
+id: "RFC-001"
+type: "RFC"
+status: "En discussion"
+date: "2025-01-05"
+author: "Greg Catteau"
+version: "1.0.0"
+tags: ["architecture", "stack", "backend", "frontend", "infrastructure"]
+links:
+  cites: ["ADR-0001"]
+---
 
-- **Statut**: 🟡 En discussion  
-- **Date**: 2025-11-03  
-- **Auteur**: Équipe Relinium Genesis  
-- **Version**: 1.0  
+# RFC-001 – Choix de stack initiale (frontend / backend / infra)
 
 ---
 

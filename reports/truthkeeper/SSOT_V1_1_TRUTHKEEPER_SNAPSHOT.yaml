@@ -1,0 +1,99 @@
+meta:
+  id: TRUTHKEEPER-SSOT-V1_1-2025-11-07-01
+  id_root: TRUTHKEEPER-SSOT-V1_1
+  version: v1
+  type: snapshot
+  pattern: truthkeeper
+  created_at: '2025-11-07T14:38:17Z'
+  authors:
+  - id: cline
+    role: system
+  roles:
+  - name: System
+    actor: Cline
+previous_hash: sha256:0024bb1b690e74f88218bfbb231fbc2122e83fa90e1ac640fc84f865097aa654
+includes:
+- docs/_registry/registry_v1.1.yaml
+- docs/_registry/registry_v1.1_v2.yaml
+- docs/_registry/registry_v1.1_v3.yaml
+- docs/_registry/registry_v1.1_v4.yaml
+- docs/_registry/registry_v1.1_v5.yaml
+- docs/sprints/SSOT-v1.0/01-subsprints/S3_VALIDATION_CI.md
+- docs/sprints/SSOT-v1.0/02-evidence/S1_VALIDATION_REPORT.md
+- docs/sprints/SSOT-v1.0/02-evidence/S2_VALIDATION_REPORT.md
+- docs/sprints/SSOT-v1.0/02-evidence/S3_VALIDATION_REPORT.md
+- docs/sprints/SSOT-v1.0/02-evidence/S4_VALIDATION_REPORT.md
+- docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_PHASE2_VALIDATION.md
+- docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_PHASE3_VALIDATION.md
+- docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_VALIDATION_PHASE1-v2.md
+- docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_VALIDATION_PHASE1.md
+- docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_PROOF_VALIDATION.md
+- docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_STRICT_VALIDATION.md
+- reports/validation/SSOT_V1_1_VALIDATION_CODEX-v2.md
+- reports/validation/SSOT_V1_1_VALIDATION_CODEX-v3.md
+- reports/validation/SSOT_V1_1_VALIDATION_CODEX.md
+- reports/analysis/SSOT_V1_1_TRUTHKEEPER_SCORECARD.yaml
+- reports/validation/SSOT_V1_1_ALIGN_PHASE1_SCORECARD.yaml
+- reports/validation/SSOT_V1_1_ALIGN_PHASE2_SCORECARD.yaml
+- reports/validation/SSOT_V1_1_ALIGN_PHASE3_SCORECARD.yaml
+- reports/validation/SSOT_V1_1_SCORECARD.yaml
+metrics:
+  coverage: 1.0
+  exit_code: 0
+cryptographic_proofs:
+- file: docs/_registry/registry_v1.1.yaml
+  sha256: sha256:65c009d86a1827b9f6871eecc30648d6f1a6ebe8760709011a5224f786fd226d
+- file: docs/_registry/registry_v1.1_v2.yaml
+  sha256: sha256:2332e6c4411e28c2eca663030fe9ac5b8ba1d6ab55929108f3265daeccb69c28
+- file: docs/_registry/registry_v1.1_v3.yaml
+  sha256: sha256:3d2fb6410bff4fd84f9ce3c5f2c6b190844e4b0961e2cf6cf1f0cf4a9f8dd751
+- file: docs/_registry/registry_v1.1_v4.yaml
+  sha256: sha256:7cfcb47a9752a160255e07f4982e036e5735850a5660513660f54867bde3343e
+- file: docs/_registry/registry_v1.1_v5.yaml
+  sha256: sha256:0024bb1b690e74f88218bfbb231fbc2122e83fa90e1ac640fc84f865097aa654
+- file: docs/sprints/SSOT-v1.0/01-subsprints/S3_VALIDATION_CI.md
+  sha256: sha256:d0cfdb3e7c63badcda7d06a996133047b9a2cb2ad7413eccb7be282283a4b563
+- file: docs/sprints/SSOT-v1.0/02-evidence/S1_VALIDATION_REPORT.md
+  sha256: sha256:64a148f14c4a8ffb8730411690779eb7b1af7ab82267f3b8dc4ba5ce6b6a47dc
+- file: docs/sprints/SSOT-v1.0/02-evidence/S2_VALIDATION_REPORT.md
+  sha256: sha256:2f2c7e0caed5f75feecfa9d9ac6eed7a775c2b7b670635ab3f6bf6b4670d4aa4
+- file: docs/sprints/SSOT-v1.0/02-evidence/S3_VALIDATION_REPORT.md
+  sha256: sha256:7ecefb4e2683f298af083d7ea456133244d421ba583dbecf00ee628f9a435126
+- file: docs/sprints/SSOT-v1.0/02-evidence/S4_VALIDATION_REPORT.md
+  sha256: sha256:32a6cb3c7330ca05defc93ae3cbaaef6cf4ba706a460e2d9879e4a41b491f78e
+- file: docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_PHASE2_VALIDATION.md
+  sha256: sha256:e290ade9870841fe518618c6ef6d1a51c21e4ab8ad4ad2c629a84ad3b787cba0
+- file: docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_PHASE3_VALIDATION.md
+  sha256: sha256:fa2577ce04c9a739e197ffcfc51ce2efb143f88f487c341a8539a6ac86844c66
+- file: docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_VALIDATION_PHASE1-v2.md
+  sha256: sha256:594a4eb2530d7bccd8303486d266614f750d0e3011b895c9b9f39ba3ca795136
+- file: docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_VALIDATION_PHASE1.md
+  sha256: sha256:423eb390df949cdcb22ec443e45ebccee68435bc6a585ce11d3793c077abc8df
+- file: docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_PROOF_VALIDATION.md
+  sha256: sha256:55e8fea1d2b07dd7a519c597e16dc26a19b2414c3a82ba626aaf46a7b956a5ac
+- file: docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_STRICT_VALIDATION.md
+  sha256: sha256:668c876d7d7389f21273408f2e84469912f54298c0bf2dd7a861748978d239dd
+- file: reports/validation/SSOT_V1_1_VALIDATION_CODEX-v2.md
+  sha256: sha256:27b141eb0f81dbbf3027086a62acfe7e99d2bb44d2b0d5c256615d32ae3c0180
+- file: reports/validation/SSOT_V1_1_VALIDATION_CODEX-v3.md
+  sha256: sha256:2356315a89a826fb97cce2765d7c571248d86fdac545a671783544a9b3b51b5f
+- file: reports/validation/SSOT_V1_1_VALIDATION_CODEX.md
+  sha256: sha256:37966d90ed40fdfbd99f184d8046152ed3498e1e69cce7abfdd83bfde6d01bbb
+- file: reports/analysis/SSOT_V1_1_TRUTHKEEPER_SCORECARD.yaml
+  sha256: sha256:30fd2ba2002a04ed75a4e0ac388bd604eba8fce17f615f09bb895138d1b521be
+- file: reports/validation/SSOT_V1_1_ALIGN_PHASE1_SCORECARD.yaml
+  sha256: sha256:a655d64be0c6469e0bc28e712e4f40d7d339fce67bce6a6aa9bba6bf74e54905
+- file: reports/validation/SSOT_V1_1_ALIGN_PHASE2_SCORECARD.yaml
+  sha256: sha256:096d520407771da0574495807a171fe422776e922bd28a5d2d2714a1363ca96c
+- file: reports/validation/SSOT_V1_1_ALIGN_PHASE3_SCORECARD.yaml
+  sha256: sha256:55f8af65be93a713144f3841f99e4c72bc8df3574ecb1e22c562ccab47c22da1
+- file: reports/validation/SSOT_V1_1_SCORECARD.yaml
+  sha256: sha256:0f9d849e9d31734684ccba4c19a2ace7dd091d10265cadcb8ef91ff96e4df7b9
+reproducibility:
+  commands:
+  - python scripts/build_truthkeeper_bundle.py
+  - python scripts/ssot_registry_check.py --ci --strict --registry-file docs/_registry/registry_v1.1_v6.yaml
+  - python scripts/ssot_hash_check.py --ci --strict --registry-file docs/_registry/registry_v1.1_v6.yaml
+  - python scripts/ssot_schema_check.py --ci --strict --registry-file docs/_registry/registry_v1.1_v6.yaml
+  workflow: .github/workflows/ssot-proof.yml
+self_hash: sha256:35ce651c5267132d9c8d620205c6cf87b4032ed206b43209faeb9b98ea2cacb8

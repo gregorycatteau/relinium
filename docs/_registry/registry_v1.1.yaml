@@ -1,0 +1,119 @@
+# Registre Documentaire SSOT v1.1 – Relinium
+# Gestion des lignées documentaires avec succession certifiée
+
+metadata:
+  version: "1.1.0"
+  generated_at: "2025-11-05T21:49:00Z"
+  protocol: "RFC-004-alignment-protocol"
+  sprint: "SSOT-v1.1-PILOT"
+
+# Lignées documentaires migrées vers v1.1
+lineages:
+  # Lignée ADR-0001: Décision architecturale fondatrice
+  - id_root: "ADR-0001"
+    title: "Repo Driven by Docs-First"
+    scope: "organizational"
+    pattern: "decision"
+    versions:
+      - id: "ADR-0001"
+        status: "Superseded"
+        version: "1.0.0"
+        date: "2025-01-05"
+        file_path: "docs/03-architecture/decisions/ADR-0001-repo-driven-by-docs-first.md"
+        hash: "sha256:3c8d8a1c0e36135a780c6a2f4d857276346932dd2bf0e8f89a3ee46f4604dc00"
+        author: "Greg Catteau"
+        
+      - id: "ADR-0001-v2"
+        status: "Active"
+        version: "2.0"
+        date: "2025-11-05"
+        file_path: "docs/03-architecture/decisions/ADR-0001-repo-driven-by-docs-first-v2.md"
+        hash: "sha256:(to_be_calculated)"
+        previous_hash: "sha256:3c8d8a1c0e36135a780c6a2f4d857276346932dd2bf0e8f89a3ee46f4604dc00"
+        author: "Greg Catteau"
+        supersedes: "ADR-0001"
+        
+    relationships:
+      cited_by: ["RFC-0001", "RFC-0002"]
+      
+  # Lignée RFC-0001: Choix de stack technique
+  - id_root: "RFC-0001"
+    title: "Choix de stack initiale"
+    scope: "technical"
+    pattern: "reflection"
+    versions:
+      - id: "RFC-001"
+        status: "Superseded"
+        version: "1.0.0"
+        date: "2025-01-05"
+        file_path: "docs/03-architecture/rfcs/RFC-001-choix-stack-initiale.md"
+        hash: "sha256:22441e66fc9b7f73f3231ad86c018bcb8645d226bb6e5dd7241029410776d5aa"
+        author: "Greg Catteau"
+        
+      - id: "RFC-0001-v2"
+        status: "Active"
+        version: "2.0"
+        date: "2025-11-05"
+        file_path: "docs/03-architecture/rfcs/RFC-001-choix-stack-initiale-v2.md"
+        hash: "sha256:(to_be_calculated)"
+        previous_hash: "sha256:22441e66fc9b7f73f3231ad86c018bcb8645d226bb6e5dd7241029410776d5aa"
+        author: "Greg Catteau"
+        supersedes: "RFC-001"
+        
+    relationships:
+      cites: ["ADR-0001"]
+
+# Documents v1.0 non encore migrés (référence)
+pending_migration:
+  - id: "RFC-0002"
+    title: "Backend et composants - Scoring Matrix"
+    file_path: "docs/03-architecture/rfcs/RFC-002-backend-et-composants-scoring-matrix.md"
+    hash: "sha256:7758a3506fb073340234918acfa9fa888826a699a49c7a6e18ea1c65bb7c97ae"
+    reason: "En attente - Sprint pilote limité à 2 documents"
+    
+  - id: "OBS-0001"
+    title: "Backend composants - Inventaire"
+    file_path: "docs/03-architecture/observations/OBS-0001-backend-composants-inventaire.md"
+    
+  - id: "OBS-0002"
+    title: "Tests initiaux"
+    file_path: "docs/03-architecture/observations/OBS-0002-tests-initiaux.md"
+    
+  - id: "OBS-0003"
+    title: "Calibration et SLOs"
+    file_path: "docs/03-architecture/observations/OBS-0003-calibration-et-SLOs.md"
+
+# Statistiques
+statistics:
+  total_lineages: 2
+  total_versions: 4
+  active_documents_v1_1: 2
+  superseded_documents_v1_0: 2
+  pending_migration: 4
+  
+  by_scope:
+    technical: 1
+    organizational: 1
+    
+  by_pattern:
+    decision: 1
+    reflection: 1
+
+# Notes de migration
+migration_notes:
+  pilot_sprint: "SSOT-v1.1-PILOT"
+  migration_method: "manual"
+  migration_date: "2025-11-05"
+  validated_by: "Greg Catteau"
+  non_destructive: true
+  cryptographic_proof: true
+  
+comments: |
+  Ce registre v1.1 documente les premières lignées documentaires migrées
+  vers le schéma v1.1 avec succession certifiée conforme au RFC-004.
+  
+  Chaque version contient un hash SHA256 permettant la vérification
+  d'intégrité et la traçabilité complète de l'évolution documentaire.
+  
+  Les champs `previous_hash` et `supersedes` garantissent la continuité
+  et la non-répudiation de la chaîne de succession.

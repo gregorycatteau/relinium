@@ -1,10 +1,17 @@
-# OBS-0001 — Inventaire initial des backends et composants
+---
+id: "OBS-0001"
+type: "OBS"
+status: "Ouvert"
+date: "2025-01-05"
+author: "Greg Catteau"
+version: "1.0.0"
+tags: ["backend", "composants", "inventaire", "exploration"]
+links:
+  cites: ["RFC-002"]
+  cited_by: ["OBS-0002"]
+---
 
-- **Statut** : 🟢 Ouvert (phase d'observation)
-- **Date** : 2025-01-03
-- **Auteur** : Équipe Relinium Genesis
-- **Version** : 1.0
-- **Lien de référence** : [RFC-002 — Matrice d'exploration et de scoring (agnostique)](../rfcs/RFC-002-backend-et-composants-scoring-matrix.md)
+# OBS-0001 — Inventaire initial des backends et composants
 
 ---
 

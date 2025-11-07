@@ -1,0 +1,179 @@
+{
+  "meta": {
+    "generated_at": "2025-11-07T14:38:17Z",
+    "version": "v1"
+  },
+  "snapshot": "reports/truthkeeper/SSOT_V1_1_TRUTHKEEPER_SNAPSHOT.yaml",
+  "bundle": "reports/truthkeeper/truthkeeper_bundle_2025-v1.tar.gz",
+  "bundle_sha256": "sha256:f29e8bc0476614093b65fd8f44b8dbd6cddce9a699e1a3ee19c176777d0e51b1",
+  "entries": [
+    {
+      "path": "docs/_registry/registry_v1.1.yaml",
+      "size": 3926,
+      "sha256": "sha256:65c009d86a1827b9f6871eecc30648d6f1a6ebe8760709011a5224f786fd226d",
+      "mtime": "2025-11-05T20:49:40Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/_registry/registry_v1.1_v2.yaml",
+      "size": 4523,
+      "sha256": "sha256:2332e6c4411e28c2eca663030fe9ac5b8ba1d6ab55929108f3265daeccb69c28",
+      "mtime": "2025-11-06T19:45:57Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/_registry/registry_v1.1_v3.yaml",
+      "size": 24871,
+      "sha256": "sha256:3d2fb6410bff4fd84f9ce3c5f2c6b190844e4b0961e2cf6cf1f0cf4a9f8dd751",
+      "mtime": "2025-11-07T07:03:56Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/_registry/registry_v1.1_v4.yaml",
+      "size": 26020,
+      "sha256": "sha256:7cfcb47a9752a160255e07f4982e036e5735850a5660513660f54867bde3343e",
+      "mtime": "2025-11-07T12:08:43Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/_registry/registry_v1.1_v5.yaml",
+      "size": 28496,
+      "sha256": "sha256:0024bb1b690e74f88218bfbb231fbc2122e83fa90e1ac640fc84f865097aa654",
+      "mtime": "2025-11-07T14:27:34Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/sprints/SSOT-v1.0/01-subsprints/S3_VALIDATION_CI.md",
+      "size": 3566,
+      "sha256": "sha256:d0cfdb3e7c63badcda7d06a996133047b9a2cb2ad7413eccb7be282283a4b563",
+      "mtime": "2025-11-04T16:22:58Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/sprints/SSOT-v1.0/02-evidence/S1_VALIDATION_REPORT.md",
+      "size": 11836,
+      "sha256": "sha256:64a148f14c4a8ffb8730411690779eb7b1af7ab82267f3b8dc4ba5ce6b6a47dc",
+      "mtime": "2025-11-05T16:04:55Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/sprints/SSOT-v1.0/02-evidence/S2_VALIDATION_REPORT.md",
+      "size": 8925,
+      "sha256": "sha256:2f2c7e0caed5f75feecfa9d9ac6eed7a775c2b7b670635ab3f6bf6b4670d4aa4",
+      "mtime": "2025-11-05T16:35:57Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/sprints/SSOT-v1.0/02-evidence/S3_VALIDATION_REPORT.md",
+      "size": 6611,
+      "sha256": "sha256:7ecefb4e2683f298af083d7ea456133244d421ba583dbecf00ee628f9a435126",
+      "mtime": "2025-11-05T16:46:11Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/sprints/SSOT-v1.0/02-evidence/S4_VALIDATION_REPORT.md",
+      "size": 6143,
+      "sha256": "sha256:32a6cb3c7330ca05defc93ae3cbaaef6cf4ba706a460e2d9879e4a41b491f78e",
+      "mtime": "2025-11-05T16:55:11Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_PHASE2_VALIDATION.md",
+      "size": 5328,
+      "sha256": "sha256:e290ade9870841fe518618c6ef6d1a51c21e4ab8ad4ad2c629a84ad3b787cba0",
+      "mtime": "2025-11-07T12:08:43Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_PHASE3_VALIDATION.md",
+      "size": 4593,
+      "sha256": "sha256:fa2577ce04c9a739e197ffcfc51ce2efb143f88f487c341a8539a6ac86844c66",
+      "mtime": "2025-11-07T14:25:50Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_VALIDATION_PHASE1-v2.md",
+      "size": 2877,
+      "sha256": "sha256:594a4eb2530d7bccd8303486d266614f750d0e3011b895c9b9f39ba3ca795136",
+      "mtime": "2025-11-07T07:02:57Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_VALIDATION_PHASE1.md",
+      "size": 5129,
+      "sha256": "sha256:423eb390df949cdcb22ec443e45ebccee68435bc6a585ce11d3793c077abc8df",
+      "mtime": "2025-11-07T13:48:01Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_PROOF_VALIDATION.md",
+      "size": 2956,
+      "sha256": "sha256:55e8fea1d2b07dd7a519c597e16dc26a19b2414c3a82ba626aaf46a7b956a5ac",
+      "mtime": "2025-11-06T11:19:11Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_STRICT_VALIDATION.md",
+      "size": 2287,
+      "sha256": "sha256:668c876d7d7389f21273408f2e84469912f54298c0bf2dd7a861748978d239dd",
+      "mtime": "2025-11-06T16:11:10Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "reports/validation/SSOT_V1_1_VALIDATION_CODEX-v2.md",
+      "size": 9840,
+      "sha256": "sha256:27b141eb0f81dbbf3027086a62acfe7e99d2bb44d2b0d5c256615d32ae3c0180",
+      "mtime": "2025-11-07T13:48:04Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "reports/validation/SSOT_V1_1_VALIDATION_CODEX-v3.md",
+      "size": 934,
+      "sha256": "sha256:2356315a89a826fb97cce2765d7c571248d86fdac545a671783544a9b3b51b5f",
+      "mtime": "2025-11-07T05:58:05Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "reports/validation/SSOT_V1_1_VALIDATION_CODEX.md",
+      "size": 9661,
+      "sha256": "sha256:37966d90ed40fdfbd99f184d8046152ed3498e1e69cce7abfdd83bfde6d01bbb",
+      "mtime": "2025-11-07T13:48:03Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "reports/analysis/SSOT_V1_1_TRUTHKEEPER_SCORECARD.yaml",
+      "size": 1166,
+      "sha256": "sha256:30fd2ba2002a04ed75a4e0ac388bd604eba8fce17f615f09bb895138d1b521be",
+      "mtime": "2025-11-06T10:04:08Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "reports/validation/SSOT_V1_1_ALIGN_PHASE1_SCORECARD.yaml",
+      "size": 1037,
+      "sha256": "sha256:a655d64be0c6469e0bc28e712e4f40d7d339fce67bce6a6aa9bba6bf74e54905",
+      "mtime": "2025-11-06T21:36:55Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "reports/validation/SSOT_V1_1_ALIGN_PHASE2_SCORECARD.yaml",
+      "size": 1086,
+      "sha256": "sha256:096d520407771da0574495807a171fe422776e922bd28a5d2d2714a1363ca96c",
+      "mtime": "2025-11-07T12:47:45Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "reports/validation/SSOT_V1_1_ALIGN_PHASE3_SCORECARD.yaml",
+      "size": 580,
+      "sha256": "sha256:55f8af65be93a713144f3841f99e4c72bc8df3574ecb1e22c562ccab47c22da1",
+      "mtime": "2025-11-07T14:26:11Z",
+      "version": "v1.1"
+    },
+    {
+      "path": "reports/validation/SSOT_V1_1_SCORECARD.yaml",
+      "size": 1621,
+      "sha256": "sha256:0f9d849e9d31734684ccba4c19a2ace7dd091d10265cadcb8ef91ff96e4df7b9",
+      "mtime": "2025-11-06T09:03:46Z",
+      "version": "v1.1"
+    }
+  ]
+}

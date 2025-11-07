@@ -1,12 +1,17 @@
-# OBS-0002 — Tests initiaux & POCs minimaux (agnostiques)
+---
+id: "OBS-0002"
+type: "OBS"
+status: "Ouvert"
+date: "2025-01-05"
+author: "Greg Catteau"
+version: "1.0.0"
+tags: ["tests", "poc", "protocole", "evaluation"]
+links:
+  cites: ["RFC-002", "OBS-0001"]
+  cited_by: ["OBS-0003"]
+---
 
-- **Statut** : 🟢 Ouvert (phase d'observation — tests)
-- **Date** : 2025-01-03
-- **Auteur** : Équipe Relinium Genesis
-- **Version** : 1.0
-- **Références** :
-  - [RFC-002 — Matrice d'exploration et de scoring (agnostique)](../rfcs/RFC-002-backend-et-composants-scoring-matrix.md)
-  - [OBS-0001 — Inventaire initial des backends et composants](OBS-0001-backend-composants-inventaire.md)
+# OBS-0002 — Tests initiaux & POCs minimaux (agnostiques)
 
 ---
 

@@ -1,0 +1,42 @@
+meta:
+  id: "VAL-SSOT-V1_1-SCORECARD-0001"
+  version: "v1"
+  created_at: "2025-11-06T08:59:25Z"
+  generated_by: "codex"
+  commit_sha: "1073f0c8d2e8e2d70f1b053b72d8db2faa811214"
+
+scores:
+  structural: 0.40
+  cryptographic: 0.58
+  registry: 0.35
+  documentary: 0.45
+  global: 0.46
+
+concordance_with_cline:
+  declared_items: 9
+  checked_items: 9
+  matching: 5
+  mismatching: 4
+
+anomalies:
+  - type: "hash_mismatch"
+    file: "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_PROGRESS.yaml"
+    description: "Manifest publie 56b14581…, recalcul = 42a1e5b0…"
+  - type: "hash_mismatch"
+    file: "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_SNAPSHOT_MANIFEST_20251106_0846.yaml"
+    description: "Valeur auto-déclarée 3459b1…, fichier courant = 477ba35f…"
+  - type: "hash_mismatch"
+    file: "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_HASHES.yaml"
+    description: "Entrée `progress_file.hash` annonce (to_be_calculated) alors que SHA256 = 0644fd04…"
+  - type: "missing_hash"
+    file: "docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PILOT_PLAN.md"
+    description: "Hash absent dans SSOT_V1_1_HASHES.yaml malgré DoD 'Hashs consignés'"
+  - type: "missing_in_registry"
+    file: "docs/_registry/registry_v1.1.yaml"
+    description: "RFC-004 absente de `lineages` et `pending_migration`"
+  - type: "id_incoherence"
+    file: "docs/03-architecture/rfcs/RFC-001-choix-stack-initiale.md"
+    description: "ID `RFC-001` ne correspond pas au successeur `RFC-0001-v2`"
+  - type: "partial_metadata"
+    file: "docs/_registry/registry_v1.1.yaml"
+    description: "Entrées OBS-0001/0002/0003 listées sans hash ni statut"

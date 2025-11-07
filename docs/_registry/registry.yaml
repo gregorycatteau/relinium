@@ -1,0 +1,127 @@
+metadata:
+  version: 1.0.0
+  generated_at: '2025-11-05T17:07:43.621000Z'
+  generator: scripts/generate_registry.py
+  schema: docs/01-genesis/document_schema_v1.json
+summary:
+  total_documents: 6
+  by_type:
+    OBS: 3
+    RFC: 2
+    ADR: 1
+  by_status:
+    Ouvert: 3
+    En discussion: 2
+    Accepté: 1
+documents:
+- id: ADR-0001
+  type: ADR
+  status: Accepté
+  date: '2025-01-05'
+  file_path: docs/03-architecture/decisions/ADR-0001-repo-driven-by-docs-first.md
+  hash: 3c8d8a1c0e36135a780c6a2f4d857276346932dd2bf0e8f89a3ee46f4604dc00
+  author: Greg Catteau
+  version: 1.0.0
+  tags:
+  - governance
+  - methodology
+  - docs-first
+  links:
+    cited_by:
+    - RFC-001
+    - RFC-002
+- id: OBS-0001
+  type: OBS
+  status: Ouvert
+  date: '2025-01-05'
+  file_path: docs/03-architecture/observations/OBS-0001-backend-composants-inventaire.md
+  hash: 069b167f03f0781c94c4f763f906e65df0ece237a101ea04bf0217b526ce1c2a
+  author: Greg Catteau
+  version: 1.0.0
+  tags:
+  - backend
+  - composants
+  - inventaire
+  - exploration
+  links:
+    cites:
+    - RFC-002
+    cited_by:
+    - OBS-0002
+- id: OBS-0002
+  type: OBS
+  status: Ouvert
+  date: '2025-01-05'
+  file_path: docs/03-architecture/observations/OBS-0002-tests-initiaux.md
+  hash: 82b1b5a4ceff9c9e49e593c3d1faf7b9765aec90e225d4eb4ced80629f7e972c
+  author: Greg Catteau
+  version: 1.0.0
+  tags:
+  - tests
+  - poc
+  - protocole
+  - evaluation
+  links:
+    cites:
+    - RFC-002
+    - OBS-0001
+    cited_by:
+    - OBS-0003
+- id: OBS-0003
+  type: OBS
+  status: Ouvert
+  date: '2025-01-05'
+  file_path: docs/03-architecture/observations/OBS-0003-calibration-et-SLOs.md
+  hash: 5bc703025795a5c8f83efa522d82756c8d6ad506d6d69c5bf495a67e5d53d69e
+  author: Greg Catteau
+  version: 1.0.0
+  tags:
+  - calibration
+  - slo
+  - performance
+  - gates
+  - metrics
+  links:
+    cites:
+    - RFC-002
+    - OBS-0001
+    - OBS-0002
+- id: RFC-001
+  type: RFC
+  status: En discussion
+  date: '2025-01-05'
+  file_path: docs/03-architecture/rfcs/RFC-001-choix-stack-initiale.md
+  hash: 22441e66fc9b7f73f3231ad86c018bcb8645d226bb6e5dd7241029410776d5aa
+  author: Greg Catteau
+  version: 1.0.0
+  tags:
+  - architecture
+  - stack
+  - backend
+  - frontend
+  - infrastructure
+  links:
+    cites:
+    - ADR-0001
+- id: RFC-002
+  type: RFC
+  status: En discussion
+  date: '2025-01-05'
+  file_path: docs/03-architecture/rfcs/RFC-002-backend-et-composants-scoring-matrix.md
+  hash: 7758a3506fb073340234918acfa9fa888826a699a49c7a6e18ea1c65bb7c97ae
+  author: Greg Catteau
+  version: 1.0.0
+  tags:
+  - architecture
+  - backend
+  - scoring
+  - evaluation
+  - methodology
+  links:
+    cites:
+    - ADR-0001
+    - RFC-001
+    cited_by:
+    - OBS-0001
+    - OBS-0002
+    - OBS-0003

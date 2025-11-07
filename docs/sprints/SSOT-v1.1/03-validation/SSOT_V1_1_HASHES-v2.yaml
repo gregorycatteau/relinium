@@ -1,0 +1,173 @@
+id: "HASHES-SSOT-V1_1-0001-v2"
+id_root: "HASHES-SSOT-V1_1-0001"
+version: "2.0"
+type: "hashes"
+status: "Active"
+title: "Hashs de Validation – Sprint SSOT v1.1 (v2)"
+date: "2025-11-06"
+scope: "organizational"
+pattern: "registry"
+created_at: "2025-11-06T19:28:00Z"
+authors:
+  - id: "greg.catteau"
+    role: "owner"
+roles:
+  - name: "Owner"
+    actor: "Greg Catteau"
+links:
+  supersedes:
+    - "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_HASHES.yaml"
+
+previous_hash: "sha256:0644fd047415845d64539397b466ef96a95e1e40a6240b3e178190d1b67cda26"
+self_hash: "sha256:42737fdade8d06f3beffdd6c51c4c874d37001db5a15cdda702aa25309c97ea9"
+
+# Hashs de Validation – Sprint SSOT v1.1
+# Preuve cryptographique de non-modification et traçabilité
+
+metadata:
+  sprint_id: "SSOT-v1.1-PILOT"
+  date: "2025-11-05"
+  hash_algorithm: "SHA256"
+  validated_by: "Greg Catteau"
+
+# Hashs des documents originaux AVANT migration
+original_hashes_pre_migration:
+  ADR-0001:
+    file: "docs/03-architecture/decisions/ADR-0001-repo-driven-by-docs-first.md"
+    hash: "sha256:3c8d8a1c0e36135a780c6a2f4d857276346932dd2bf0e8f89a3ee46f4604dc00"
+    captured_at: "2025-11-05T20:46:00Z"
+    
+  RFC-001:
+    file: "docs/03-architecture/rfcs/RFC-001-choix-stack-initiale.md"
+    hash: "sha256:22441e66fc9b7f73f3231ad86c018bcb8645d226bb6e5dd7241029410776d5aa"
+    captured_at: "2025-11-05T20:46:00Z"
+    
+  RFC-002:
+    file: "docs/03-architecture/rfcs/RFC-002-backend-et-composants-scoring-matrix.md"
+    hash: "sha256:7758a3506fb073340234918acfa9fa888826a699a49c7a6e18ea1c65bb7c97ae"
+    captured_at: "2025-11-05T20:46:00Z"
+    note: "Document de référence, non migré dans ce sprint pilote"
+
+# Hashs des documents originaux APRÈS migration
+original_hashes_post_migration:
+  ADR-0001:
+    file: "docs/03-architecture/decisions/ADR-0001-repo-driven-by-docs-first.md"
+    hash: "sha256:3c8d8a1c0e36135a780c6a2f4d857276346932dd2bf0e8f89a3ee46f4604dc00"
+    captured_at: "2025-11-05T20:48:00Z"
+    match: "✅ IDENTIQUE"
+    
+  RFC-001:
+    file: "docs/03-architecture/rfcs/RFC-001-choix-stack-initiale.md"
+    hash: "sha256:22441e66fc9b7f73f3231ad86c018bcb8645d226bb6e5dd7241029410776d5aa"
+    captured_at: "2025-11-05T20:48:00Z"
+    match: "✅ IDENTIQUE"
+    
+  RFC-002:
+    file: "docs/03-architecture/rfcs/RFC-002-backend-et-composants-scoring-matrix.md"
+    hash: "sha256:7758a3506fb073340234918acfa9fa888826a699a49c7a6e18ea1c65bb7c97ae"
+    captured_at: "2025-11-05T20:48:00Z"
+    match: "✅ IDENTIQUE"
+
+# Hashs des nouveaux successeurs v1.1
+successor_hashes:
+  ADR-0001-v2:
+    file: "docs/03-architecture/decisions/ADR-0001-repo-driven-by-docs-first-v2.md"
+    hash: "sha256:e061333de450b505a101adb1a8c960fdfb5791ba7c6c30578a8048035a538902"
+    created_at: "2025-11-05T20:46:30Z"
+    previous_hash: "sha256:3c8d8a1c0e36135a780c6a2f4d857276346932dd2bf0e8f89a3ee46f4604dc00"
+    supersedes: "ADR-0001"
+    
+  RFC-0001-v2:
+    file: "docs/03-architecture/rfcs/RFC-001-choix-stack-initiale-v2.md"
+    hash: "sha256:263fb5de775afdf616c4b2399f8440cca2d413bd5bb3f7149210b901a54b4580"
+    created_at: "2025-11-05T20:47:50Z"
+    previous_hash: "sha256:22441e66fc9b7f73f3231ad86c018bcb8645d226bb6e5dd7241029410776d5aa"
+    supersedes: "RFC-001"
+
+# Hashs des rapports de sprint
+sprint_artifacts:
+  plan:
+    file: "docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PILOT_PLAN.md"
+    hash: "sha256:4635b67272f12f993a22aef7b513afc3d11dcee6776d2cf4ddc7bd14340e4c25"
+    
+  dry_run_report:
+    file: "docs/sprints/SSOT-v1.1/02-evidence/MIGRATION_DRY_RUN_REPORT.md"
+    hash: "sha256:ee92a541b01c4632ac15aeb2abb8dbbda57e252a189b1cc459e8da927efd555d"
+    
+  execution_report:
+    file: "docs/sprints/SSOT-v1.1/02-evidence/MIGRATION_EXECUTION_REPORT.md"
+    hash: "sha256:bea1c28550c0255cff63aa5f0289e6fe0f772a0ff7d41931545d8ca00d1e0bbf"
+    
+  registry_v1_1:
+    file: "docs/_registry/registry_v1.1.yaml"
+    hash: "sha256:65c009d86a1827b9f6871eecc30648d6f1a6ebe8760709011a5224f786fd226d"
+    
+  progress_file:
+    file: "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_PROGRESS.yaml"
+    hash: "sha256:42a1e5b0879e867b0f21de1730b88bb47641a036258322ff7bde4b0f750a4f8f"
+
+# Preuve de non-modification
+non_modification_proof:
+  status: "✅ VERIFIED"
+  method: "SHA256 hash comparison"
+  documents_verified: 3
+  documents_modified: 0
+  confidence: "100% (mathematical certainty)"
+  
+  verification_steps:
+    - step: 1
+      action: "Capture hashs avant migration"
+      result: "✅ Captured"
+      
+    - step: 2
+      action: "Création des successeurs v1.1"
+      result: "✅ Created (2 files)"
+      
+    - step: 3
+      action: "Recalcul des hashs après migration"
+      result: "✅ Recalculated"
+      
+    - step: 4
+      action: "Comparaison cryptographique"
+      result: "✅ 100% match (no modifications)"
+
+# Hashs du Snapshot S6 (Pre-Codex Validation)
+snapshot_s6_hashes:
+  snapshot_document:
+    file: "docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_SNAPSHOT_20251106_0846.md"
+    hash: "sha256:17661f4b5a4174dcb750abbb906b5279f98d4ead90dd6bfe05bbf7c95db90373"
+    created_at: "2025-11-06T07:46:13Z"
+    type: "evidence"
+    purpose: "pre_codex_validation"
+    
+  snapshot_manifest:
+    file: "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_SNAPSHOT_MANIFEST_20251106_0846.yaml"
+    hash: "sha256:477ba35f179888361a010a1623cb5a943cde75cadc27441c8796fddb5a634173"
+    created_at: "2025-11-06T07:46:13Z"
+    type: "manifest"
+    purpose: "cryptographic_reference"
+    
+  audit_report:
+    file: "reports/audits/SSOT_V1_1_REGISTRY_AUDIT.md"
+    hash: "sha256:cda688c2f606552fa4f3654c89b04574a7e40a7a29d0e815ac56d324a3f59d17"
+    created_at: "2025-11-05"
+    type: "audit"
+    purpose: "registry_validation"
+
+# Notes
+comments: |
+  La preuve de non-modification repose sur la propriété cryptographique
+  du SHA256 : toute modification, même d'un seul bit, produirait un
+  hash complètement différent.
+  
+  L'égalité stricte des hashs avant/après migration constitue une
+  preuve mathématiquement certaine qu'aucun document original n'a
+  été altéré durant le processus de succession.
+  
+  Conformément au RFC-004, chaque successeur v1.1 contient le hash
+  de son prédécesseur dans le champ `previous_hash`, garantissant
+  la traçabilité et la non-répudiation de la chaîne de succession.
+  
+  Les hashs du snapshot S6 (2025-11-06) constituent une référence
+  cryptographique de l'état du SSOT v1.1 AVANT toute validation Codex.
+  Ces hashs permettent de prouver l'intégrité du dépôt à cet instant.

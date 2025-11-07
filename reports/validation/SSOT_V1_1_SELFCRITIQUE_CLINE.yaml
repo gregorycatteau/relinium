@@ -1,0 +1,221 @@
+meta:
+  id: "SELFCRIT-SSOT-V1_1-0001"
+  version: "v1"
+  created_at: "2025-11-06T09:10:35Z"
+  generated_by: "cline"
+  commit_sha: "1073f0c8d2e8e2d70f1b053b72d8db2faa811214"
+
+codex_reference:
+  validation_report: "VAL-SSOT-V1_1-0001"
+  scorecard: "VAL-SSOT-V1_1-SCORECARD-0001"
+
+summary:
+  total_divergences: 7
+  analyzed: 7
+  classified:
+    acceptable_risk: 1
+    process_flaw: 5
+    design_limitation: 2
+    unknown_cause: 0
+
+divergences:
+  - id: "DIV-001"
+    type: "hash_mismatch"
+    file: "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_PROGRESS.yaml"
+    codex_finding: "Manifest publie 56b14581…, recalcul = 42a1e5b0…"
+    classification: "process_flaw"
+    impact: "CRITIQUE"
+    cause: "Défaut de séquence - hashs calculés avant modification finale"
+    anticipated: false
+    
+  - id: "DIV-002"
+    type: "hash_mismatch"
+    file: "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_SNAPSHOT_MANIFEST_20251106_0846.yaml"
+    codex_finding: "Valeur auto-déclarée 3459b1…, fichier courant = 477ba35f…"
+    classification: "design_limitation"
+    impact: "CRITIQUE"
+    cause: "Problème d'auto-référence cryptographique non résolu"
+    anticipated: true
+    anticipated_note: "Savais que c'était délicat mais sous-estimé la complexité"
+    
+  - id: "DIV-003"
+    type: "missing_hash"
+    file: "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_HASHES.yaml"
+    codex_finding: "Entrées (to_be_calculated) alors que DoD marquée ✅"
+    classification: "process_flaw"
+    impact: "MOYEN"
+    cause: "Incohérence entre déclaration et réalité - mauvaise interprétation de la DoD"
+    anticipated: false
+    
+  - id: "DIV-004"
+    type: "missing_in_registry"
+    file: "docs/_registry/registry_v1.1.yaml"
+    codex_finding: "RFC-004 absente de lineages et pending_migration"
+    classification: "design_limitation"
+    impact: "ÉLEVÉ"
+    cause: "Point aveugle conceptuel - traité comme méta-document au lieu de partie du système"
+    anticipated: false
+    
+  - id: "DIV-005"
+    type: "id_incoherence"
+    file: "docs/03-architecture/rfcs/RFC-001-choix-stack-initiale.md"
+    codex_finding: "ID RFC-001 ne correspond pas au successeur RFC-0001-v2"
+    classification: "process_flaw"
+    impact: "MOYEN_À_ÉLEVÉ"
+    cause: "Normalisation incohérente - confusion entre nommage idéal et référencement factuel"
+    anticipated: false
+    
+  - id: "DIV-006"
+    type: "partial_metadata"
+    file: "docs/_registry/registry_v1.1.yaml"
+    codex_finding: "OBS-0001/0002/0003 listés sans hash ni statut"
+    classification: "acceptable_risk"
+    impact: "MOYEN"
+    cause: "Approche minimaliste - vision pilote trop restreinte"
+    anticipated: true
+    anticipated_note: "Savais incomplet mais considéré acceptable pour pilote"
+    
+  - id: "DIV-007"
+    type: "declared_but_absent"
+    file: "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_PROGRESS.yaml"
+    codex_finding: "Métrique 'Hashs consignés' cochée alors que hashs manquent"
+    classification: "process_flaw"
+    impact: "ÉLEVÉ_CONFIANCE"
+    cause: "Biais d'optimisme - vérification insuffisante avant déclaration de succès"
+    anticipated: false
+
+axes:
+  structural:
+    codex_score: 0.40
+    cline_initial_score: 0.95
+    cline_corrected_score: 0.45
+    gap_analysis: "Sur-valorisation des 2 lignées pilotes, sous-évaluation de la cohérence globale"
+    bias_identified: "Focus sur succès locaux au détriment de vision systémique"
+    notes: "2 lignées complètes mais RFC-004 absente et incohérence RFC-001/RFC-0001"
+    
+  cryptographic:
+    codex_score: 0.58
+    cline_initial_score: 0.98
+    cline_corrected_score: 0.55
+    gap_analysis: "Confusion entre 'hashs calculés' et 'hashs corrects et à jour'"
+    bias_identified: "Sous-estimation de la complexité d'auto-vérification cryptographique"
+    notes: "10/14 hashs OK mais 4 obsolètes dans snapshot, placeholders non remplis"
+    
+  registry:
+    codex_score: 0.35
+    cline_initial_score: 0.90
+    cline_corrected_score: 0.40
+    gap_analysis: "Vision pilote trop restreinte - registre traité comme démo plutôt que référentiel opérationnel"
+    bias_identified: "Acceptation trop large de l'incomplet comme 'suffisant pour pilote'"
+    notes: "RFC-004 absente, OBS sans métadonnées, hashs v2 manquants"
+    
+  documentary:
+    codex_score: 0.45
+    cline_initial_score: 0.95
+    cline_corrected_score: 0.50
+    gap_analysis: "Focus conformité technique au détriment cohérence sémantique"
+    bias_identified: "Validation schéma sans test de navigation automatique"
+    notes: "Successeurs conformes mais incohérence d'ID et navigation limitée"
+    
+  global:
+    codex_score: 0.46
+    cline_initial_score: 0.95
+    cline_corrected_score: 0.48
+    gap_analysis: "Biais d'optimisme systématique - écart majeur entre perception et réalité"
+    bias_identified: "Sur-valorisation réussites locales, négligence détails cryptographiques critiques"
+    notes: "Confusion entre 'processus exécuté' et 'résultat valide'"
+
+key_insights:
+  mechanical_errors:
+    - "Séquence incorrecte: hashs calculés puis fichiers modifiés → hashs obsolètes"
+    - "Auto-référence cryptographique non résolue (fichier contenant son propre hash)"
+    - "Placeholders oubliés dans livrables déclarés terminés"
+    
+  methodological_errors:
+    - "Mauvaise interprétation DoD: 'fichier créé' ≠ 'fichier complet et correct'"
+    - "Vision pilote trop laxiste: incomplet considéré comme acceptable"
+    - "Absence de vérification post-modification"
+    
+  conceptual_errors:
+    - "Point aveugle RFC-004: documents normatifs traités comme au-dessus du système"
+    - "Normalisation vs référencement: esthétique prioritaire sur continuité factuelle"
+    - "Biais d'optimisme: sur-confiance dans auto-évaluation"
+
+corrective_measures:
+  immediate:
+    - action: "Recalculer tous hashs obsolètes"
+      priority: "P0"
+      files: ["SSOT_V1_1_PROGRESS.yaml", "SSOT_V1_1_HASHES.yaml", "SSOT_V1_1_SNAPSHOT_MANIFEST_20251106_0846.yaml", "SSOT_V1_1_PILOT_PLAN.md"]
+      
+    - action: "Résoudre auto-référence manifest"
+      priority: "P0"
+      options: ["hash sans champ self_hash", "exclusion du manifest", "signature externe"]
+      
+    - action: "Compléter placeholders"
+      priority: "P0"
+      target: "Remplacer tous (to_be_calculated)"
+      
+  next_cycle:
+    - action: "Normaliser lignée RFC"
+      priority: "P1"
+      decision_needed: "RFC-001 ou RFC-0001 comme racine"
+      
+    - action: "Ajouter RFC-004 au registre"
+      priority: "P1"
+      fields: ["hash", "statut", "scope", "pattern"]
+      
+    - action: "Compléter métadonnées OBS"
+      priority: "P1"
+      documents: ["OBS-0001", "OBS-0002", "OBS-0003"]
+      
+  strategic:
+    - action: "Établir workflow de vérification"
+      priority: "P2"
+      steps: ["créer", "calculer", "insérer", "re-calculer", "comparer", "déclarer"]
+      
+    - action: "Script validation automatique"
+      priority: "P2"
+      features: ["recalcul auto", "comparaison", "signalement divergences", "blocage commit"]
+      
+    - action: "Redéfinir critères DoD"
+      priority: "P2"
+      requirements: ["critères objectifs", "procédure vérification", "validation externe"]
+
+confidence_evolution:
+  before_codex_validation: 0.95
+  after_codex_validation: 0.48
+  gap: 0.47
+  gap_percentage: "49.5%"
+  
+  reasons_for_gap:
+    - "Validation locale sans recul global"
+    - "Biais de confirmation (chercher ce qui marche)"
+    - "Confusion processus exécuté vs résultat correct"
+    - "Points aveugles conceptuels"
+
+confidence_self_assessment: 0.85
+
+yes_means_yes_definition:
+  yes_criteria:
+    - "Tous hashs corrects (pas de placeholders)"
+    - "Tous documents inventoriés (pas d'absents)"
+    - "Toutes lignées traçables (pas d'incohérences)"
+    - "Validation externe confirmée"
+    
+  no_criteria:
+    - "Si un seul hash obsolète"
+    - "Si un seul document manque"
+    - "Si une seule DoD floue"
+    - "Si pas de preuve mathématique"
+    
+  no_grey_zone: "Pas de 'acceptable dans le contexte' sauf si explicitement documenté et justifié"
+
+learning_summary:
+  primary_lesson: "La validation externe n'est pas optionnelle"
+  secondary_lessons:
+    - "Les hashs doivent être calculés sur l'état FINAL"
+    - "Un pilote doit être parfait dans son périmètre"
+    - "Le référencement factuel prime sur l'esthétique"
+    - "Tous les documents font partie du système, sans exception"
+
+self_hash: "sha256:f0047895e29f178cb0c4c56d8b7a69df286c06aa678736e74d02c504a63428e0"

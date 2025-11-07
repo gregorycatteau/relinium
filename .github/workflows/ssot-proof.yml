@@ -1,0 +1,81 @@
+name: SSOT v1.1 Triple-Check (S8-PROOF)
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+
+permissions:
+  contents: read
+
+jobs:
+  triple-check:
+    name: Run triple-check (hash + registry + schema)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -V
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Prepare artifacts directory
+        run: |
+          mkdir -p artifacts
+
+      - name: Hash check (strict)
+        shell: bash
+        run: |
+          set -o pipefail
+          python scripts/ssot_hash_check.py --ci --strict 2>&1 | tee artifacts/hash_check.log
+          echo "${PIPESTATUS[0]}" > artifacts/hash_check.code
+
+      - name: Registry check (strict)
+        shell: bash
+        run: |
+          set -o pipefail
+          python scripts/ssot_registry_check.py --ci --strict 2>&1 | tee artifacts/registry_check.log
+          echo "${PIPESTATUS[0]}" > artifacts/registry_check.code
+
+      - name: Schema check (strict, extended targets)
+        shell: bash
+        run: |
+          set -o pipefail
+          python scripts/ssot_schema_check.py --ci --strict \
+            --targets docs/03-architecture/decisions docs/03-architecture/rfcs docs/03-architecture/observations docs/observatory docs/sprints docs/reports \
+            2>&1 | tee artifacts/schema_check.log
+          echo "${PIPESTATUS[0]}" > artifacts/schema_check.code
+
+      - name: Publish triple-check artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ssot-proof-artifacts
+          path: artifacts
+
+      - name: Evaluate strict results
+        shell: bash
+        run: |
+          set -e
+          hc=$(cat artifacts/hash_check.code || echo 2)
+          rc=$(cat artifacts/registry_check.code || echo 2)
+          sc=$(cat artifacts/schema_check.code || echo 2)
+          echo "hash_check.code=$hc"
+          echo "registry_check.code=$rc"
+          echo "schema_check.code=$sc"
+          if [ "$hc" -gt 0 ] || [ "$rc" -gt 0 ] || [ "$sc" -gt 0 ]; then
+            echo "❌ Strict triple-check failed (see uploaded artifacts)" >&2
+            exit 2
+          fi

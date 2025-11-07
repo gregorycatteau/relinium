@@ -1,0 +1,394 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/gregorycatteau/relinium/docs/01-genesis/document_schema_v1.json",
+  "title": "Relinium Document Frontmatter Schema",
+  "description": "JSON Schema pour la validation des métadonnées frontmatter des documents Relinium",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "status",
+    "date"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$",
+      "description": "Identifiant unique du document (format: TYPE-NNNN)",
+      "examples": [
+        "ADR-0001",
+        "RFC-002",
+        "OBS-0003",
+        "POC-0001",
+        "SPRINT_DOC-0001"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "ADR",
+        "RFC",
+        "OBS",
+        "POC",
+        "SPRINT_DOC"
+      ],
+      "description": "Type de document définissant son rôle dans la gouvernance"
+    },
+    "status": {
+      "type": "string",
+      "description": "Statut actuel du document dans son cycle de vie",
+      "oneOf": [
+        {
+          "enum": [
+            "Proposition",
+            "En discussion",
+            "Accepté",
+            "Rejeté",
+            "Supersédé"
+          ],
+          "description": "Statuts valides pour les ADR"
+        },
+        {
+          "enum": [
+            "Ébauche",
+            "En discussion",
+            "Mature",
+            "Accepté",
+            "Abandonné"
+          ],
+          "description": "Statuts valides pour les RFC"
+        },
+        {
+          "enum": [
+            "Ouvert",
+            "En observation",
+            "Synthétisé",
+            "Archivé"
+          ],
+          "description": "Statuts valides pour les OBS"
+        },
+        {
+          "enum": [
+            "Planned",
+            "In Progress",
+            "Complete",
+            "Failed"
+          ],
+          "description": "Statuts valides pour les POC"
+        },
+        {
+          "enum": [
+            "Planifié",
+            "En cours",
+            "Terminé",
+            "Certifié"
+          ],
+          "description": "Statuts valides pour les SPRINT_DOC"
+        }
+      ]
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Date de création ou dernière modification majeure (format ISO 8601: YYYY-MM-DD)",
+      "examples": [
+        "2025-01-05",
+        "2025-11-03"
+      ]
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Auteur principal ou équipe responsable du document",
+      "examples": [
+        "Équipe Relinium Genesis",
+        "John Doe",
+        "Équipe Backend"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$",
+      "description": "Version du document suivant SemVer simplifié (MAJOR.MINOR ou MAJOR.MINOR.PATCH)",
+      "examples": [
+        "1.0",
+        "1.2",
+        "2.0.1"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "description": "Tags de classification thématique",
+      "examples": [
+        [
+          "governance",
+          "methodology"
+        ],
+        [
+          "security",
+          "authentication",
+          "backend"
+        ]
+      ]
+    },
+    "links": {
+      "type": "object",
+      "description": "Structure de liens inter-documents pour tracer les dépendances",
+      "properties": {
+        "cites": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$"
+          },
+          "uniqueItems": true,
+          "description": "Liste des documents référencés/cités par ce document"
+        },
+        "cited_by": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$"
+          },
+          "uniqueItems": true,
+          "description": "Liste des documents qui citent ce document (généré automatiquement)"
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$"
+          },
+          "uniqueItems": true,
+          "description": "Document(s) que ce document remplace/rend obsolète"
+        },
+        "superseded_by": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$"
+          },
+          "uniqueItems": true,
+          "description": "Document qui remplace/rend obsolète ce document"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "ADR"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^ADR-\\d{4}$"
+          },
+          "status": {
+            "enum": [
+              "Proposition",
+              "En discussion",
+              "Accepté",
+              "Rejeté",
+              "Supersédé"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "RFC"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^RFC-\\d{4}$"
+          },
+          "status": {
+            "enum": [
+              "Ébauche",
+              "En discussion",
+              "Mature",
+              "Accepté",
+              "Abandonné"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "OBS"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^OBS-\\d{4}$"
+          },
+          "status": {
+            "enum": [
+              "Ouvert",
+              "En observation",
+              "Synthétisé",
+              "Archivé"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "POC"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^POC-\\d{4}$"
+          },
+          "status": {
+            "enum": [
+              "Planned",
+              "In Progress",
+              "Complete",
+              "Failed"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "SPRINT_DOC"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^SPRINT_DOC-\\d{4}$"
+          },
+          "status": {
+            "enum": [
+              "Planifié",
+              "En cours",
+              "Terminé",
+              "Certifié"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "ADR-0001",
+      "type": "ADR",
+      "status": "Accepté",
+      "date": "2025-01-03",
+      "author": "Équipe Relinium Genesis",
+      "version": "1.0",
+      "tags": [
+        "governance",
+        "methodology",
+        "docs-first"
+      ],
+      "links": {
+        "cited_by": [
+          "RFC-001",
+          "RFC-002"
+        ]
+      }
+    },
+    {
+      "id": "RFC-001",
+      "type": "RFC",
+      "status": "En discussion",
+      "date": "2025-01-03",
+      "author": "Équipe Relinium Genesis",
+      "version": "1.0",
+      "tags": [
+        "architecture",
+        "stack",
+        "backend",
+        "frontend"
+      ],
+      "links": {
+        "cites": [
+          "ADR-0001"
+        ]
+      }
+    },
+    {
+      "id": "OBS-0001",
+      "type": "OBS",
+      "status": "Ouvert",
+      "date": "2025-01-03",
+      "author": "Équipe Relinium Genesis",
+      "version": "1.0",
+      "tags": [
+        "backend",
+        "composants",
+        "inventaire"
+      ],
+      "links": {
+        "cited_by": [
+          "RFC-002"
+        ]
+      }
+    },
+    {
+      "id": "POC-0001",
+      "type": "POC",
+      "status": "Complete",
+      "date": "2025-01-04",
+      "author": "Dev Team",
+      "version": "1.0",
+      "tags": [
+        "auth",
+        "keycloak",
+        "security"
+      ]
+    },
+    {
+      "id": "SPRINT_DOC-0001",
+      "type": "SPRINT_DOC",
+      "status": "En cours",
+      "date": "2025-01-05",
+      "author": "Équipe Relinium Genesis",
+      "version": "1.0",
+      "tags": [
+        "ssot",
+        "metadata",
+        "sprint"
+      ]
+    }
+  ]
+}

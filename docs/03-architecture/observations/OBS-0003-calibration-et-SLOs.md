@@ -1,10 +1,16 @@
-# OBS-0003 — Calibration & SLOs de référence
+---
+id: "OBS-0003"
+type: "OBS"
+status: "Ouvert"
+date: "2025-01-05"
+author: "Greg Catteau"
+version: "1.0.0"
+tags: ["calibration", "slo", "performance", "gates", "metrics"]
+links:
+  cites: ["RFC-002", "OBS-0001", "OBS-0002"]
+---
 
-- **Statut** : 🟢 Ouvert (calibration & gates)
-- **Date** : 2025-01-03
-- **Auteur** : Équipe Relinium Genesis
-- **Version** : 1.0
-- **Référence** : RFC-002, OBS-0001, OBS-0002
+# OBS-0003 — Calibration & SLOs de référence
 
 ---
 

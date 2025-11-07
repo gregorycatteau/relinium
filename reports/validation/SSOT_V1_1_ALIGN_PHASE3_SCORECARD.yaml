@@ -1,0 +1,19 @@
+scorecard:
+  name: "SSOT v1.1 – S9-ALIGN Phase 3 Scorecard"
+  computed_at: "2025-11-07T00:00:00Z"
+  evidence:
+    - "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_PHASE3_VALIDATION.md"
+    - "docs/_registry/registry_v1.1_v5.yaml"
+    - "scripts/ssot_hash_check.py"
+    - "scripts/ssot_registry_check.py"
+    - "scripts/ssot_schema_check.py"
+
+scores:
+  coverage_hash: 1.00
+  registry: 1.00
+  schema: 1.00
+  ci_gate: 1.00
+
+verdict:
+  strict_global_exit_code: 0
+  message: "Triple-check strict global = 0, registre v5 scellé et chaîné à v4, succession v1.1 certifiée."

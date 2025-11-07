@@ -1,9 +1,17 @@
-# RFC-002 — Matrice d'exploration et de scoring : backend & composants (agnostique)
+---
+id: "RFC-002"
+type: "RFC"
+status: "En discussion"
+date: "2025-01-05"
+author: "Greg Catteau"
+version: "1.0.0"
+tags: ["architecture", "backend", "scoring", "evaluation", "methodology"]
+links:
+  cites: ["ADR-0001", "RFC-001"]
+  cited_by: ["OBS-0001", "OBS-0002", "OBS-0003"]
+---
 
-- **Statut** : 🟡 En discussion
-- **Date** : 2025-01-03
-- **Auteur** : Équipe Relinium Genesis
-- **Version** : 1.0
+# RFC-002 — Matrice d'exploration et de scoring : backend & composants (agnostique)
 
 ---
 
