@@ -2,7 +2,7 @@
 VALIDATION LOG - FRONTMATTER RELINIUM
 ================================================================================
 
-Date d'exécution: 2025-11-05T20:47:20.815196
+Date d'exécution: 2025-11-08T08:56:03.859143
 Schéma utilisé  : docs/01-genesis/document_schema_v1.json
 Répertoire scanné: docs
 
@@ -15,29 +15,69 @@ RÉSULTATS PAR FICHIER
 
 [VALIDE] docs/01-genesis/GENESIS_SUMMARY.md
 
+[INVALIDE] docs/03-architecture/decisions/ADR-0001-repo-driven-by-docs-first-v2.md
+  Erreur:   • id: 'ADR-0001-v2' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • status: 'Accepté' is valid under each of {'enum': ['Ébauche', 'En discussion', 'Mature', 'Accepté', 'Abandonné'], 'description': 'Statuts valides pour les RFC'}, {'enum': ['Proposition', 'En discussion', 'Accepté', 'Rejeté', 'Supersédé'], 'description': 'Statuts valides pour les ADR'}
+  • links.supersedes: 'ADR-0001' is not of type 'array'
+
 [INVALIDE] docs/03-architecture/decisions/ADR-0001-repo-driven-by-docs-first.md
   Erreur:   • status: 'Accepté' is valid under each of {'enum': ['Ébauche', 'En discussion', 'Mature', 'Accepté', 'Abandonné'], 'description': 'Statuts valides pour les RFC'}, {'enum': ['Proposition', 'En discussion', 'Accepté', 'Rejeté', 'Supersédé'], 'description': 'Statuts valides pour les ADR'}
   • links.cited_by.0: 'RFC-001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
   • links.cited_by.1: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
 
+[INVALIDE] docs/03-architecture/observations/OBS-0001-backend-composants-inventaire-v2.md
+  Erreur:   • id: 'OBS-0001-v2' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.0: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.supersedes: 'OBS-0001' is not of type 'array'
+
 [INVALIDE] docs/03-architecture/observations/OBS-0001-backend-composants-inventaire.md
   Erreur:   • links.cites.0: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/03-architecture/observations/OBS-0002-tests-initiaux-v2.md
+  Erreur:   • id: 'OBS-0002-v2' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.0: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.supersedes: 'OBS-0002' is not of type 'array'
 
 [INVALIDE] docs/03-architecture/observations/OBS-0002-tests-initiaux.md
   Erreur:   • links.cites.0: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
 
+[INVALIDE] docs/03-architecture/observations/OBS-0003-calibration-et-SLOs-v2.md
+  Erreur:   • id: 'OBS-0003-v2' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.0: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.supersedes: 'OBS-0003' is not of type 'array'
+
 [INVALIDE] docs/03-architecture/observations/OBS-0003-calibration-et-SLOs.md
   Erreur:   • links.cites.0: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/03-architecture/rfcs/RFC-001-choix-stack-initiale-v2.md
+  Erreur:   • id: 'RFC-0001-v2' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • status: 'En discussion' is valid under each of {'enum': ['Ébauche', 'En discussion', 'Mature', 'Accepté', 'Abandonné'], 'description': 'Statuts valides pour les RFC'}, {'enum': ['Proposition', 'En discussion', 'Accepté', 'Rejeté', 'Supersédé'], 'description': 'Statuts valides pour les ADR'}
+  • links.supersedes: 'RFC-0001' is not of type 'array'
 
 [INVALIDE] docs/03-architecture/rfcs/RFC-001-choix-stack-initiale.md
   Erreur:   • id: 'RFC-001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
   • status: 'En discussion' is valid under each of {'enum': ['Ébauche', 'En discussion', 'Mature', 'Accepté', 'Abandonné'], 'description': 'Statuts valides pour les RFC'}, {'enum': ['Proposition', 'En discussion', 'Accepté', 'Rejeté', 'Supersédé'], 'description': 'Statuts valides pour les ADR'}
   • id: 'RFC-001' does not match '^RFC-\\d{4}$'
 
+[INVALIDE] docs/03-architecture/rfcs/RFC-002-backend-et-composants-scoring-matrix-v2.md
+  Erreur:   • id: 'RFC-0002-v2' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • status: 'En discussion' is valid under each of {'enum': ['Ébauche', 'En discussion', 'Mature', 'Accepté', 'Abandonné'], 'description': 'Statuts valides pour les RFC'}, {'enum': ['Proposition', 'En discussion', 'Accepté', 'Rejeté', 'Supersédé'], 'description': 'Statuts valides pour les ADR'}
+  • links.supersedes: 'RFC-0002' is not of type 'array'
+
 [INVALIDE] docs/03-architecture/rfcs/RFC-002-backend-et-composants-scoring-matrix.md
   Erreur:   • id: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
   • status: 'En discussion' is valid under each of {'enum': ['Ébauche', 'En discussion', 'Mature', 'Accepté', 'Abandonné'], 'description': 'Statuts valides pour les RFC'}, {'enum': ['Proposition', 'En discussion', 'Accepté', 'Rejeté', 'Supersédé'], 'description': 'Statuts valides pour les ADR'}
   • links.cites.1: 'RFC-001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/03-architecture/rfcs/RFC-004-alignment-protocol-v2.md
+  Erreur:   • id: 'RFC-0004-v2' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • status: 'En discussion' is valid under each of {'enum': ['Ébauche', 'En discussion', 'Mature', 'Accepté', 'Abandonné'], 'description': 'Statuts valides pour les RFC'}, {'enum': ['Proposition', 'En discussion', 'Accepté', 'Rejeté', 'Supersédé'], 'description': 'Statuts valides pour les ADR'}
+  • links.cites.0: 'OBS-CONFORMITY-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/03-architecture/rfcs/RFC-004-alignment-protocol.md
+  Erreur:   • status: 'En discussion' is valid under each of {'enum': ['Ébauche', 'En discussion', 'Mature', 'Accepté', 'Abandonné'], 'description': 'Statuts valides pour les RFC'}, {'enum': ['Proposition', 'En discussion', 'Accepté', 'Rejeté', 'Supersédé'], 'description': 'Statuts valides pour les ADR'}
+  • links.cites.0: 'OBS-CONFORMITY-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.1: 'OBS-SCHEMA-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
 
 [INVALIDE] docs/06-ops/email-normalization-report.md
   Erreur: Pas de frontmatter YAML trouvé
@@ -57,17 +97,13 @@ RÉSULTATS PAR FICHIER
   • links.cites.0: 'OBS-GOVERNANCE-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
   • links.cites.3: 'RFC-002' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
 
-[INVALIDE] docs/observatory/OBS-SSOT-EXPLORATION.md
-  Erreur: Pas de frontmatter YAML trouvé
+[VALIDE] docs/observatory/OBS-SSOT-EXPLORATION.md
 
-[INVALIDE] docs/observatory/SSOT_GOVERNANCE_FOUNDATIONS.md
-  Erreur: Pas de frontmatter YAML trouvé
+[VALIDE] docs/observatory/SSOT_GOVERNANCE_FOUNDATIONS.md
 
-[INVALIDE] docs/observatory/SSOT_METADATA_EXPLORATION.md
-  Erreur: Pas de frontmatter YAML trouvé
+[VALIDE] docs/observatory/SSOT_METADATA_EXPLORATION.md
 
-[INVALIDE] docs/observatory/SSOT_SCENARIOS_EXPLORATION.md
-  Erreur: Pas de frontmatter YAML trouvé
+[VALIDE] docs/observatory/SSOT_SCENARIOS_EXPLORATION.md
 
 [INVALIDE] docs/sprints/SSOT-v1.0/00-context/CONTEXT_SUMMARY.md
   Erreur: Pas de frontmatter YAML trouvé
@@ -135,10 +171,135 @@ RÉSULTATS PAR FICHIER
 [INVALIDE] docs/sprints/SSOT-v1.0/prompts_next/prompt_next_s1_execution.md
   Erreur: Pas de frontmatter YAML trouvé
 
+[INVALIDE] docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_ALIGN_PHASE2_PLAN.md
+  Erreur:   • root: 'date' is a required property
+  • id: 'PLAN-ALIGN-PHASE2-SSOT-V1_1-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • type: 'sprint_plan' is not one of ['ADR', 'RFC', 'OBS', 'POC', 'SPRINT_DOC']
+
+[INVALIDE] docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_ALIGN_PLAN.md
+  Erreur:   • root: 'date' is a required property
+  • id: 'PLAN-ALIGN-SSOT-V1_1-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • type: 'sprint_plan' is not one of ['ADR', 'RFC', 'OBS', 'POC', 'SPRINT_DOC']
+
+[INVALIDE] docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PILOT_PLAN-v2.md
+  Erreur:   • id: 'SPRINT-SSOT-v1_1-PILOT' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • status: 'Active' is not valid under any of the given schemas
+  • links.supersedes.0: 'docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PILOT_PLAN.md' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PILOT_PLAN-v3.md
+  Erreur:   • id: 'SPRINT_DOC-0101-v3' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.supersedes: 'SPRINT_DOC-0101-v2' is not of type 'array'
+  • root: Additional properties are not allowed ('decision_type', 'id_root', 'pattern', 'previous_hash', 'scope', 'self_hash' were unexpected)
+
+[INVALIDE] docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PILOT_PLAN.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PROOF_PLAN.md
+  Erreur:   • type: 'sprint_plan' is not one of ['ADR', 'RFC', 'OBS', 'POC', 'SPRINT_DOC']
+  • links.cites.0: 'reports/analysis/SSOT_V1_1_100PCT_EXPLORATION.md' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.1: 'reports/analysis/SSOT_V1_1_100PCT_PLAN.yaml' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_STRICT_PLAN-v2.md
+  Erreur:   • links.supersedes.0: 'docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_STRICT_PLAN.md' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • root: Additional properties are not allowed ('id_root', 'pattern', 'previous_hash', 'scope', 'self_hash' were unexpected)
+
+[INVALIDE] docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_STRICT_PLAN-v3.md
+  Erreur:   • id: 'SPRINT_DOC-0100-v3' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.supersedes: 'docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_STRICT_PLAN-v2.md' is not of type 'array'
+  • root: Additional properties are not allowed ('id_root', 'pattern', 'previous_hash', 'scope', 'self_hash' were unexpected)
+
+[INVALIDE] docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_STRICT_PLAN.md
+  Erreur:   • root: Additional properties are not allowed ('id_root', 'pattern', 'scope', 'self_hash' were unexpected)
+
+[INVALIDE] docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_TRUTHKEEPER_PLAN.md
+  Erreur:   • status: 'Active' is not valid under any of the given schemas
+  • date: datetime.date(2025, 11, 7) is not of type 'string'
+  • links: Additional properties are not allowed ('governs' was unexpected)
+
+[INVALIDE] docs/sprints/SSOT-v1.1/02-evidence/MIGRATION_DRY_RUN_REPORT.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.1/02-evidence/MIGRATION_EXECUTION_REPORT.md
+  Erreur: Pas de frontmatter YAML trouvé
+
+[INVALIDE] docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_ALIGN_EVIDENCE.md
+  Erreur:   • root: 'date' is a required property
+  • id: 'EVID-ALIGN-SSOT-V1_1-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • type: 'evidence' is not one of ['ADR', 'RFC', 'OBS', 'POC', 'SPRINT_DOC']
+
+[INVALIDE] docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_ALIGN_PHASE2_EVIDENCE.md
+  Erreur:   • root: 'date' is a required property
+  • id: 'EVIDENCE-ALIGN-PHASE2-SSOT-V1_1-0001' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • type: 'evidence' is not one of ['ADR', 'RFC', 'OBS', 'POC', 'SPRINT_DOC']
+
+[INVALIDE] docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_PROOF_EVIDENCE-v2.md
+  Erreur:   • id: 'SPRINT_DOC-0008-EVIDENCE' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.0: 'docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PROOF_PLAN.md' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.1: '.github/workflows/ssot-proof.yml' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_PROOF_EVIDENCE-v3.md
+  Erreur:   • id: 'SPRINT_DOC-0008-v3' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.supersedes: 'docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_PROOF_EVIDENCE-v2.md' is not of type 'array'
+  • root: Additional properties are not allowed ('id_root', 'pattern', 'previous_hash', 'scope', 'self_hash' were unexpected)
+
+[INVALIDE] docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_PROOF_EVIDENCE.md
+  Erreur:   • id: 'SPRINT_DOC-0008-EVIDENCE' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.0: 'docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PROOF_PLAN.md' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.1: '.github/workflows/ssot-proof.yml' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_SNAPSHOT_20251106_0846.md
+  Erreur:   • root: 'date' is a required property
+  • id: 'SSOT-V1.1-SNAPSHOT-20251106-0846' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • type: 'snapshot' is not one of ['ADR', 'RFC', 'OBS', 'POC', 'SPRINT_DOC']
+
+[INVALIDE] docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_STRICT_EVIDENCE.md
+  Erreur:   • root: Additional properties are not allowed ('id_root', 'pattern', 'scope', 'self_hash' were unexpected)
+
+[INVALIDE] docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_TRUTHKEEPER_EVIDENCE.md
+  Erreur:   • id: 'SPRINT_DOC-0060-v2' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • status: 'Active' is not valid under any of the given schemas
+  • date: datetime.date(2025, 11, 7) is not of type 'string'
+
+[INVALIDE] docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_PHASE2_VALIDATION.md
+  Erreur:   • root: 'status' is a required property
+  • root: 'date' is a required property
+  • id: 'SSOT_V1_1_ALIGN_PHASE2_VALIDATION' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_PHASE3_VALIDATION.md
+  Erreur:   • links.cites.0: 'docs/_registry/registry_v1.1_v4.yaml' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.1: 'docs/_registry/registry_v1.1_v5.yaml' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.2: 'scripts/ssot_hash_check.py' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_VALIDATION_PHASE1-v2.md
+  Erreur:   • id: 'SPRINT_DOC-0010-v2' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • status: 'Active' is not valid under any of the given schemas
+  • links.supersedes.0: 'docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_VALIDATION_PHASE1.md' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_VALIDATION_PHASE1.md
+  Erreur:   • id: 'ALIGN-VALIDATION-SSOT-V1_1-PHASE1' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • status: 'Active' is not valid under any of the given schemas
+  • links.cites.0: 'docs/_registry/registry_v1.1_v2.yaml' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_PROOF_VALIDATION.md
+  Erreur:   • id: 'SPRINT_DOC-0008-VALIDATION' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.0: 'docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PROOF_PLAN.md' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • links.cites.1: 'docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_PROOF_EVIDENCE.md' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+
+[INVALIDE] docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_STRICT_VALIDATION.md
+  Erreur:   • root: Additional properties are not allowed ('id_root', 'pattern', 'scope', 'self_hash' were unexpected)
+
+[INVALIDE] docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_TRUTHKEEPER_VALIDATION.md
+  Erreur:   • id: 'SPRINT_DOC-0060-v3' does not match '^(ADR|RFC|OBS|POC|SPRINT_DOC)-\\d{4}$'
+  • status: 'Active' is not valid under any of the given schemas
+  • date: datetime.date(2025, 11, 7) is not of type 'string'
+
+[INVALIDE] docs/sprints/SSOT-v1.1/README.md
+  Erreur: Pas de frontmatter YAML trouvé
+
 --------------------------------------------------------------------------------
 STATISTIQUES
 --------------------------------------------------------------------------------
-Total de fichiers analysés: 38
-Fichiers valides         : 1
-Fichiers invalides       : 37
-Taux de conformité       : 2.6%
+Total de fichiers analysés: 74
+Fichiers valides         : 5
+Fichiers invalides       : 69
+Taux de conformité       : 6.8%
