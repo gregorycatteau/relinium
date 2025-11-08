@@ -1,3 +1,15 @@
+---
+id: "OBS-0103"
+type: "OBS"
+status: "Synthétisé"
+date: "2025-11-08"
+author: "Équipe Relinium Genesis"
+version: "1.0"
+tags: ["ssot", "scénarios", "architecture", "registry"]
+links:
+  cites: ["OBS-0100", "OBS-0101", "OBS-0102", "ADR-0001"]
+---
+
 # SSOT_SCENARIOS_EXPLORATION — Scénarios d'organisation documentaire
 
 - **Statut** : 🔍 Exploration comparative

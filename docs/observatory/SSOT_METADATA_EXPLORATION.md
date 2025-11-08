@@ -1,3 +1,15 @@
+---
+id: "OBS-0101"
+type: "OBS"
+status: "Synthétisé"
+date: "2025-11-08"
+author: "Équipe Relinium Genesis"
+version: "1.0"
+tags: ["ssot", "metadata", "registry", "validation"]
+links:
+  cites: ["OBS-0100", "ADR-0001", "OBS-0001", "OBS-0002", "OBS-0003"]
+---
+
 # SSOT_METADATA_EXPLORATION — Étude comparative des approches de métastructuration
 
 - **Statut** : 🔬 Exploration analytique

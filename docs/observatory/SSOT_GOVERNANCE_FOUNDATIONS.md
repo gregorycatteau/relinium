@@ -1,3 +1,15 @@
+---
+id: "OBS-0102"
+type: "OBS"
+status: "Synthétisé"
+date: "2025-11-08"
+author: "Équipe Relinium Genesis"
+version: "1.0"
+tags: ["ssot", "governance", "policy", "signatures"]
+links:
+  cites: ["OBS-0100", "OBS-0101", "ADR-0001"]
+---
+
 # SSOT_GOVERNANCE_FOUNDATIONS — Fondations de la gouvernance documentaire
 
 - **Statut** : 🔍 Modélisation conceptuelle
