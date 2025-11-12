@@ -2,7 +2,7 @@
 VALIDATION LOG - FRONTMATTER RELINIUM
 ================================================================================
 
-Date d'exécution: 2025-11-12T11:51:45.842600
+Date d'exécution: 2025-11-12T12:20:45.918641
 Schéma utilisé  : docs/01-genesis/document_schema_v1.1.json
 Répertoire scanné: docs
 
