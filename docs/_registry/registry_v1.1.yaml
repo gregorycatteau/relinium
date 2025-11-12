@@ -958,6 +958,21 @@ lineages:
     file_path: docs/sprints/SSOT-v1.0/prompts_next/prompt_next_s1_execution.md
     hash: sha256:138dfbbc434d3254c3c8e6b28704cebfdfd97b61d8d5b63e4da7d6b82e86c468
     author: Relinium Genesis Team
+- id_root: SPRINT-0001
+  title: SPRINT-0001 — Inventaire détaillé des candidats
+  scope: technical
+  pattern: sprint
+  versions:
+  - id: SPRINT-0001
+    type: SPRINT
+    status: "En cours"
+    version: "1.0.0"
+    date: '2025-11-12'
+    file_path: docs/sprints/phase1/SPRINT-0001-inventaire-detailled.md
+    tags: ["sprint", "inventaire", "stack", "phase1"]
+    hash: sha256:e4aff72109eeada09808324c956c258e6e3b6e0cf62e0b9c447feb2d368f5c6a
+    self_hash: sha256:e4aff72109eeada09808324c956c258e6e3b6e0cf62e0b9c447feb2d368f5c6a
+    author: Agent Codex
 pending_migration: []
 previous_hash: sha256:024bb1b690e74f88218bfbb231fbc2122e83fa90e1ac640fc84f865097aa654
 self_hash: sha256:c5dd4e46e7616cbba6d6e8f6194190ad901eba040b90a74241d067d216d472fd

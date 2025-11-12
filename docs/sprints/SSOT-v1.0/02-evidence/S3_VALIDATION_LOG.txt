@@ -2,7 +2,7 @@
 VALIDATION LOG - FRONTMATTER RELINIUM
 ================================================================================
 
-Date d'exécution: 2025-11-11T09:46:07.934901
+Date d'exécution: 2025-11-12T11:51:45.842600
 Schéma utilisé  : docs/01-genesis/document_schema_v1.1.json
 Répertoire scanné: docs
 
@@ -172,10 +172,12 @@ RÉSULTATS PAR FICHIER
 
 [VALIDE] docs/sprints/SSOT_Consolidation/README.md
 
+[VALIDE] docs/sprints/phase1/SPRINT-0001-inventaire-detailled.md
+
 --------------------------------------------------------------------------------
 STATISTIQUES
 --------------------------------------------------------------------------------
-Total de fichiers analysés: 81
-Fichiers valides         : 81
+Total de fichiers analysés: 82
+Fichiers valides         : 82
 Fichiers invalides       : 0
 Taux de conformité       : 100.0%
