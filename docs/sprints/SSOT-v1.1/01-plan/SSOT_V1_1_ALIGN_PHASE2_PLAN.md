@@ -1,41 +1,27 @@
 ---
-id: "PLAN-ALIGN-PHASE2-SSOT-V1_1-0001"
-id_root: "PLAN-ALIGN-PHASE2-SSOT-V1_1-0001"
-version: "1.0.0"
-type: "sprint_plan"
-pattern: "plan"
+id: "SPRINT_DOC-0052"
+id_root: "SPRINT_DOC-0052"
+type: "SPRINT_DOC"
+status: "Planifié"
+date: "2025-11-07"
+author: "Cline"
+version: "1.0"
 scope: "organizational"
-decision_type: "plan"
-status: "Active"
-created_at: "2025-11-07T10:35:00+01:00"
-authors:
-  - name: "Cline"
-    role: "AI Assistant"
-roles:
-  author:
-    - name: "Cline"
-      email: "cline@local"
-workstream: "SSOT"
-phase: "alignment"
-priority: "critical"
+pattern: "rule"
+title: "SSOT v1.1 — Align Phase 2 Plan"
 tags:
   - "ssot"
   - "v1.1"
   - "alignment"
-  - "succession"
-  - "rfc-004"
-  - "s9-align"
 links:
-  relates_to:
-    - "VAL-STRICT-SSOT-V1_1-0001"
-    - "VAL-PROOF-SSOT-V1_1-0001"
-    - "VAL-ALIGN-PHASE1-SSOT-V1_1-0001"
-    - "EXPLORE-SSOT-V1_1-100PCT-0001"
-  evidence:
-    - "docs/_registry/registry_v1.1_v3.yaml"
-    - "reports/analysis/SSOT_V1_1_100PCT_PLAN.yaml"
-    - "reports/validation/SSOT_V1_1_ALIGN_PHASE1_CODEX.md"
-self_hash: sha256:7f1aad02cd0c310703dde8d2f525647a08e1555819408b04e5fcf7c7a55caba9
+  implements:
+    - "SPRINT_DOC-0040"
+  cites:
+    - "SPRINT_DOC-0042"
+    - "SPRINT_DOC-0043"
+    - "SPRINT_DOC-0050"
+    - "SPRINT_DOC-0053"
+self_hash: sha256:dcbad26dbbc8ac7dfb9525324e2696ff85b81c86c1787dd9bff5c74ea8ed436f
 ---
 
 # Sprint S9-ALIGN — Phase 2 : Exploration & planification du registre complet (read-only)

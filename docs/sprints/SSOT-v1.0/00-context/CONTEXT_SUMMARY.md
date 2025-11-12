@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1003"
+id_root: "SPRINT_DOC-1003"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:a094265c656bb2576c83739f1cb9bda63483a29aac8cfdb98dcef3d467138d17
+---
+
 # CONTEXT SUMMARY — Contexte du Sprint SSOT v1.0
 
 - **id** : `CONTEXT-SSOT-V1.0`

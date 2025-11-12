@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1032"
+id_root: "SPRINT_DOC-1032"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "rule"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:231be9265ed83b92167a162afdb9bd7a42cf742827488a04928eab8d666eb781
+---
+
 # SSOT v1.0 - Certificat Officiel de Conformité
 
 > **Statut** : ✅ CERTIFIÉ  

@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1022"
+id_root: "SPRINT_DOC-1022"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "experiment"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:83c2eec72f7f6e7741b0550df7d850591f9385039117cc31f19fc3a1865f811b
+---
+
 # S2 — Rapport de Validation : Frontmatter Injection (SSOT v1.0)
 
 **Sprint** : SSOT v1.0  

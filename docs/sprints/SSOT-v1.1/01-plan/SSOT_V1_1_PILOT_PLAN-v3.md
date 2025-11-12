@@ -1,20 +1,26 @@
 ---
-id: "SPRINT_DOC-0101-v3"
+id: "SPRINT_DOC-0008-v3"
+id_root: "SPRINT_DOC-0008"
 type: "SPRINT_DOC"
 status: "En cours"
 date: "2025-11-07"
 author: "Cline"
 version: "3.0"
-id_root: "SPRINT_DOC-0101"
 scope: "organizational"
-pattern: "plan"
-decision_type: "execution_plan"
+pattern: "rule"
+title: "SSOT v1.1 — Pilot Sprint Plan (v3)"
+decision_type: "experimental"
+tags:
+  - "ssot"
+  - "v1.1"
+  - "pilot"
 links:
-  supersedes: "SPRINT_DOC-0101-v2"
-
-# Succession certifiée (RFC-004)
-previous_hash: "sha256:201066b3e8eba73c93538f59bc692bcf337b9b0e750b63086a2248da188cba29"
-self_hash: sha256:09584cf2ab93aa10bc0eb2bf26cd28dc26f6007e6fb27d991ea421a2ab6d2533
+  supersedes: "SPRINT_DOC-0008-v2"
+  cites:
+    - "SPRINT_DOC-0003-v3"
+    - "SPRINT_DOC-0004-v3"
+previous_hash: "sha256:c4512cb36675f6717947e1b881d584ada8e8d993d926a442be0affbdf820e5c4"
+self_hash: sha256:1fe2707c405375947fbd6ad0d7407aa0349c15e59f2506288a4e819bacbd70a9
 ---
 
 # Plan de Sprint Pilote SSOT v1.1 (Successeur v3)

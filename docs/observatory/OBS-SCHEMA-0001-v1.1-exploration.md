@@ -1,15 +1,28 @@
 ---
-id: "OBS-SCHEMA-0001"
-type: "OBS"
-status: "Ouvert"
-date: "2025-11-05"
-author: "Greg Catteau"
-version: "1.0.0"
-tags: ["schema", "evolution", "governance", "v1.1"]
+id: OBS-0112
+type: OBS
+status: Ouvert
+date: '2025-11-05'
+author: Greg Catteau
+version: 1.0.0
+tags:
+- schema
+- evolution
+- governance
+- v1.1
 links:
-  cites: ["OBS-GOVERNANCE-0001", "SPRINT_DOC-0001", "ADR-0001", "RFC-002"]
+  cites:
+  - OBS-0111
+  - SPRINT_DOC-0001
+  - ADR-0001
+  - RFC-0002
 intent:
-  primary_question: "Comment faire évoluer le schéma documentaire Relinium pour intégrer les patterns de gouvernance identifiés dans v1.0 ?"
+  primary_question: Comment faire évoluer le schéma documentaire Relinium pour intégrer
+    les patterns de gouvernance identifiés dans v1.0 ?
+id_root: OBS-0112
+scope: organizational
+pattern: observation
+self_hash: sha256:257362db64aaafb1a58216452c52e5e8d49cb8f248d64666be5b2fce98da039b
 ---
 
 # OBS-SCHEMA-0001 – Exploration de l'Évolution du Schéma Documentaire vers v1.1

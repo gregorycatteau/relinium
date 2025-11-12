@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1030"
+id_root: "SPRINT_DOC-1030"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "rule"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:6224da56905fa886e467ee68412f60ad88a70dbc7c6f7c182fab30013c990992
+---
+
 # Validation Directory — Dossier de Validation et Certification
 
 Ce répertoire contiendra la **certification finale** du sprint SSOT v1.0.

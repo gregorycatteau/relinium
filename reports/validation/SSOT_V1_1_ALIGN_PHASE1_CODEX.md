@@ -21,14 +21,14 @@ links:
     - "SPRINT-SSOT-V1_1-S8-STRICT"
     - "EXPLORE-SSOT-V1_1-100PCT-0001"
   evidence:
-    - "docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_ALIGN_PLAN.md"
-    - "docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_ALIGN_EVIDENCE.md"
-    - "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_VALIDATION_PHASE1.md"
+    - "SPRINT_DOC-0040"
+    - "SPRINT_DOC-0044"
+    - "SPRINT_DOC-0010"
     - "docs/_registry/registry_v1.1.yaml"
     - "docs/_registry/registry_v1.1_v2.yaml"
     - "scripts/ssot_hash_check.py"
     - "scripts/ssot_registry_check.py"
-self_hash: sha256:482133e0b95b2015c2d58549346e48ffa09ea33fd3bc9c230bc39ce2da78a7fe
+self_hash: sha256:a86ef0133b5672c6d69a262b09688fbbc20ae39247a8702e83a0a0864c44845b
 ---
 
 ## Contexte & périmètre

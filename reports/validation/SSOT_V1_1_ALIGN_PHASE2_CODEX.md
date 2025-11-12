@@ -23,10 +23,10 @@ links:
   evidence:
     - "docs/_registry/registry_v1.1_v4.yaml"
     - "docs/_registry/registry_v1.1_v3.yaml"
-    - "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_PHASE2_VALIDATION.md"
+    - "SPRINT_DOC-0054"
     - "reports/analysis/SSOT_V1_1_100PCT_PLAN.yaml"
     - "reports/validation/SSOT_V1_1_VALIDATION_CODEX.md"
-self_hash: sha256:d53aa2c5935eff2e83d5789078afc7db1f23fc150606f9fbaac8f2a104389e33
+self_hash: sha256:d4fb2df16891c7e1722c8ce7b97e08d858f613da1bc2b37edb82ac578745ea87
 ---
 
 ## 1️⃣ Contexte & méthode

@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1041"
+id_root: "SPRINT_DOC-1041"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:3ce9a92ed053d3439370a52d00359f5227519af5ce195c56f86b823294c3d01b
+---
+
 # Prompt Next : Phase 2 - Hybride Frontmatter + Registry
 
 Ce prompt sera utilisé après certification du Sprint v1.0 pour déployer la Phase 2.

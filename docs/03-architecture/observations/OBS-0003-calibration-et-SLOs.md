@@ -7,7 +7,8 @@ author: "Greg Catteau"
 version: "1.0.0"
 tags: ["calibration", "slo", "performance", "gates", "metrics"]
 links:
-  cites: ["RFC-002", "OBS-0001", "OBS-0002"]
+  cites: ["RFC-0002", "OBS-0001", "OBS-0002"]
+self_hash: sha256:9f623307683b4011c529765e45eb01a17e71e694a072d781334841ad044a3e02
 ---
 
 # OBS-0003 — Calibration & SLOs de référence

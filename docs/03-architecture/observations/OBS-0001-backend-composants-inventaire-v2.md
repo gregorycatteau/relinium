@@ -13,9 +13,9 @@ pattern: "observation"
 tags: ["backend", "composants", "inventaire", "exploration", "ssot-v1.1"]
 links:
   supersedes: "OBS-0001"
-  cites: ["RFC-002"]
+  cites: ["RFC-0002"]
   cited_by: ["OBS-0002"]
-self_hash: sha256:17a1df718311722b3405fb075c8811ecec921076f8973bfaca4edb6dfdd6f5ea
+self_hash: sha256:cad9481068a47b94ea073b93252fec999ba43fe346a9242ac5631d6bc6521dad
 ---
 
 # OBS-0001 — Inventaire initial des backends et composants

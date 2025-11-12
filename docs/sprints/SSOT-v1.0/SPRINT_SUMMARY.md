@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1002"
+id_root: "SPRINT_DOC-1002"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:0629d7042a51c3a29d778d323c5adf05bdab7eb7dfe4fc2f353c0608065e1954
+---
+
 # SPRINT SUMMARY — Récapitulatif du Plan SSOT v1.0
 
 - **id** : `SPRINT-SUMMARY-V1.0`

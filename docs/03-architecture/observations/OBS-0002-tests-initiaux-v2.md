@@ -13,9 +13,9 @@ pattern: "observation"
 tags: ["tests", "poc", "protocole", "evaluation", "ssot-v1.1"]
 links:
   supersedes: "OBS-0002"
-  cites: ["RFC-002", "OBS-0001"]
+  cites: ["RFC-0002", "OBS-0001"]
   cited_by: ["OBS-0003"]
-self_hash: sha256:33e90f887e5d7d1ffa4f9273024922ace537bf23e15da5b23ba6ef1ec7a72c43
+self_hash: sha256:0f51246fc2f4046c8eef303d47ad0b3179f9a0ee36fe641407746461204485a9
 ---
 
 # OBS-0002 — Tests initiaux & POCs minimaux (agnostiques)

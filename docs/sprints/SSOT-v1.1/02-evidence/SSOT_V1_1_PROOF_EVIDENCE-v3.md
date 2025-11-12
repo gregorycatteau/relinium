@@ -1,19 +1,19 @@
 ---
-id: "SPRINT_DOC-0008-v3"
+id: "SPRINT_DOC-0002-v3"
 type: "SPRINT_DOC"
-status: "En cours"
+status: "Terminé"
 date: "2025-11-07"
 author: "Équipe Relinium Genesis"
 version: "3.0"
-id_root: "SPRINT_DOC-0008"
+id_root: "SPRINT_DOC-0002"
 scope: "organizational"
-pattern: "observation"
+pattern: "experiment"
 links:
-  supersedes: "docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_PROOF_EVIDENCE-v2.md"
+  supersedes: "SPRINT_DOC-0002-v2"
 
 # Succession certifiée (RFC-004)
 previous_hash: "sha256:56570c6f8f0e7ec096a02e8b92109fbf3539641a96f3c295fb42e70849f4bb54"
-self_hash: sha256:8c2ede076c53efb9000955ff79e33d6a07fb0126d4fa6c53e39f6c8ac0429bdb
+self_hash: sha256:878fb44eb906946fae76ce9a575c83386295473d3327335be3e1c57678283677
 ---
 
 # S8-PROOF — Rapport d’évidence (Successeur v3)

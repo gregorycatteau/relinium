@@ -1,3 +1,20 @@
+---
+id: "POC-0100"
+id_root: "POC-0100"
+type: "POC"
+status: "Complete"
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "rule"
+tags:
+  - "frontmatter"
+  - "guide"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:07cb8f07fffc42195d2b5896758d7f7c4da3945c3ef39cba0bafb99c02b56a61
+---
+
 # Guide du Frontmatter Relinium
 
 **Version** : 1.0.0  

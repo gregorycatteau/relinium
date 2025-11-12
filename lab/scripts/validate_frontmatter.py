@@ -214,7 +214,7 @@ class FrontmatterValidator:
 def main():
     """Point d'entrée principal du script."""
     # Chemins relatifs au répertoire racine du projet
-    schema_path = "docs/01-genesis/document_schema_v1.json"
+    schema_path = "docs/01-genesis/document_schema_v1.1.json"
     docs_root = "docs"
     log_output = "docs/sprints/SSOT-v1.0/02-evidence/S3_VALIDATION_LOG.txt"
     

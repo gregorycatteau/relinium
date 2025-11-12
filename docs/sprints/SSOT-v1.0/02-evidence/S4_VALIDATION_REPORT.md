@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1024"
+id_root: "SPRINT_DOC-1024"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "experiment"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:97615a03f72b31d8f15a837ed656cad9a523acd01db3bb2d03b88daca7e1a288
+---
+
 # S4 : Rapport de Validation — Registry Prototype (SSOT v1.0)
 
 **Date de génération** : 2025-11-05T16:54:12Z  

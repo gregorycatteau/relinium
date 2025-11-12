@@ -9,11 +9,11 @@ id_root: "SPRINT_DOC-0100"
 scope: "organizational"
 pattern: "rule"
 links:
-  supersedes: "docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_STRICT_PLAN-v2.md"
+  supersedes: "SPRINT_DOC-0001-v2"
 
 # Succession certifiée (RFC-004)
 previous_hash: "sha256:bd3685dd04b644ea0333f0d98546b14220b301208d2f4eb31082936d9993dc04"
-self_hash: sha256:ba9fcac31741636b8d8f679e8392024a88c309569581a2d955dabba82f97c14f
+self_hash: sha256:0aae374839c36b212980dd9cc0e828dc944483e21d6b0b9c0d630786be721d11
 ---
 
 # SSOT v1.1 — S8-STRICT Plan (Successeur v3)

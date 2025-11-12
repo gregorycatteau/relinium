@@ -1,26 +1,23 @@
 ---
-id: "SPRINT_DOC-0008"
-type: "sprint_plan"
-status: "En cours"
+id: "SPRINT_DOC-0041"
+id_root: "SPRINT_DOC-0041"
+type: "SPRINT_DOC"
+status: "Planifié"
 date: "2025-11-06"
 author: "Équipe Relinium Genesis"
 version: "1.0"
-
 scope: "organizational"
-pattern: "plan"
-
+pattern: "rule"
 links:
   cites:
-    - "reports/analysis/SSOT_V1_1_100PCT_EXPLORATION.md"
-    - "reports/analysis/SSOT_V1_1_100PCT_PLAN.yaml"
-    - "reports/analysis/SSOT_V1_1_TRUTHKEEPER_REPORT.md"
-    - "reports/analysis/SSOT_V1_1_TRUTHKEEPER_SCORECARD.yaml"
-    - "reports/validation/SSOT_V1_1_VALIDATION_CODEX.md"
-    - "reports/validation/SSOT_V1_1_SELFCRITIQUE_CLINE.md"
-    - "docs/_registry/registry_v1.1.yaml"
-    - "docs/01-genesis/document_schema_v1.1.yaml"
-
-self_hash: sha256:98544b18c5ae2675d3a94baaa6d11e112f5f00f9ccd0993a8283d7d4ebdde6b7
+    - "SPRINT_DOC-0004-v3"
+    - "SPRINT_DOC-0003-v3"
+    - "SPRINT_DOC-0005-v3"
+    - "SPRINT_DOC-0006-v3"
+    - "SPRINT_DOC-0007-v3"
+    - "SPRINT_DOC-0060-v5"
+    - "SPRINT_DOC-0001"
+self_hash: sha256:6f5ef3e44e4e15ec8f23226f6693d4c785103123274a02c2333c9ed488922cba
 ---
 
 # S8-PROOF — Plan de Sprint: Implémentation du pipeline de preuve SSOT (Phase 1)

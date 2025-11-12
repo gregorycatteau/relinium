@@ -1,26 +1,22 @@
 ---
-id: "SPRINT_DOC-0008-VALIDATION"
+id: "SPRINT_DOC-0046"
+id_root: "SPRINT_DOC-0046"
 type: "SPRINT_DOC"
-status: "En cours"
+status: "Certifié"
 date: "2025-11-06"
 author: "Équipe Relinium Genesis"
 version: "1.0"
-
 scope: "organizational"
-pattern: "observation"
-
+pattern: "rule"
 links:
   cites:
-    - "docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PROOF_PLAN.md"
-    - "docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_PROOF_EVIDENCE.md"
-    - ".github/workflows/ssot-proof.yml"
-    - "scripts/ssot_hash_check.py"
-    - "scripts/ssot_registry_check.py"
-    - "scripts/ssot_schema_check.py"
-    - "docs/_registry/registry_v1.1.yaml"
-    - "docs/01-genesis/document_schema_v1.1.yaml"
-
-self_hash: sha256:63c2833fdde98286735f930ce9583f70500ac336d1d461b691da960655474461
+    - "SPRINT_DOC-0041"
+    - "SPRINT_DOC-0002-v3"
+    - "SPRINT_DOC-0005-v3"
+    - "SPRINT_DOC-0006-v3"
+    - "SPRINT_DOC-0007-v3"
+    - "SPRINT_DOC-0060-v5"
+self_hash: sha256:fad17917a7e65c866e7851a5e8bdaa21751f7af21f6f34dd997f320fdbf358f9
 ---
 
 # S8-PROOF — Rapport de validation (auto)

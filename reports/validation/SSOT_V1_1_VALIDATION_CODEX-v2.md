@@ -21,7 +21,7 @@ roles:
 
 links:
   supersedes:
-    - "reports/validation/SSOT_V1_1_VALIDATION_CODEX.md"
+    - "SPRINT_DOC-0005"
   relates_to:
     - "ADR-0001"
     - "RFC-0001"
@@ -30,12 +30,12 @@ links:
     - "OBS-0002"
     - "OBS-0003"
   evidence:
-    - "docs/sprints/SSOT-v1.1/02-evidence/MIGRATION_EXECUTION_REPORT.md"
-    - "reports/audits/SSOT_V1_1_REGISTRY_AUDIT.md"
-    - "docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_SNAPSHOT_20251106_0846.md"
+    - "SPRINT_DOC-0043"
+    - "SPRINT_DOC-0048"
+    - "SPRINT_DOC-0050"
 
 previous_hash: "sha256:3cabcc27ab3e4563652d8c1b74e982f90cf6e1440465f38f83fb6e2938819056"
-self_hash: sha256:ee77c82bcb139cca7db6f10e7ce868354e92a39f2ab2d9439c66ba147c63a5ef
+self_hash: sha256:00dd1a6a0ae545f5a6feb5b46f2bd117beaab1677bfcecb8588cf0cb1eee0fe4
 ---
 
 ## 1️⃣ Contexte & périmètre

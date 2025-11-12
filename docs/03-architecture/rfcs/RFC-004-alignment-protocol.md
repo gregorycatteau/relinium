@@ -7,7 +7,7 @@ author: "Greg Catteau"
 version: "1.0.0"
 tags: ["alignment", "protocol", "governance", "supersede", "integrity"]
 links:
-  cites: ["OBS-CONFORMITY-0001", "OBS-SCHEMA-0001", "OBS-GOVERNANCE-0001", "SSOT_V1_CERTIFICATION"]
+  cites: ["OBS-0110", "OBS-0112", "OBS-0111", "SPRINT_DOC-1032"]
 intent:
   primary_question: "Comment assurer la mise en conformité du corpus Relinium sans modifier aucun document existant ?"
 ---

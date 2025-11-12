@@ -24,10 +24,10 @@ links:
     - "OBS-0002"
     - "OBS-0003"
   evidence:
-    - "docs/sprints/SSOT-v1.1/02-evidence/MIGRATION_EXECUTION_REPORT.md"
-    - "reports/audits/SSOT_V1_1_REGISTRY_AUDIT.md"
-    - "docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_SNAPSHOT_20251106_0846.md"
-self_hash: sha256:c0c53fd02c579dbb51afd221c5bb587fca4ea7ea01615829a702979cf1a41f66
+    - "SPRINT_DOC-0043"
+    - "SPRINT_DOC-0048"
+    - "SPRINT_DOC-0050"
+self_hash: sha256:656b65fb69a009bcc565ec897b8de3e9cd39edb547b00502f7d9342964dcc6e2
 ---
 
 ## 1️⃣ Contexte & périmètre

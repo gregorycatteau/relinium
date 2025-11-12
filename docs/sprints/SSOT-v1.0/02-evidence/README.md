@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1020"
+id_root: "SPRINT_DOC-1020"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "experiment"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:446823824f4b130311533e739dfc84305ff26ae3b7a1cb90be6eac63d41a6829
+---
+
 # Evidence Directory — Dossier de Preuves
 
 Ce répertoire contiendra les **éléments de preuve** de chaque sous-sprint du SSOT v1.0.

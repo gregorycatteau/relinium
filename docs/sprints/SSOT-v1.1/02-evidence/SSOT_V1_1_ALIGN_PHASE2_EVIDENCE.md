@@ -1,26 +1,20 @@
 ---
-id: "EVIDENCE-ALIGN-PHASE2-SSOT-V1_1-0001"
-id_root: "EVIDENCE-ALIGN-PHASE2-SSOT-V1_1-0001"
-version: "1.0.0"
-type: "evidence"
-pattern: "observation"
+id: "SPRINT_DOC-0053"
+id_root: "SPRINT_DOC-0053"
+type: "SPRINT_DOC"
+status: "Terminé"
+date: "2025-11-07"
+author: "Cline"
+version: "1.0"
 scope: "organizational"
-decision_type: "observation"
-status: "Active"
-created_at: "2025-11-07T10:40:00+01:00"
-authors:
-  - name: "Cline"
-    role: "AI Assistant"
+pattern: "experiment"
 links:
-  relates_to:
-    - "VAL-STRICT-SSOT-V1_1-0001"
-    - "VAL-PROOF-SSOT-V1_1-0001"
-    - "VAL-ALIGN-PHASE1-SSOT-V1_1-0001"
-    - "EXPLORE-SSOT-V1_1-100PCT-0001"
-  evidence:
-    - "docs/_registry/registry_v1.1_v3.yaml"
-    - "ssot_registry_check.py --strict summary: warnings=0, errors=0 (REG-COVERAGE OK)"
-self_hash: sha256:9af91eadcc0acde2ddbbfa7bf67c8dca538cc86f7182cfbe92c348af2236f292
+  implements:
+    - "SPRINT_DOC-0040"
+  cites:
+    - "SPRINT_DOC-0041"
+    - "SPRINT_DOC-0009-v3"
+self_hash: sha256:e99155cc1f502cc8a284b9374cb17f22b83ba4d69dc72503b6ef28f1bf3aa7dc
 ---
 
 # Evidence — S9-ALIGN Phase 2 (audit détaillé, read-only)

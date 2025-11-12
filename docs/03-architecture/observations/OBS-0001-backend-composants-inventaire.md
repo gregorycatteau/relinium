@@ -7,8 +7,9 @@ author: "Greg Catteau"
 version: "1.0.0"
 tags: ["backend", "composants", "inventaire", "exploration"]
 links:
-  cites: ["RFC-002"]
+  cites: ["RFC-0002"]
   cited_by: ["OBS-0002"]
+self_hash: sha256:be6f048c723de9bf303f7015aba1fd2fc47ca8cbbee58be4661e4e0924490ace
 ---
 
 # OBS-0001 — Inventaire initial des backends et composants

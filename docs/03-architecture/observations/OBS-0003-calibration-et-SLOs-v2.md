@@ -13,8 +13,8 @@ pattern: "observation"
 tags: ["calibration", "slo", "performance", "gates", "metrics", "ssot-v1.1"]
 links:
   supersedes: "OBS-0003"
-  cites: ["RFC-002", "OBS-0001", "OBS-0002"]
-self_hash: sha256:bb2716813cff83d7a0679b03162a922555d454b6be901f3e0814717b50af8441
+  cites: ["RFC-0002", "OBS-0001", "OBS-0002"]
+self_hash: sha256:0a9c8df1c2f4c2d5cb25d7321ade27325246323287acc2162e072e8378100a9f
 ---
 
 # OBS-0003 — Calibration & SLOs de référence

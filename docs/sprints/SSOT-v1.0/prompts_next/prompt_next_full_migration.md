@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1042"
+id_root: "SPRINT_DOC-1042"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:aa24fce2e0165abf7c829bf36357520bcede4c81b77bb73417c845bbc27613bb
+---
+
 # Prompt Next : Migration Complète du Corpus
 
 Ce prompt sera utilisé pour migrer l'ensemble du corpus documentaire après validation de la Phase 2.

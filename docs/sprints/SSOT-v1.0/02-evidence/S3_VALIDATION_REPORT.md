@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1023"
+id_root: "SPRINT_DOC-1023"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "experiment"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:17e8c88d3bcc5f35f8cc699729e10a5a86f50b6ee7ce13730e424af1c32846cc
+---
+
 # 📋 S3 — Rapport de Validation CI (SSOT v1.0)
 
 **Sprint** : SSOT v1.0  

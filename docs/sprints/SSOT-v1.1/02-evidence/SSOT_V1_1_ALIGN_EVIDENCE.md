@@ -1,37 +1,24 @@
 ---
-id: "EVID-ALIGN-SSOT-V1_1-0001"
-id_root: "EVID-ALIGN-SSOT-V1_1-0001"
-version: "1.1"
-type: "evidence"
-pattern: "observation"
+id: "SPRINT_DOC-0044"
+id_root: "SPRINT_DOC-0044"
+type: "SPRINT_DOC"
+status: "Terminé"
+date: "2025-11-07"
+author: "Cline"
+version: "1.0"
 scope: "organizational"
-status: "Active"
-created_at: "2025-11-06T19:21:00+01:00"
-updated_at: "2025-11-06T19:21:00+01:00"
-authors:
-  - name: "Cline"
-    role: "AI Assistant"
-workstream: "SSOT"
-phase: "alignment"
-priority: "critical"
+pattern: "experiment"
 tags:
   - "ssot"
   - "v1.1"
   - "alignment"
-  - "succession"
-  - "evidence"
-  - "s9-align"
 links:
   implements:
-    - "PLAN-ALIGN-SSOT-V1_1-0001"
-  relates_to:
-    - "RFC-004"
-changelog:
-  - version: "1.0.0"
-    date: "2025-11-06T19:21:00+01:00"
-    author: "Cline"
-    changes: "Création initiale de l'evidence S9-ALIGN"
-self_hash: sha256:5e8fc9741cc436b41ffae55cfca3a99b5546fef1d350de23b7696e6562ed9029
+    - "SPRINT_DOC-0040"
+  cites:
+    - "SPRINT_DOC-0001"
+    - "SPRINT_DOC-0009-v3"
+self_hash: sha256:37e512794d26f76690747d50e2a1ee392b213879e443b3eac7235cf6f68dfbe3
 ---
 
 # Sprint S9-ALIGN — Evidence des corrections par succession

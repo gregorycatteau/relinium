@@ -1,13 +1,25 @@
 ---
-id: "OBS-0103"
-type: "OBS"
-status: "Synthétisé"
-date: "2025-11-08"
-author: "Équipe Relinium Genesis"
-version: "1.0"
-tags: ["ssot", "scénarios", "architecture", "registry"]
+id: OBS-0103
+type: OBS
+status: Synthétisé
+date: '2025-11-08'
+author: Équipe Relinium Genesis
+version: '1.0'
+tags:
+- ssot
+- scénarios
+- architecture
+- registry
 links:
-  cites: ["OBS-0100", "OBS-0101", "OBS-0102", "ADR-0001"]
+  cites:
+  - OBS-0100
+  - OBS-0101
+  - OBS-0102
+  - ADR-0001
+id_root: OBS-0103
+scope: organizational
+pattern: observation
+self_hash: sha256:53179667714ec536a0cf49acf148f487f16f9b73039d0d0af77db51cbd2ab760
 ---
 
 # SSOT_SCENARIOS_EXPLORATION — Scénarios d'organisation documentaire

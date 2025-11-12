@@ -1,25 +1,15 @@
 ---
 id: "SPRINT_DOC-0056"
+id_root: "SPRINT_DOC-0056"
 type: "SPRINT_DOC"
 status: "Certifié"
 date: "2025-11-07"
 author: "Cline"
 version: "1.0"
-
 scope: "organizational"
-pattern: "validation"
-
-links:
-  cites:
-    - "docs/_registry/registry_v1.1_v4.yaml"
-    - "docs/_registry/registry_v1.1_v5.yaml"
-    - "scripts/ssot_hash_check.py"
-    - "scripts/ssot_registry_check.py"
-    - "scripts/ssot_schema_check.py"
-    - "docs/01-genesis/document_schema_v1.1.yaml"
-
-# Écrit immédiatement après création par script pour assurer conformité v1.1
-self_hash: sha256:cdb8be45c4fc7e9cbb0068a827786a8c234a25409b4ca0d2fb0513d6e0045ce0
+pattern: "observation"
+previous_hash: "sha256:7cfcb47a9752a160255e07f4982e036e5735850a5660513660f54867bde3343e"
+self_hash: sha256:fb96d858685707ee6084f5f25e12def0c1f06cbc860fa9f641fa118f21fab8b2
 ---
 
 # SSOT v1.1 – S9-ALIGN Phase 3 — Rapport de Validation Finale

@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-0047"
+id_root: "SPRINT_DOC-0047"
+type: "SPRINT_DOC"
+status: "En cours"
+date: "2025-11-05"
+author: "Équipe Relinium Genesis"
+version: "1.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ssot"
+  - "pilot"
+  - "migration"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:8f53364e7f8d69f2f93886aa4f3fe043a77050c94a5ede88e2ccff1eb28cebed
+---
+
 # Sprint Pilote SSOT v1.1 – Migration Documentaire Non-Destructive
 
 ## 🎯 Objectif

@@ -1,25 +1,21 @@
 ---
-id: "SPRINT_DOC-0008-EVIDENCE"
+id: "SPRINT_DOC-0002"
+id_root: "SPRINT_DOC-0002"
 type: "SPRINT_DOC"
-status: "En cours"
+status: "Terminé"
 date: "2025-11-06"
 author: "Équipe Relinium Genesis"
 version: "1.0"
-
 scope: "organizational"
-pattern: "observation"
-
+pattern: "experiment"
 links:
+  implements:
+    - "SPRINT_DOC-0041"
   cites:
-    - "docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PROOF_PLAN.md"
-    - ".github/workflows/ssot-proof.yml"
-    - "scripts/ssot_hash_check.py"
-    - "scripts/ssot_registry_check.py"
-    - "scripts/ssot_schema_check.py"
-    - "docs/_registry/registry_v1.1.yaml"
-    - "docs/01-genesis/document_schema_v1.1.yaml"
-
-self_hash: sha256:b7695e82dae1487a24f973b604b39e98706d4a5981d4f622af0adea3f28fdb3f
+    - "SPRINT_DOC-0005"
+    - "SPRINT_DOC-0006"
+    - "SPRINT_DOC-0007"
+self_hash: sha256:ab3b3e4c48fe60bae7b62518b9b23829a14a24a196cb085ba9ea495c79d3abc9
 ---
 
 # S8-PROOF — Rapport d’évidence

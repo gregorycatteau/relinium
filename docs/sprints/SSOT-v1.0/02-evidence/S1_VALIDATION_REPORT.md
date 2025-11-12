@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1021"
+id_root: "SPRINT_DOC-1021"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "experiment"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:e4ead5ff6848b1b2cfb99dea4b146d2ab8f1aeb453bff547c68b543cc3749296
+---
+
 # S1 – VALIDATION REPORT
 
 **Sous-sprint** : S1 - Frontmatter Schema  

@@ -1,13 +1,24 @@
 ---
-id: "OBS-0102"
-type: "OBS"
-status: "Synthétisé"
-date: "2025-11-08"
-author: "Équipe Relinium Genesis"
-version: "1.0"
-tags: ["ssot", "governance", "policy", "signatures"]
+id: OBS-0102
+type: OBS
+status: Synthétisé
+date: '2025-11-08'
+author: Équipe Relinium Genesis
+version: '1.0'
+tags:
+- ssot
+- governance
+- policy
+- signatures
 links:
-  cites: ["OBS-0100", "OBS-0101", "ADR-0001"]
+  cites:
+  - OBS-0100
+  - OBS-0101
+  - ADR-0001
+id_root: OBS-0102
+scope: organizational
+pattern: observation
+self_hash: sha256:2bc32f54240075b26f3162a9902767336360a294a540cd35da8fa9ea89bb06fc
 ---
 
 # SSOT_GOVERNANCE_FOUNDATIONS — Fondations de la gouvernance documentaire

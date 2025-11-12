@@ -1,15 +1,27 @@
 ---
-id: "OBS-GOVERNANCE-0001"
-type: "OBS"
-status: "Ouvert"
-date: "2025-11-05"
-author: "Greg Catteau"
-version: "1.0.0"
-tags: ["governance", "audit", "schema-evolution", "ssot"]
+id: OBS-0111
+type: OBS
+status: Ouvert
+date: '2025-11-05'
+author: Greg Catteau
+version: 1.0.0
+tags:
+- governance
+- audit
+- schema-evolution
+- ssot
 links:
-  cites: ["ADR-0001", "RFC-001", "RFC-002"]
+  cites:
+  - ADR-0001
+  - RFC-0001
+  - RFC-0002
 intent:
-  primary_question: "Quels patterns implicites de gouvernance documentaire émergent du corpus Relinium v1.0 ?"
+  primary_question: Quels patterns implicites de gouvernance documentaire émergent
+    du corpus Relinium v1.0 ?
+id_root: OBS-0111
+scope: organizational
+pattern: observation
+self_hash: sha256:e8979a477fd857dc47df49e1b7cabbf17e4c9c0a8c932a5b1dd0922572d4f809
 ---
 
 # OBS-GOVERNANCE-0001 – Audit Exploratoire de la Gouvernance Documentaire

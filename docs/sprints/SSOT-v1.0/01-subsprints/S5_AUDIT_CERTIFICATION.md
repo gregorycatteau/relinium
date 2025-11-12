@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1014"
+id_root: "SPRINT_DOC-1014"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:4e1cc0fdd970c7975730943da06917efb106212b53cd0017cddf90008426bd39
+---
+
 # S5 — AUDIT & CERTIFICATION
 
 - **id** : `S5-AUDIT-CERTIFICATION`

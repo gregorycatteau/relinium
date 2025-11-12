@@ -1,29 +1,23 @@
 ---
-id: "SPRINT-SSOT-v1_1-PILOT"
-id_root: "SPRINT-SSOT-v1_1-PILOT"
-version: "2.0"
+id: "SPRINT_DOC-0008-v2"
+id_root: "SPRINT_DOC-0008"
 type: "SPRINT_DOC"
-status: "Active"
-title: "Plan de Sprint Pilote SSOT v1.1"
+status: "En cours"
 date: "2025-11-06"
+author: "Cline"
+version: "2.0"
 scope: "organizational"
-pattern: "plan"
-decision_type: "execution_plan"
-created_at: "2025-11-06T19:15:00Z"
-authors:
-  - id: "cline"
-    role: "author"
-roles:
-  - name: "Author"
-    actor: "Cline"
+pattern: "rule"
+tags:
+  - "ssot"
+  - "v1.1"
+  - "pilot"
 links:
-  supersedes:
-    - "docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PILOT_PLAN.md"
+  supersedes: "SPRINT_DOC-0008"
   relates_to:
     - "RFC-0004"
-
-previous_hash: "sha256:4635b67272f12f993a22aef7b513afc3d11dcee6776d2cf4ddc7bd14340e4c25"
-self_hash: sha256:672151768f0a7a93dab1268f9acd1472844df0e0d1450cc05f87e1b0e83e2343
+previous_hash: "sha256:4be3d1449b604b678c49f7aa5f2391b3eb49f2135a56c5a6222c44c6e63e3469"
+self_hash: sha256:f8ce4ca14c749a32f29fa98583adcb698c2e6bac15f4aec41dfa217cf32b46c9
 ---
 
 # Plan de Sprint Pilote SSOT v1.1

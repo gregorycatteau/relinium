@@ -13,10 +13,10 @@ pattern: "reflection"
 tags: ["alignment", "protocol", "governance", "supersede", "integrity"]
 links:
   supersedes: "RFC-0004"
-  cites: ["OBS-CONFORMITY-0001", "OBS-SCHEMA-0001", "OBS-GOVERNANCE-0001", "SSOT_V1_CERTIFICATION"]
+  cites: ["OBS-0110", "OBS-0112", "OBS-0111", "SPRINT_DOC-1032"]
 intent:
   primary_question: "Comment assurer la mise en conformité du corpus Relinium sans modifier aucun document existant ?"
-self_hash: sha256:0d0afe91ad4097ee5dd627c8bc93372af2c59a6529bd22306b2e7cf82e6da737
+self_hash: sha256:32b3a03071f38e0ebfe9392b4caf5b673397fed3cca49106ba99b9a9fcc7e255
 ---
 
 # RFC-004 : Protocole de mise en cohérence documentaire Relinium

@@ -1,13 +1,25 @@
 ---
-id: "OBS-0100"
-type: "OBS"
-status: "Synthétisé"
-date: "2025-11-08"
-author: "Équipe Relinium Genesis"
-version: "1.0"
-tags: ["ssot", "exploration", "governance", "registry"]
+id: OBS-0100
+type: OBS
+status: Synthétisé
+date: '2025-11-08'
+author: Équipe Relinium Genesis
+version: '1.0'
+tags:
+- ssot
+- exploration
+- governance
+- registry
 links:
-  cites: ["ADR-0001", "OBS-0001", "OBS-0002", "OBS-0003"]
+  cites:
+  - ADR-0001
+  - OBS-0001
+  - OBS-0002
+  - OBS-0003
+id_root: OBS-0100
+scope: organizational
+pattern: observation
+self_hash: sha256:baeef3f415c184e95e337582bbeaf903affd28df2a74d62b9fb1298b7f6a3fa4
 ---
 
 # OBS-SSOT-EXPLORATION — Exploration documentaire de Relinium

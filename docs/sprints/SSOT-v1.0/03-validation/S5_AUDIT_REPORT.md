@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1033"
+id_root: "SPRINT_DOC-1033"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "rule"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:653e1501f916d6a28a543a5a34b235f8fe1799c0594e69ec485e377468cd63c3
+---
+
 # S5 - Rapport d'Audit Technique
 
 > **Sprint** : S5 - Audit & Certification  

@@ -1,14 +1,19 @@
 ---
-id: "RFC-002"
+id: "RFC-0002"
+id_root: "RFC-0002"
 type: "RFC"
 status: "En discussion"
 date: "2025-01-05"
 author: "Greg Catteau"
 version: "1.0.0"
+scope: "technical"
+pattern: "reflection"
 tags: ["architecture", "backend", "scoring", "evaluation", "methodology"]
 links:
-  cites: ["ADR-0001", "RFC-001"]
+  cites: ["ADR-0001", "RFC-0001"]
   cited_by: ["OBS-0001", "OBS-0002", "OBS-0003"]
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:3130053bbbb5d7eadfea388f3797662fa87401e8c2f40705706ba2f7e86266f5
 ---
 
 # RFC-002 — Matrice d'exploration et de scoring : backend & composants (agnostique)

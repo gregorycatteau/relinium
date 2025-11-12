@@ -7,7 +7,8 @@ author: "Greg Catteau"
 version: "1.0.0"
 tags: ["governance", "methodology", "docs-first"]
 links:
-  cited_by: ["RFC-001", "RFC-002"]
+  cited_by: ["RFC-0001", "RFC-0002"]
+self_hash: sha256:84e14be6c9f69e73a1bd6cc87270e311b87fc79e153da6ab56c8a298fe3cf21b
 ---
 
 # ADR-0001 – Repo Driven by Docs-First

@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1031"
+id_root: "SPRINT_DOC-1031"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "rule"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:5e5d43220c3e53a456fe1695737d52c73d2f100ae26a921de37e6d5ae1909f95
+---
+
 # PRE_EXECUTION_CHECK — Sprint SSOT v1.0
 
 **Type** : `VALIDATION_DOC`  

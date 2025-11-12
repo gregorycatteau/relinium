@@ -1,30 +1,24 @@
 ---
-id: "SPRINT_DOC-0008-EVIDENCE"
-id_root: "SPRINT_DOC-0008"
+id: "SPRINT_DOC-0002-v2"
+id_root: "SPRINT_DOC-0002"
 type: "SPRINT_DOC"
-status: "En cours"
+status: "Terminé"
 date: "2025-11-06"
 author: "Équipe Relinium Genesis"
 version: "2.0"
-
 scope: "organizational"
-pattern: "observation"
-
-previous_hash: "sha256:5aa74d858fd8c4ed106d6c977317b6a278d15ea5a372fd05f20e22bc656b67ca"
+pattern: "experiment"
 
 links:
-  supersedes:
-    - "docs/sprints/SSOT-v1.1/02-evidence/SSOT_V1_1_PROOF_EVIDENCE.md"
+  supersedes: "SPRINT_DOC-0002"
+  implements:
+    - "SPRINT_DOC-0041"
   cites:
-    - "docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_PROOF_PLAN.md"
-    - ".github/workflows/ssot-proof.yml"
-    - "scripts/ssot_hash_check.py"
-    - "scripts/ssot_registry_check.py"
-    - "scripts/ssot_schema_check.py"
-    - "docs/_registry/registry_v1.1.yaml"
-    - "docs/01-genesis/document_schema_v1.1.yaml"
-
-self_hash: sha256:53bd2f7a4db1de371b6c2cd5091e4b13d2d780367e6c40191f25edd1db0d7b07
+    - "SPRINT_DOC-0005"
+    - "SPRINT_DOC-0006"
+    - "SPRINT_DOC-0007"
+previous_hash: "sha256:5aa74d858fd8c4ed106d6c977317b6a278d15ea5a372fd05f20e22bc656b67ca"
+self_hash: sha256:703d26f9760da0b5020ea7315cb6a70fce03aaf4d769c62be11734e13869d046
 ---
 
 # S8-PROOF — Rapport d’évidence

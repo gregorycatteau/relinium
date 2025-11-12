@@ -1,13 +1,26 @@
 ---
-id: "OBS-0101"
-type: "OBS"
-status: "Synthétisé"
-date: "2025-11-08"
-author: "Équipe Relinium Genesis"
-version: "1.0"
-tags: ["ssot", "metadata", "registry", "validation"]
+id: OBS-0101
+type: OBS
+status: Synthétisé
+date: '2025-11-08'
+author: Équipe Relinium Genesis
+version: '1.0'
+tags:
+- ssot
+- metadata
+- registry
+- validation
 links:
-  cites: ["OBS-0100", "ADR-0001", "OBS-0001", "OBS-0002", "OBS-0003"]
+  cites:
+  - OBS-0100
+  - ADR-0001
+  - OBS-0001
+  - OBS-0002
+  - OBS-0003
+id_root: OBS-0101
+scope: organizational
+pattern: observation
+self_hash: sha256:d1ff3108d29066da3fcb73ba32368639993bd4215e091d101afd2500faf94293
 ---
 
 # SSOT_METADATA_EXPLORATION — Étude comparative des approches de métastructuration

@@ -1,13 +1,16 @@
 ---
-id: "SSOT_V1_1_ALIGN_PHASE2_VALIDATION"
-type: "sprint_doc"
-pattern: "validation"
+id: "SPRINT_DOC-0054"
+id_root: "SPRINT_DOC-0054"
+type: "SPRINT_DOC"
+version: "1.0"
+status: "Terminé"
+date: "2025-11-07"
+author: "Cline"
+scope: "organizational"
+pattern: "observation"
 title: "SSOT v1.1 – Validation Phase 2-bis (v4 registry)"
-created_at: "2025-11-07T12:08:43Z"
-authors:
-  - id: "cline"
-    role: "system"
-self_hash: sha256:1bc6e20bb330914050bab8fec622be8524889038b30c4b31a1db9919a318518a
+previous_hash: "sha256:3d2fb6410bff4fd84f9ce3c5f2c6b190844e4b0961e2cf6cf1f0cf4a9f8dd751"
+self_hash: sha256:962d65e9f7772631de145fed829080239b90e31e0c52a5f9c0a42215e1a3a5fa
 ---
 
 # SSOT v1.1 – Validation Phase 2-bis

@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1011"
+id_root: "SPRINT_DOC-1011"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:13f225999574077c120c23ddaee7761a2e811d21c3e0dc246e66bd0e37324532
+---
+
 # S2 — FRONTMATTER INJECTION PILOTE
 
 - **id** : `S2-FRONTMATTER-INJECTION`

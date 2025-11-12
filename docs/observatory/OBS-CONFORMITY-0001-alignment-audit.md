@@ -1,15 +1,29 @@
 ---
-id: "OBS-CONFORMITY-0001"
-type: "OBS"
-status: "Ouvert"
-date: "2025-11-05"
-author: "Greg Catteau"
-version: "1.0.0"
-tags: ["alignment", "audit", "conformity", "migration", "schema-v1.1"]
+id: OBS-0110
+type: OBS
+status: Ouvert
+date: '2025-11-05'
+author: Greg Catteau
+version: 1.0.0
+tags:
+- alignment
+- audit
+- conformity
+- migration
+- schema-v1.1
 links:
-  cites: ["OBS-SCHEMA-0001", "OBS-GOVERNANCE-0001", "GENESIS_SUMMARY", "SSOT_V1_CERTIFICATION"]
+  cites:
+  - OBS-0112
+  - OBS-0111
+  - SPRINT_DOC-0001
+  - SPRINT_DOC-1032
 intent:
-  primary_question: "Quel est l'état de conformité du corpus Relinium avant migration vers le schéma documentaire v1.1 ?"
+  primary_question: Quel est l'état de conformité du corpus Relinium avant migration
+    vers le schéma documentaire v1.1 ?
+id_root: OBS-0110
+scope: organizational
+pattern: observation
+self_hash: sha256:ac6e17f8b9921852a80e27690227a7109bab19e752a6f2165208d517617669a9
 ---
 
 # OBS-CONFORMITY-0001 – Audit Global de Conformité du Corpus Relinium

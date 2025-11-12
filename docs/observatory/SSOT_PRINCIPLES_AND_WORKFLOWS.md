@@ -1,13 +1,27 @@
 ---
-id: "OBS-0104"
-type: "OBS"
-status: "Synthétisé"
-date: "2025-11-08"
-author: "Équipe Relinium Genesis"
-version: "1.0"
-tags: ["ssot", "principes", "workflows", "registry", "validation"]
+id: OBS-0104
+type: OBS
+status: Synthétisé
+date: '2025-11-08'
+author: Équipe Relinium Genesis
+version: '1.0'
+tags:
+- ssot
+- principes
+- workflows
+- registry
+- validation
 links:
-  cites: ["ADR-0001", "OBS-0100", "OBS-0101", "OBS-0102", "OBS-0103"]
+  cites:
+  - ADR-0001
+  - OBS-0100
+  - OBS-0101
+  - OBS-0102
+  - OBS-0103
+id_root: OBS-0104
+scope: organizational
+pattern: observation
+self_hash: sha256:2cb009982051c5b4654ee937287131135fe31647ed7e1db9ec23ebb3f3143faf
 ---
 
 # SSOT_PRINCIPLES_AND_WORKFLOWS — Principes et Workflows du SSOT Relinium

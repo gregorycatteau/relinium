@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1013"
+id_root: "SPRINT_DOC-1013"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:42cab5a1e441651354fe2cd6f23d2454cda9f7d6cdbba194255565a88eee5518
+---
+
 # S4 — REGISTRY PROTOTYPE
 
 - **id** : `S4-REGISTRY-PROTOTYPE`

@@ -2,18 +2,19 @@
 id: "SPRINT_DOC-0010-v2"
 id_root: "SPRINT_DOC-0010"
 type: "SPRINT_DOC"
-status: "Active"
+status: "Terminé"
 version: "2.0"
 date: "2025-11-07"
 author: "Cline"
 scope: "organizational"
-pattern: "validation"
-decision_type: "report"
+pattern: "observation"
+roles:
+  guardian:
+    name: "Équipe SSOT"
 links:
-  supersedes:
-    - "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_ALIGN_VALIDATION_PHASE1.md"
-previous_hash: "sha256:386041fb009c70faef000562ec91b55219f9938ecceb00a708163b533801dca4"
-self_hash: sha256:21507368ed7e8e7a5db78f4c8c43ba5cc6a6534c65a7f56d420a6b018575fd4c
+  supersedes: "SPRINT_DOC-0010"
+previous_hash: "sha256:5e820703c16a101d8e02a0af149919108199a0d89d799259b1a0f4643ac7b06a"
+self_hash: sha256:51f64b7faf5137ad9ade3b7c65d62cc4b35c23c28f24434fbbaec620e7e5a024
 ---
 
 # SSOT v1.1 — S9-ALIGN Phase 1 — Rapport de Validation (v2)

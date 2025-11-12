@@ -1,43 +1,28 @@
 ---
-id: "PLAN-ALIGN-SSOT-V1_1-0001"
-id_root: "PLAN-ALIGN-SSOT-V1_1-0001"
-version: "1.1"
-type: "sprint_plan"
-pattern: "plan"
+id: "SPRINT_DOC-0040"
+id_root: "SPRINT_DOC-0040"
+type: "SPRINT_DOC"
+status: "En cours"
+date: "2025-11-07"
+author: "Cline"
+version: "1.0"
 scope: "organizational"
-decision_type: "plan"
-status: "Active"
-created_at: "2025-11-06T19:18:00+01:00"
-updated_at: "2025-11-06T19:18:00+01:00"
-authors:
-  - name: "Cline"
-    role: "AI Assistant"
-participants:
-  - name: "Human"
-    role: "Validator"
-workstream: "SSOT"
-phase: "alignment"
-priority: "critical"
+pattern: "rule"
+title: "SSOT v1.1 — Align Sprint Plan"
 tags:
   - "ssot"
   - "v1.1"
   - "alignment"
-  - "succession"
-  - "rfc-004"
-  - "s9-align"
 links:
-  relates_to:
-    - "EXPLORE-SSOT-V1_1-100PCT-0001"
-    - "VAL-PROOF-SSOT-V1_1-0001"
-    - "VAL-STRICT-SSOT-V1_1-0001"
   implements:
-    - "RFC-004"
-changelog:
-  - version: "1.0.0"
-    date: "2025-11-06T19:18:00+01:00"
-    author: "Cline"
-    changes: "Création initiale du plan S9-ALIGN"
-self_hash: sha256:7aa808917facb9f667d014c8aaffed69746b37d18fedf8e502cc5882ec2ed6cf
+    - "SPRINT_DOC-0001-v3"
+  cites:
+    - "SPRINT_DOC-0003-v3"
+    - "SPRINT_DOC-0004-v3"
+    - "SPRINT_DOC-0005-v3"
+    - "SPRINT_DOC-0006-v3"
+    - "SPRINT_DOC-0007-v3"
+self_hash: sha256:33204850a87dd95254272ead1d2b1f780e739d958279b8837121d71a6d0494dc
 ---
 
 # Sprint S9-ALIGN — Plan de mise en conformité du SSOT v1.1

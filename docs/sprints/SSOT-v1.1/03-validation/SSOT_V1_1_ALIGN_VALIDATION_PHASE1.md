@@ -1,27 +1,19 @@
 ---
-id: "ALIGN-VALIDATION-SSOT-V1_1-PHASE1"
-id_root: "ALIGN-VALIDATION-SSOT-V1_1-PHASE1"
+id: "SPRINT_DOC-0010"
+id_root: "SPRINT_DOC-0010"
 version: "1.0"
 type: "SPRINT_DOC"
-status: "Active"
+status: "Terminé"
 title: "SSOT v1.1 — Align Validation Phase 1 (S9-ALIGN)"
 date: "2025-11-06"
 scope: "organizational"
 pattern: "observation"
-created_at: "2025-11-06T19:05:00Z"
-authors:
-  - id: "cline"
-    role: "author"
+author: "Cline"
 roles:
-  - name: "Author"
-    actor: "Cline"
-links:
-  cites:
-    - "docs/_registry/registry_v1.1_v2.yaml"
-    - "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_HASHES-v2.yaml"
-    - "docs/sprints/SSOT-v1.1/03-validation/SSOT_V1_1_SNAPSHOT_MANIFEST_20251106_0846-v2.yaml"
-
-self_hash: sha256:cf1eaf1473a352d1bfda125655e9c208409ebd94dab856f70eb33de72cec2b18
+  guardian:
+    name: "Équipe SSOT"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:5e820703c16a101d8e02a0af149919108199a0d89d799259b1a0f4643ac7b06a
 ---
 
 # SSOT v1.1 — Align Validation Phase 1 (S9-ALIGN)

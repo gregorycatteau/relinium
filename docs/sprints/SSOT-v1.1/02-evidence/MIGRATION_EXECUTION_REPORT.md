@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-0043"
+id_root: "SPRINT_DOC-0043"
+type: "SPRINT_DOC"
+status: "Terminé"
+date: "2025-11-05"
+author: "Relinium Genesis Team"
+version: "1.0"
+scope: "organizational"
+pattern: "experiment"
+tags:
+  - "ssot"
+  - "migration"
+  - "execution"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:77db38d8b1067a667f6d18c418b529fc1e10f62e6d2384a9e16350e29da65804
+---
+
 # Rapport d'Exécution – Migration SSOT v1.1
 
 **Date**: 2025-11-05  

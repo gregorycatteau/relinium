@@ -9,12 +9,11 @@ version: "2.0"
 scope: "organizational"
 pattern: "rule"
 links:
-  supersedes:
-    - "docs/sprints/SSOT-v1.1/01-plan/SSOT_V1_1_STRICT_PLAN.md"
+  supersedes: "SPRINT_DOC-0001"
   cites: ["RFC-0001"]
 tags: ["ssot", "ci", "strict", "compliance", "audit"]
 previous_hash: "sha256:c4ba98862451c4b79799ce3d22a0da78c926eefa6e3abbe9fe454a4b50147133"
-self_hash: sha256:eadaea0193f3480c05c50bf1f13d4b00a83304bfe850cd401002e08d3ef888d6
+self_hash: sha256:f199135618bcf3b72b680b726bfcb113a4fdc1cf2f0701adc926cc5288d00419
 ---
 
 # SSOT v1.1 — S8-STRICT Plan (Durcissement du pipeline de preuve)

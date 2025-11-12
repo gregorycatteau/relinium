@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1043"
+id_root: "SPRINT_DOC-1043"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:2ea932bc70dbdbcc7b228b47037d0a5ab7097f133cf137b6ce3c7879dee570b1
+---
+
 # Prompt Next : Exécution S1 - Frontmatter Schema
 
 Ce prompt sera utilisé après validation humaine du plan global pour exécuter le sous-sprint S1.

@@ -1,13 +1,18 @@
 ---
-id: "SPRINT_DOC-0001"
+id: "SPRINT_DOC-0300"
+id_root: "SPRINT_DOC-0300"
 type: "SPRINT_DOC"
 status: "Certifié"
 date: "2025-11-05"
 author: "Greg Catteau"
 version: "1.0.0"
+scope: "organizational"
+pattern: "rule"
 tags: ["genesis", "ssot", "documentation", "audit", "certification"]
 links:
   cites: ["ADR-0001", "RFC-0001", "RFC-0002", "OBS-0003"]
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:0fcac9b1d864c22f4c1c36f8dca95c4deaea0de5a43bda5221702dfda837be98
 ---
 
 # Genesis – Synthèse Narrative de la Phase Fondatrice

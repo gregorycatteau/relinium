@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-0008"
+id_root: "SPRINT_DOC-0008"
+type: "SPRINT_DOC"
+status: "Planifié"
+date: "2025-11-05"
+author: "Greg Catteau"
+version: "1.0"
+scope: "organizational"
+pattern: "rule"
+tags:
+  - "ssot"
+  - "v1.1"
+  - "pilot"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:0334b11ab0637cb126594b15316ed0f1c84b6fdc58b054eb3860d3b1eaa22c68
+---
+
 # Plan de Sprint Pilote SSOT v1.1
 
 **ID**: SPRINT-SSOT-v1.1  

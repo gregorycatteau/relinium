@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-0042"
+id_root: "SPRINT_DOC-0042"
+type: "SPRINT_DOC"
+status: "Terminé"
+date: "2025-11-05"
+author: "Relinium Genesis Team"
+version: "1.0"
+scope: "organizational"
+pattern: "experiment"
+tags:
+  - "ssot"
+  - "migration"
+  - "dry-run"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:fc9117c2505f14ab81590cba35f4726a9caead3059bffd615d412e62bf3b4d74
+---
+
 # Rapport Dry-Run – Migration SSOT v1.1
 
 **Date**: 2025-11-05  

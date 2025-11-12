@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1000"
+id_root: "SPRINT_DOC-1000"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:27a4440056ef18f7f58960affbe3200b702d63edc4d5f6407a06315fbdd1b218
+---
+
 # Sprint SSOT v1.0 — Plan Opérationnel de Déploiement
 
 - **id** : `SPRINT-SSOT-V1.0`

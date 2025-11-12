@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1012"
+id_root: "SPRINT_DOC-1012"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:1262fc78312dd3b52cd8af249cecb05cefc400c296c5603bc19b0e7d459cda27
+---
+
 # S3 — VALIDATION CI TOOLING
 
 - **id** : `S3-VALIDATION-CI`

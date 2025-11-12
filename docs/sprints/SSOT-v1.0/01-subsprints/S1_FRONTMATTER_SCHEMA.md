@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1010"
+id_root: "SPRINT_DOC-1010"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:99c9d1157f0448f8052a7f108289a41369458918fb0ad7b133b44a7236619ab3
+---
+
 # S1 — FRONTMATTER SCHEMA
 
 - **id** : `S1-FRONTMATTER-SCHEMA`

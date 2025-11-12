@@ -1,3 +1,21 @@
+---
+id: "SPRINT_DOC-1040"
+id_root: "SPRINT_DOC-1040"
+type: "SPRINT_DOC"
+status: "Terminé"
+
+date: "2025-01-05"
+author: "Relinium Genesis Team"
+version: "1.0.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ssot"
+  - "v1.0"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:264dfcc5a6506da76791176b6be10a379a4e4da2092ba335c81d68e57f5a8356
+---
+
 # Prompt Next : Event Sourcing Documentaire (Phase 3+)
 
 Ce prompt sera utilisé si un besoin d'audit forensique émerge (> 2000 documents).

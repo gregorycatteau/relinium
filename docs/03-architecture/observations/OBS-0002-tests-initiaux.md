@@ -7,8 +7,9 @@ author: "Greg Catteau"
 version: "1.0.0"
 tags: ["tests", "poc", "protocole", "evaluation"]
 links:
-  cites: ["RFC-002", "OBS-0001"]
+  cites: ["RFC-0002", "OBS-0001"]
   cited_by: ["OBS-0003"]
+self_hash: sha256:7f0ef7479fda609f0d379c4d53f584e4042587f212a7a0fdc9c3fd1f13174ff5
 ---
 
 # OBS-0002 — Tests initiaux & POCs minimaux (agnostiques)

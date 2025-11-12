@@ -1,13 +1,18 @@
 ---
-id: "RFC-001"
+id: "RFC-0001"
+id_root: "RFC-0001"
 type: "RFC"
 status: "En discussion"
 date: "2025-01-05"
 author: "Greg Catteau"
 version: "1.0.0"
+scope: "technical"
+pattern: "reflection"
 tags: ["architecture", "stack", "backend", "frontend", "infrastructure"]
 links:
   cites: ["ADR-0001"]
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:588c823928b4c8e914aa301e7ede33e0bc35ba6c34aa9fa3224548703aa13b4e
 ---
 
 # RFC-001 – Choix de stack initiale (frontend / backend / infra)

@@ -1,3 +1,21 @@
+---
+id: "OBS-0500"
+id_root: "OBS-0500"
+type: "OBS"
+status: "Synthétisé"
+date: "2025-11-03"
+author: "Automation Team"
+version: "1.0"
+scope: "organizational"
+pattern: "observation"
+tags:
+  - "ops"
+  - "automation"
+  - "email"
+previous_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+self_hash: sha256:27f907e13522ada78a8bdc7ec9ecdc246193a51231a1f2b11955ffa43f57ca2d
+---
+
 # Email Normalization Report
 
 - Date: 2025-11-03 16:55:30 
