@@ -143,6 +143,32 @@ git config --global tag.gpgSign true
 git config --global user.signingkey <votre-clé-GPG>
 ```
 
+## Routine documentaire automatisée
+
+La création (ou la mise à jour) d'un document normatif doit désormais passer par l’assistant fourni dans `scripts/new_doc_routine.py`. Une cible dédiée facilite l’usage :
+
+```bash
+make new-doc \
+  ID=SPRINT-0002 \
+  TYPE=SPRINT \
+  STATUS="En cours" \
+  DOC_PATH=docs/sprints/phase1/SPRINT-0002.md \
+  VERSION=1.0.0 \
+  TAGS="sprint,inventaire,stack" \
+  LINKS="OBS-0001,RFC-0002" \
+  AUTHOR="Agent Codex"
+```
+
+- Utiliser **DOC_PATH** (et non la variable d’environnement `PATH`) pour éviter d’écraser le PATH système.
+- Le script peut être invoqué directement (`python scripts/new_doc_routine.py --help`) pour des usages avancés : template de corps, id_root spécifique, previous_hash, etc.
+- À chaque exécution, la routine :
+  - Regénère le front matter complet et calcule `self_hash` via `scripts/ssot_hash_check.py`.
+  - Alimente `docs/_registry/registry_v1.1.yaml` en créant/rafraîchissant l’entrée `id_root`.
+  - Lance `python scripts/validate_frontmatter.py` puis `make docs-check` (hash + registre).
+  - Commit automatiquement les fichiers si tout est sain (désactivable avec `SKIP_COMMIT=1`).
+- **Obligation** : toute modification de contenu (même mineure) doit repasser par la routine pour recalculer `self_hash` et synchroniser le registre avant de pousser une branche.
+- Avant tout push/PR, relancer localement `python scripts/validate_frontmatter.py` **et** `make docs-check` pour garantir l’absence de divergences (le hook pré-commit fourni les exécute également).
+
 ## Questions fréquentes
 
 ### Comment proposer une nouvelle fonctionnalité ?

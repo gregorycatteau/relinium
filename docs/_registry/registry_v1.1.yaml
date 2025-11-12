@@ -398,15 +398,17 @@ lineages:
     supersedes: OBS-0003
 - id_root: OBS-0004
   versions:
-  - id: OBS-0004
-    status: Ouvert
-    version: 1.0.0
-    date: '2025-11-12'
-    file_path: docs/03-architecture/observations/OBS-0004-candidate-selection-review.md
+  - id: "OBS-0004"
+    status: "Ouvert"
+    version: "1.0.0"
+    date: "2025-11-12"
+    file_path: "docs/03-architecture/observations/OBS-0004-candidate-selection-review.md"
     tags: ["candidats", "revue", "backend"]
-    hash: sha256:ca38f0fdf2ea33ab95254329d5f4a363694660560fdcdaf396b1636446aed076
-    self_hash: sha256:ca38f0fdf2ea33ab95254329d5f4a363694660560fdcdaf396b1636446aed076
-    author: Agent Codex
+    hash: sha256:0b794006816f42b02937e98a36ed95102ca294e626ca5fc5b855d07831a2365f
+    self_hash: sha256:ba379b2c47f0b1719a5a50f57f1fa3a522fe9a8bda19c7db60144e7832bcf9c1
+    author: "Agent Codex"
+    type: "OBS"
+  title: "OBS-0004 — Revue communautaire des candidats backend"
 - id_root: SPRINT_DOC-0040
   versions:
   - id: SPRINT_DOC-0040
@@ -970,19 +972,19 @@ lineages:
     hash: sha256:138dfbbc434d3254c3c8e6b28704cebfdfd97b61d8d5b63e4da7d6b82e86c468
     author: Relinium Genesis Team
 - id_root: SPRINT-0001
-  title: SPRINT-0001 — Inventaire détaillé des candidats
+  title: "SPRINT-0001 — Inventaire détaillé des candidats"
   scope: technical
   pattern: sprint
   versions:
-  - id: SPRINT-0001
-    type: SPRINT
+  - id: "SPRINT-0001"
+    type: "SPRINT"
     status: "En cours"
-    version: "1.1.0"
-    date: '2025-11-12'
-    file_path: docs/sprints/phase1/SPRINT-0001-inventaire-detailled.md
+    version: "1.2.0"
+    date: "2025-11-13"
+    file_path: "docs/sprints/phase1/SPRINT-0001-inventaire-detailled.md"
     tags: ["sprint", "inventaire", "stack", "phase1"]
-    hash: sha256:b53d289642fa23dec0e90ac747cb3f28e178a1f03767458c8329b143e9a2adf0
-    self_hash: sha256:b53d289642fa23dec0e90ac747cb3f28e178a1f03767458c8329b143e9a2adf0
-    author: Agent Codex
+    hash: sha256:fa7d22490409edb472414f7130222c0944adcc1aaf7679bd2569e60178c3485e
+    self_hash: sha256:a7a5cbc9a2baae0d4a7040915ebde91592fe9d512e0c1d176a3e0371264299dd
+    author: "Agent Codex"
 pending_migration: []
 previous_hash: sha256:024bb1b690e74f88218bfbb231fbc2122e83fa90e1ac640fc84f865097aa654

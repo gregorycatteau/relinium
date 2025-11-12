@@ -2,13 +2,13 @@
 id: "SPRINT-0001"
 type: "SPRINT"
 status: "En cours"
-date: "2025-11-12"
+date: "2025-11-13"
 author: "Agent Codex"
-version: "1.1.0"
+version: "1.2.0"
 tags: ["sprint", "inventaire", "stack", "phase1"]
 links:
   cites: ["OBS-0001", "RFC-0002"]
-self_hash: sha256:b53d289642fa23dec0e90ac747cb3f28e178a1f03767458c8329b143e9a2adf0
+self_hash: sha256:a7a5cbc9a2baae0d4a7040915ebde91592fe9d512e0c1d176a3e0371264299dd
 ---
 
 # SPRINT-0001 — Inventaire détaillé des candidats
@@ -37,3 +37,6 @@ Utiliser le référentiel OBS-0001 pour confirmer les candidats existants (runti
 - **Conteneurisation / Orchestration** : Docker/Compose, Podman, Kubernetes
 
 Les sélections s'appuient sur `OBS-0001`, `RFC-0002` et les documentations officielles associées (python.org, go.dev, rust-lang.org, nodejs.org, djangoproject.com, fastapi.tiangolo.com, gin-gonic.com, actix.rs, postgresql.org, mariadb.org, mongodb.com, sqlite.org, redis.io, rabbitmq.com, nats.io, kafka.apache.org, caddyserver.com, nginx.org, traefik.io, envoyproxy.io, keycloak.org, authelia.com, min.io, prometheus.io, grafana.com, opentelemetry.io, docker.com, podman.io, kubernetes.io).
+
+## Journal de version 1.2.0
+- Alignement du périmètre de sélection avec la routine documentaire automatisée (`make new-doc`) afin de garantir la traçabilité des futures itérations.

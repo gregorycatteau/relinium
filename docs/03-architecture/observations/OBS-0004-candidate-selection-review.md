@@ -8,7 +8,7 @@ version: "1.0.0"
 tags: ["candidats", "revue", "backend"]
 links:
   cites: ["SPRINT-0001", "OBS-0001", "RFC-0002"]
-self_hash: sha256:ca38f0fdf2ea33ab95254329d5f4a363694660560fdcdaf396b1636446aed076
+self_hash: sha256:ba379b2c47f0b1719a5a50f57f1fa3a522fe9a8bda19c7db60144e7832bcf9c1
 ---
 
 # OBS-0004 — Revue communautaire des candidats backend

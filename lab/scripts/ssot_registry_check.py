@@ -73,8 +73,8 @@ DEFAULT_SCAN_ROOTS = [
     PROJECT_ROOT / "reports",
 ]
 
-ID_ROOT_RE = re.compile(r"^(ADR|RFC|OBS|POC|SPRINT_DOC)-\d{4}$")
-ID_RE = re.compile(r"^(ADR|RFC|OBS|POC|SPRINT_DOC)-\d{4}(-v\d+)?$")
+ID_ROOT_RE = re.compile(r"^(ADR|RFC|OBS|POC|SPRINT|SPRINT_DOC)-\d{4}$")
+ID_RE = re.compile(r"^(ADR|RFC|OBS|POC|SPRINT|SPRINT_DOC)-\d{4}(-v\d+)?$")
 SHA256_RE = re.compile(r"^sha256:[a-f0-9]{64}$")
 
 def parse_yaml_file(path: Path) -> Optional[Dict[str, Any]]:
@@ -131,18 +131,22 @@ def id_root_of(doc_id: str) -> Optional[str]:
         return None
     return doc_id.split("-v")[0] if "-v" in doc_id else doc_id
 
-def build_registry_index(reg: Dict[str, Any]) -> Tuple[Set[str], Set[str], Dict[str, Path], Set[Path]]:
+def build_registry_index(
+    reg: Dict[str, Any]
+) -> Tuple[Set[str], Set[str], Dict[str, Path], Set[Path], Set[Path]]:
     """
     Construit des index:
       - all_ids_in_versions: tous les 'id' présents dans lineages[].versions[]
       - all_id_roots: tous les id_root
-      - path_by_id: map id -> file_path absolu
+      - path_by_id: map id -> file_path absolu (dernière occurrence)
       - pending_paths: ensemble des file_path listés dans pending_migration
+      - registered_paths: ensemble de tous les file_path référencés dans lineages
     """
     all_ids: Set[str] = set()
     all_roots: Set[str] = set()
     path_by_id: Dict[str, Path] = {}
     pending_paths: Set[Path] = set()
+    registered_paths: Set[Path] = set()
 
     lineages = reg.get("lineages", [])
     if isinstance(lineages, list):
@@ -158,7 +162,9 @@ def build_registry_index(reg: Dict[str, Any]) -> Tuple[Set[str], Set[str], Dict[
                     if isinstance(vid, str):
                         all_ids.add(vid)
                         if isinstance(fp, str):
-                            path_by_id[vid] = (PROJECT_ROOT / fp).resolve()
+                            abs_fp = (PROJECT_ROOT / fp).resolve()
+                            path_by_id[vid] = abs_fp
+                            registered_paths.add(abs_fp)
 
     pending = reg.get("pending_migration", [])
     if isinstance(pending, list):
@@ -167,7 +173,7 @@ def build_registry_index(reg: Dict[str, Any]) -> Tuple[Set[str], Set[str], Dict[
             if isinstance(fp, str):
                 pending_paths.add((PROJECT_ROOT / fp).resolve())
 
-    return all_ids, all_roots, path_by_id, pending_paths
+    return all_ids, all_roots, path_by_id, pending_paths, registered_paths
 
 def check_registry_structure(reg: Dict[str, Any], quiet: bool=False, strict: bool=False) -> Tuple[int, int]:
     """
@@ -330,10 +336,10 @@ def check_registry_coverage(reg: Dict[str, Any], scan_roots: Iterable[Path], qui
     Retourne (warn_count, err_count)
     """
     warn = err = 0
-    all_ids, all_roots, path_by_id, pending_paths = build_registry_index(reg)
+    all_ids, all_roots, path_by_id, pending_paths, registered_paths = build_registry_index(reg)
 
     normative_files = list_normative_files(scan_roots)
-    known_paths: Set[Path] = set(path_by_id.values()) | pending_paths
+    known_paths: Set[Path] = registered_paths | pending_paths
 
     # chemins normalisés vers absolus
     missing_in_registry: List[Path] = []
