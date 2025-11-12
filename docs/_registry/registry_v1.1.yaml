@@ -396,6 +396,17 @@ lineages:
     hash: sha256:bb88cb48f7a04e02a9e6d7168e340b993a8f785e5c9bca440c0a8233962da9b7
     previous_hash: sha256:5bc703025795a5c8f83efa522d82756c8d6ad506d6d69c5bf495a67e5d53d69e
     supersedes: OBS-0003
+- id_root: OBS-0004
+  versions:
+  - id: OBS-0004
+    status: Ouvert
+    version: 1.0.0
+    date: '2025-11-12'
+    file_path: docs/03-architecture/observations/OBS-0004-candidate-selection-review.md
+    tags: ["candidats", "revue", "backend"]
+    hash: sha256:ca38f0fdf2ea33ab95254329d5f4a363694660560fdcdaf396b1636446aed076
+    self_hash: sha256:ca38f0fdf2ea33ab95254329d5f4a363694660560fdcdaf396b1636446aed076
+    author: Agent Codex
 - id_root: SPRINT_DOC-0040
   versions:
   - id: SPRINT_DOC-0040
