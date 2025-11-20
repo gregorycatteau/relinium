@@ -1,1 +1,239 @@
-# rules_temporal_v0.1
+# =====================================================================
+# rules_temporal_v0.1.yaml
+# Règles TEMPORELLES pour les documents du SSOT Relinium
+# v0.1 — Horodatage, fenêtres d’effet, TTL, horloges
+# =====================================================================
+
+version: "0.1"
+id: "RULES-TEMPORAL-v0.1"
+title: "Règles temporelles des documents SSOT"
+status: "active"
+
+description: >
+  Ce fichier définit les contraintes temporelles appliquées aux
+  documents du SSOT Relinium : horodatage de création, mises à jour,
+  fenêtres d’effet, dates d’expiration, cohérence avec l’Event Kernel.
+  L’objectif est de pouvoir répondre à la question : « Que disait
+  officiellement le système à un instant T ? » de manière opposable.
+
+references:
+  - "core/schema/document_core_v0.1.yaml"
+  - "core/schema/event_schema_v0.1.yaml"
+  - "core/validation/rules_structural_v0.1.yaml"
+  - "core/validation/rules_semantic_v0.1.yaml"
+  - "core/validation/rules_succession_v0.1.yaml"
+  - "policies/legal/POL-RETENTION-0001.md"
+
+# ---------------------------------------------------------------------
+# 1. Portée (scope)
+# ---------------------------------------------------------------------
+
+scope:
+  applies_to:
+    - "ssot_canon/registry/registry.yaml"
+  excludes:
+    - "evidence_lake/**"
+    - "event_kernel/**"
+    - "personal_vault/**"
+
+  notes:
+    - "Ces règles portent sur la dimension TEMPORELLE des documents canon."
+    - "Elles complètent les règles structurelles, sémantiques et de succession."
+
+# ---------------------------------------------------------------------
+# 2. Modèle temporel de base
+# ---------------------------------------------------------------------
+
+time_model:
+  canonical_timezone: "UTC"
+  timestamp_format: "RFC3339"
+  newline_style_hint: "LF"
+
+  fields:
+    created_at:
+      mandatory: true
+      description: >
+        Instant de création logique de la version actuelle du document.
+        Une fois fixé, ne doit jamais être modifié.
+    updated_at:
+      mandatory: true
+      description: >
+        Instant de dernière modification de la version actuelle.
+        Peut évoluer tant que la version est en cours d’édition.
+    effective_from:
+      mandatory: false
+      description: >
+        Instant à partir duquel le contenu est considéré comme « en vigueur »
+        pour l’organisation (peut être postérieur à created_at).
+    effective_to:
+      mandatory: false
+      description: >
+        Instant à partir duquel le contenu n’est plus en vigueur.
+        Utilisé pour raisonner en « tranches de temps ».
+    expires_at:
+      mandatory: false
+      description: >
+        Date d’expiration administrative selon la politique de rétention
+        (POL-RETENTION-0001), distincte de effective_to.
+    lifecycle_history:
+      mandatory: true
+      description: >
+        Liste ordonnée d’événements de cycle de vie (status, horodatage),
+        utilisée pour reconstruire l’historique temporel.
+
+# ---------------------------------------------------------------------
+# 3. Invariants chronologiques de base
+# ---------------------------------------------------------------------
+
+chronological_invariants:
+  creation_vs_update:
+    rules:
+      - "created_at doit être défini une seule fois à la création de la version."
+      - "updated_at >= created_at."
+      - "Tout changement persistant du contenu doit entraîner la mise à jour de updated_at."
+  effective_window:
+    rules:
+      - "Si effective_from est défini, alors effective_from >= created_at."
+      - "Si effective_to est défini, alors effective_to > effective_from."
+      - "Un document est considéré comme « en vigueur » à un instant T si :"
+      - "  - T >= effective_from (ou effective_from absent) ET"
+      - "  - (effective_to absent OU T < effective_to)."
+  lifecycle_history_order:
+    rules:
+      - "Les timestamps dans lifecycle_history doivent être strictement croissants."
+      - "Chaque changement de statut doit être associé à un horodatage."
+      - "Le premier événement de lifecycle_history doit correspondre à la création (created_at)."
+
+# ---------------------------------------------------------------------
+# 4. Relation avec les versions (succession)
+# ---------------------------------------------------------------------
+
+succession_temporal_rules:
+  rules:
+    - "Pour un couple (tenant_id, id_root), les created_at doivent être strictement croissants d’une version à l’autre."
+    - "effective_from d’une nouvelle version ne doit pas être antérieur à created_at de cette version."
+    - "Une nouvelle version « remplaçante » ne peut pas être effective avant la version précédente, sauf cas d’erreur corrigée explicitement documenté."
+    - "Lorsqu’un document est marqué superseded, effective_to doit être fixé (ou recalculé) pour refléter la fin de validité."
+
+  behavior:
+    backdated_content_behavior: "accept_with_flag"
+    non_monotonic_created_at_behavior: "error"
+    overlapping_effective_windows_behavior: "warn"
+
+  notes:
+    - >
+      En v0.1, les cas d’overlap de fenêtres d’effet sont seulement
+      signalés, mais ils peuvent traduire des manipulations discutables
+      (ex: tentative de réécrire le passé).
+
+# ---------------------------------------------------------------------
+# 5. Relation avec l’Event Kernel (horloges)
+# ---------------------------------------------------------------------
+
+event_clock_alignment:
+  description: >
+    Les événements du kernel sont la trace brute des actions. Les
+    timestamps des documents canon doivent rester cohérents avec ces
+    événements, en tenant compte d’un certain skew de l’horloge système.
+
+  clock_skew:
+    max_skew_seconds: 300
+    description: >
+      Tolérance maximale (en secondes) entre l’horloge des événements
+      (Event Kernel) et les timestamps présents dans les documents
+      canon correspondants.
+
+  invariants:
+    - "Pour un événement de type document_created, event.timestamp doit être proche de created_at (± max_skew_seconds)."
+    - "Pour un événement de type document_version_created, event.timestamp doit être proche de created_at de la nouvelle version."
+    - "Pour un événement de type document_status_changed, event.timestamp doit être cohérent avec l’entrée correspondante dans lifecycle_history."
+
+  behavior:
+    skew_exceeded_behavior: "warn"
+    missing_matching_event_behavior: "warn"
+    inconsistent_clock_direction_behavior: "error"
+
+  notes:
+    - >
+      Un skew récurrent ou des timestamps inversés sont des signaux
+      forensiques (horloge altérée, manipulations, import approximatif).
+
+# ---------------------------------------------------------------------
+# 6. Expiration, rétention et archivage
+# ---------------------------------------------------------------------
+
+retention_and_expiry:
+  description: >
+    Les dates d’expiration et d’archivage doivent respecter la
+    politique POL-RETENTION-0001, tout en conservant la possibilité
+    de relire l’historique complet pour les besoins forensiques.
+
+  invariants:
+    - "expires_at, si défini, doit être >= effective_from (ou created_at si effective_from absent)."
+    - "Le passage en statut 'archived' doit être horodaté dans lifecycle_history."
+    - "Une fois archivé, un document ne doit plus voir ses champs métier modifiés (immutabilité)."
+
+  behavior:
+    missing_expires_at_when_required: "warn"
+    archived_document_modified_behavior: "error"
+
+  notes:
+    - >
+      L’archivage n’implique pas nécessairement la suppression
+      physique immédiate : l’evidence_lake peut conserver des
+      traces brutes selon la politique de rétention.
+
+# ---------------------------------------------------------------------
+# 7. Reconstitution à un instant T (time slicing)
+# ---------------------------------------------------------------------
+
+time_slicing:
+  description: >
+    Relinium doit permettre de reconstruire l’état logique d’un
+    système documentaire à un instant T donné (ex: « Que savait-on
+    officiellement le 2025-09-01 à 12:00 UTC ? »).
+
+  rules:
+    - "Pour une requête à un instant T, seuls les documents dont la fenêtre d’effet contient T sont considérés comme en vigueur."
+    - "Les versions futures (created_at > T) sont ignorées."
+    - "Les documents en statut 'draft' ou 'rejected' à T ne sont pas considérés comme faisant autorité, sauf politique contraire explicite."
+
+  behavior:
+    missing_effective_window_behavior: "interpret_from_creation_and_status"
+
+  notes:
+    - >
+      Cette capacité est au cœur de la valeur forensique du SSOT :
+      reconstituer ce qui était « vrai officiellement » à un moment
+      donné, sans dépendre de récits ultérieurs.
+
+# ---------------------------------------------------------------------
+# 8. Intégration dans le pipeline de validation
+# ---------------------------------------------------------------------
+
+validation_pipeline:
+  ordering_hint:
+    - "rules_structural_v0.1"
+    - "rules_semantic_v0.1"
+    - "rules_succession_v0.1"
+    - "rules_temporal_v0.1"
+    - "rules_security_v0.1"
+
+  mandatory_for:
+    - "publication dans ssot_canon/docs"
+    - "génération de releases Relinium"
+    - "audits forensiques officiels"
+
+  behavior:
+    on_error: "reject_document"
+    on_warn: "accept_with_flag"
+
+  notes:
+    - >
+      Sans règles temporelles solides, la succession et la sécurité
+      perdent une grande partie de leur valeur probatoire. Ce bloc
+      est donc considéré comme non négociable en production.
+
+# =====================================================================
+# Fin de rules_temporal_v0.1.yaml
+# =====================================================================
