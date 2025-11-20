@@ -1,1 +1,140 @@
-# document_core_v0.1
+# document_core_v0.1.yaml
+# Noyau minimal commun à tous les documents Relinium.
+# Tout ce qui veut entrer dans le SSOT doit respecter ces invariants.
+
+version: "0.1"
+description: >
+  Schéma de noyau minimal des documents SSOT Relinium.
+  Ce noyau doit être valable pour tous les types de documents (ADR, RFC, OBS,
+  emails encapsulés, captures de chat, rapports forensiques, etc.).
+
+required_fields:
+  # Identité du document dans l'écosystème Relinium
+  - id              # identifiant unique dans le SSOT (ex: "OBS-0104")
+  - type            # nature du document (OBS, ADR, RFC, MAIL, CHAT_MSG, SNAPSHOT, etc.)
+  - tenant_id       # espace logique (ex: "tenant_default", "m_comme_medoc")
+  - created_at      # date de création (ISO8601, UTC recommandé)
+  - status          # état de vie (draft, active, archived, superseded, revoked)
+  - subject_ids     # liste minimale d'identifiants de personnes/entités concernées
+  - author_ids      # liste d'acteurs ayant produit le contenu initial
+  - source_channel  # canal d’origine (telegram, email, drive, meeting_notes, etc.)
+  - integrity:
+      hash_sha256   # hash du contenu canonique (hors métadonnées volatiles)
+      previous_hash # hash du document précédent dans la chaîne, si succession
+  - lifecycle:
+      event_id      # id de l’événement kernel qui a introduit ce doc dans le SSOT
+
+fields:
+  id:
+    type: string
+    pattern: "^[A-Z0-9_-]+$"
+    description: >
+      Identifiant unique du document dans le SSOT (ex: ADR-0001, OBS-0104,
+      MAIL-20240712-01). Ne doit pas être recyclé.
+
+  type:
+    type: string
+    enum:
+      - ADR
+      - RFC
+      - OBS
+      - POC
+      - SPRINT
+      - FORENSIC
+      - MAIL
+      - CHAT_MSG
+      - SNAPSHOT
+      - POLICY
+      - OTHER
+    description: >
+      Type logique de document. Permet de router vers des schémas spécifiques
+      (document_schema_v1.2) et des templates.
+
+  tenant_id:
+    type: string
+    description: >
+      Espace logique auquel appartient le document (organisation, projet).
+      Exemple: tenant_default, m_comme_medoc, pixelprowlers_internal.
+
+  created_at:
+    type: datetime
+    format: "ISO8601"
+    description: >
+      Date de création initiale du contenu, pas de son import. Sert d’ancre
+      temporelle de vérité (ce que l’auteur a produit, quand).
+
+  status:
+    type: string
+    enum:
+      - draft
+      - active
+      - archived
+      - superseded
+      - revoked
+    description: >
+      État de vie du document dans le SSOT. Toute transition de status doit
+      être traçable par un événement dans l’event_kernel.
+
+  subject_ids:
+    type: array
+    items:
+      type: string
+    description: >
+      Identifiants des sujets principaux impactés ou décrits. Ex: IDs d’agents
+      humains, d’équipes, d’instances (voir event_kernel/mappings/identity_map.yaml).
+
+  author_ids:
+    type: array
+    items:
+      type: string
+    description: >
+      Identifiants des auteurs du contenu (humains ou agents). Doit pointer vers
+      des identités normalisées dans l’identity_map.
+
+  source_channel:
+    type: string
+    description: >
+      Canal d’origine du contenu (telegram, email, drive, meeting_notes,
+      verbal_transcript, etc.). Sert à reconstituer la provenance forensique.
+
+  integrity:
+    type: object
+    properties:
+      hash_sha256:
+        type: string
+        pattern: "^[a-f0-9]{64}$"
+        description: >
+          Hash SHA-256 du contenu canonique du document (hors champs volatils).
+      previous_hash:
+        type: string
+        nullable: true
+        description: >
+          Hash du document précédent dans la chaîne de succession (si applicable).
+          Null pour un document racine (première version).
+
+  lifecycle:
+    type: object
+    properties:
+      event_id:
+        type: string
+        description: >
+          Identifiant de l’événement kernel (event_kernel) qui a introduit
+          ce document dans le SSOT. Permet de relier forensique et contenu.
+
+optional_fields:
+  - title          # titre humain lisible
+  - tags           # tags libres pour filtrage (ex: "harcèlement", "budget")
+  - language       # langue principale du contenu (fr, en, de…)
+  - confidentiality_level  # public, internal, restricted, secret
+  - references     # liens vers autres documents SSOT (ids)
+  - comments       # notes internes non destinées à publication
+
+notes:
+  - >
+    Ce schéma définit le noyau minimal. Chaque type de document peut ajouter
+    des champs via document_schema_v1.2.yaml, mais ne doit jamais casser ces
+    invariants.
+  - >
+    Toute modification future de ce schéma doit être effectuée par succession
+    (document_core_v0.2.yaml, etc.) et accompagnée d’un événement dédié dans
+    l’event_kernel + une décision (ADR/RFC).
