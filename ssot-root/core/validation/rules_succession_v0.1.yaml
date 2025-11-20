@@ -1,1 +1,261 @@
-# rules_succession_v0.1
+# =====================================================================
+# rules_succession_v0.1.yaml
+# Règles de SUCCESSION & LIGNÉES pour les documents du SSOT Relinium
+# v0.1 — Chaînes de versions, id_root et previous_hash
+# =====================================================================
+
+version: "0.1"
+id: "RULES-SUCCESSION-v0.1"
+title: "Règles de succession et de lignées des documents SSOT"
+status: "active"
+
+description: >
+  Ce fichier définit la manière dont les versions successives
+  d'un document sont chaînées, identifiées et auditées dans
+  Relinium. L'objectif est de garantir qu'un historique ne
+  puisse pas être réécrit silencieusement, et que chaque
+  évolution soit opposable via une lignée cryptographique.
+
+references:
+  - "core/schema/document_core_v0.1.yaml"
+  - "core/schema/event_schema_v0.1.yaml"
+  - "core/validation/rules_structural_v0.1.yaml"
+  - "core/validation/rules_semantic_v0.1.yaml"
+
+# ---------------------------------------------------------------------
+# 1. Portée (scope)
+# ---------------------------------------------------------------------
+
+scope:
+  applies_to:
+    - "ssot_canon/registry/registry.yaml"
+  excludes:
+    - "evidence_lake/**"
+    - "event_kernel/**"
+    - "personal_vault/**"
+
+  notes:
+    - "Ces règles s’appliquent à la dimension TEMPORELLE et HISTORIQUE des documents."
+    - "La structure physique est définie par rules_structural_v0.1."
+    - "La cohérence de base des métadonnées est définie par rules_semantic_v0.1."
+
+# ---------------------------------------------------------------------
+# 2. Concepts de lignée et de versions
+# ---------------------------------------------------------------------
+
+lineage_model:
+  concepts:
+    id_root:
+      description: >
+        Identifiant logique de la lignée d’un document. Toutes les
+        versions successives d’un même contenu de référence (ex: ADR-0001)
+        partagent le même id_root.
+      rules:
+        - "id_root est stable pour toute la durée de vie de la lignée."
+        - "La première version d’une lignée a id_root = id (v0.1, convention simple)."
+
+    version:
+      description: >
+        Une version est une instance concrète et datée d’un document,
+        identifiée au minimum par (tenant_id, id, hash_sha256).
+      rules:
+        - "Deux versions différentes d’un même document n’ont jamais le même hash_sha256."
+        - "Une version ne peut pas être modifiée en place : toute modification crée une nouvelle version."
+
+    chain:
+      description: >
+        Une chaîne de versions est une suite ordonnée de documents
+        reliés par previous_hash, formant une lignée temporelle.
+      rules:
+        - "Chaque version non initiale doit pointer vers le hash de la version précédente via previous_hash."
+        - "La chaîne ne peut pas être réordonnée a posteriori."
+
+# ---------------------------------------------------------------------
+# 3. Invariants de succession
+# ---------------------------------------------------------------------
+
+succession_invariants:
+  genesis_version:
+    description: "Contraintes sur la première version d’une lignée."
+    rules:
+      - "Pour la première version d’un document, id_root = id."
+      - "previous_hash est absent ou null."
+      - "lifecycle_history doit inclure au moins un événement de création."
+      - "Un event_kernel de type document_created doit exister pour cette version."
+
+  non_genesis_version:
+    description: "Contraintes sur toutes les versions après la première."
+    rules:
+      - "id_root doit être renseigné et identique à celui de la première version."
+      - "previous_hash doit pointer vers le hash_sha256 de la version précédente."
+      - "created_at de la nouvelle version doit être strictement > created_at de la version précédente."
+      - "Un event_kernel de type document_version_created doit exister pour cette version."
+
+  monotonicity:
+    description: "Les versions doivent respecter un ordre temporel strict."
+    rules:
+      - "Pour un couple (tenant_id, id_root), les created_at doivent être strictement croissants."
+      - "Les statuts dans lifecycle_history doivent suivre une séquence cohérente avec rules_semantic_v0.1."
+
+  immutability:
+    description: "Interdiction de réécrire l’historique."
+    rules:
+      - "Toute modification d’un contenu canonique doit changer hash_sha256."
+      - "Il est interdit de modifier une entrée historique pour l’aligner sur un nouvel état."
+      - "Toute incohérence entre previous_hash et la version précédente doit être considérée comme un signal fort d’attaque ou de corruption."
+
+# ---------------------------------------------------------------------
+# 4. Politique de branches (forks de lignée)
+# ---------------------------------------------------------------------
+
+branching_policy:
+  mode: "forbidden_v0.1"
+  description: >
+    En v0.1, Relinium considère qu’une lignée de document est
+    STRICTEMENT linéaire pour simplifier les audits et éviter
+    les scénarios de branches concurrentes difficiles à interpréter.
+
+  rules:
+    - "Pour un couple (tenant_id, id_root), il ne peut exister qu’une unique succession linéaire de versions."
+    - "Il est interdit d’avoir plusieurs versions partageant le même previous_hash et un status non terminal."
+    - "Tout cas de double succession sur une même version doit être flaggé comme 'fork_suspect' dans les rapports."
+
+  behavior:
+    on_detected_fork: "error"
+    on_suspected_fork: "accept_with_flag"
+
+  notes:
+    - >
+      Des politiques plus fines (branches explicites, merges, etc.)
+      pourront être introduites dans une future version (v0.2+),
+      mais le modèle v0.1 privilégie la lisibilité forensique.
+
+# ---------------------------------------------------------------------
+# 5. Supersession entre documents (supersedes)
+# ---------------------------------------------------------------------
+
+supersession:
+  description: >
+    La supersession permet de marquer qu’un document A remplace
+    un document B, même si leurs id ou leurs lignées diffèrent.
+
+  invariants:
+    - "supersedes doit pointer vers un id valide existant dans le registre."
+    - "Le type du document successeur doit être compatible avec le type du document supplanté."
+    - "Le tenant_id doit être identique, sauf cas explicitement documentés (ex: transfert de projet)."
+    - "Un document en status 'superseded' doit lui-même avoir été 'accepted' ou 'synthesized' auparavant (rules_semantic_v0.1)."
+
+  behavior:
+    unknown_supersedes_target: "error"
+    incompatible_type_supersession: "error"
+    cross_tenant_supersession_without_policy: "error"
+
+  notes:
+    - >
+      La supersession n’est pas un mécanisme de versionning
+      interne mais un lien de remplacement entre documents
+      potentiellement distincts (ex: un nouveau référentiel
+      qui remplace un ancien RFC).
+
+# ---------------------------------------------------------------------
+# 6. Lien avec l’Event Kernel
+# ---------------------------------------------------------------------
+
+event_linking:
+  required_for:
+    - "creation de la première version d’un document"
+    - "création de toute nouvelle version"
+    - "changement de statut terminal (rejected, deprecated, archived, superseded)"
+
+  event_types:
+    genesis:
+      expected_type: "document_created"
+      required_fields:
+        - "id"
+        - "tenant_id"
+        - "hash_sha256"
+        - "path"
+    new_version:
+      expected_type: "document_version_created"
+      required_fields:
+        - "id"
+        - "tenant_id"
+        - "hash_sha256"
+        - "previous_hash"
+    terminal_status:
+      expected_type: "document_status_changed"
+      required_fields:
+        - "id"
+        - "tenant_id"
+        - "old_status"
+        - "new_status"
+
+  invariants:
+    - "Pour chaque entrée de registre (document_core), il doit exister au moins un event_kernel correspondant."
+    - "Pour chaque nouvelle version, un événement associé doit être présent dans le stream du tenant."
+    - "Les timestamps des events ne doivent pas être antérieurs aux created_at des versions correspondantes."
+
+  behavior:
+    missing_event_behavior: "warn"
+    inconsistent_event_timestamp_behavior: "warn"
+    wrong_event_type_behavior: "error"
+
+  notes:
+    - >
+      En v0.1, l’absence d’event n’est pas bloquante mais
+      signalée. À terme, le mode strict pourra rendre ces
+      inconsistances bloquantes.
+
+# ---------------------------------------------------------------------
+# 7. Politique d’archives et de clôture de lignée
+# ---------------------------------------------------------------------
+
+lineage_closure:
+  closure_status:
+    - "archived"
+    - "superseded"
+
+  invariants:
+    - "Une lignée est considérée comme close lorsqu’un document atteint un statut terminal et qu’aucune nouvelle version n’est créée ensuite."
+    - "Il est interdit de créer une nouvelle version après une clôture explicite, sauf via un processus d’unseal ou de réouverture documenté."
+
+  behavior:
+    post_closure_new_version_behavior: "error"
+    allowed_unseal_reopen_behavior: "manual_review"
+
+  notes:
+    - >
+      La réouverture d’une lignée close doit être un processus
+      exceptionnel, tracé dans policies/ et event_kernel,
+      et potentiellement soumis à validation éthique/forensique.
+
+# ---------------------------------------------------------------------
+# 8. Intégration dans le pipeline de validation
+# ---------------------------------------------------------------------
+
+validation_pipeline:
+  ordering_hint:
+    - "rules_structural_v0.1"
+    - "rules_semantic_v0.1"
+    - "rules_succession_v0.1"
+    - "rules_temporal_v0.1"
+    - "rules_security_v0.1"
+
+  mandatory_for:
+    - "publication dans ssot_canon/docs"
+    - "génération de releases Relinium"
+    - "audits forensiques officiels"
+
+  behavior:
+    on_error: "reject_document"
+    on_warn: "accept_with_flag"
+
+  notes:
+    - >
+      Toute implémentation sérieuse de Relinium doit considérer
+      ces règles de succession comme non négociables pour
+      garantir une chaîne de confiance exploitable à long terme.
+
+# =====================================================================
+# Fin de rules_succession_v0.1.yaml
+# =====================================================================
