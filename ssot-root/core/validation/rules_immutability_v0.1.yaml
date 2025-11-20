@@ -1,0 +1,250 @@
+id: "RULES-IMMUTABILITY-v0.1"
+version: "0.1"
+title: "Règles d'immutabilité – Relinium SSOT v0.1"
+description: >
+  Ce document définit les règles d'immutabilité applicables aux différentes
+  zones de ssot-root/. Il sert de référence au Validation Core pour contrôler
+  les opérations autorisées (création, mise à jour, suppression) et les
+  mécanismes de succession, d'append-only et de dérivation.
+
+meta:
+  created_at: "2025-11-20T00:00:00Z"
+  author_human: "Gregory Catteau"
+  author_agent: "Relinium Design Assistant (LLM)"
+  status: "genesis"
+  genesis:
+    is_genesis_document: true
+    genesis_protocol_version: "0.1"
+    comment: >
+      Premier document normatif créé après la mise en place de ssot-root/.
+      À partir de ce document, toutes les évolutions structurelles devront
+      respecter les règles qu'il définit.
+
+  relates_to:
+    - "core/schema/document_schema_v1.2.yaml"
+    - "core/schema/event_schema_v0.1.yaml"
+    - "core/schema/analysis_request_schema_v0.1.yaml"
+    - "core/schema/analysis_result_schema_v0.1.yaml"
+
+global_principles:
+  - id: "IMMUT-001"
+    rule: "Aucun fichier ne peut être modifié ou supprimé sans que l'opération soit reconstruisible à partir d'un historique complet."
+  - id: "IMMUT-002"
+    rule: "Les zones de preuves brutes (evidence_lake) sont append-only. Toute modification ou suppression directe est interdite."
+  - id: "IMMUT-003"
+    rule: "Les timelines factuelles (event_kernel/streams) sont append-only. Toute correction se fait via des événements de correction."
+  - id: "IMMUT-004"
+    rule: "Les documents canoniques (ssot_canon/docs) sont modifiés via succession versionnée. Aucune réécriture destructrice n'est autorisée."
+  - id: "IMMUT-005"
+    rule: "Les résultats d'analyse ne remplacent pas les faits : ils référencent les sources, les patterns et les limites de l'analyse."
+  - id: "IMMUT-006"
+    rule: "Les politiques (policies/) et schémas (core/schema/) ne peuvent évoluer qu'en lien avec des décisions documentées (ADR/RFC)."
+
+zones:
+
+  evidence_lake:
+    path: "evidence_lake/"
+    role: "archive_brute"
+    immutability_mode: "append_only"
+    allowed_operations:
+      - "create_file"
+      - "append_checksums"
+    forbidden_operations:
+      - "modify_file"
+      - "truncate_file"
+      - "delete_file"
+    succession_required: false
+    derivation:
+      description: >
+        Les fichiers de evidence_lake/ peuvent être référencés par des événements
+        (event_kernel) et des documents canoniques, mais ne sont jamais modifiés.
+      typical_consumers:
+        - "event_kernel/streams"
+        - "analysis/"
+    integrity_controls:
+      - type: "checksums_file"
+        path: "evidence_lake/legacy/tenant_default/checksums.sha256"
+      - type: "periodic_verification"
+        description: "Script de vérification d'intégrité des archives."
+
+  event_kernel_streams:
+    path: "event_kernel/streams/"
+    role: "timeline_factuelle"
+    immutability_mode: "append_only_lines"
+    allowed_operations:
+      - "append_event"
+    forbidden_operations:
+      - "edit_event"
+      - "delete_event"
+      - "reorder_events"
+    event_model:
+      schema: "core/schema/event_schema_v0.1.yaml"
+      correction_pattern:
+        enabled: true
+        fields:
+          - "event_type: correction"
+          - "corrects_event_id"
+          - "reason"
+    succession_required: false
+
+  event_kernel_mappings:
+    path: "event_kernel/mappings/"
+    role: "mapping_interpretatif"
+    immutability_mode: "mutable_versionne"
+    allowed_operations:
+      - "create_mapping"
+      - "update_mapping"
+    forbidden_operations:
+      - "delete_mapping_without_trace"
+    notes: >
+      Les mappings (identity_map, channel_map, source_map) sont considérés comme
+      des couches d'interprétation. Toute modification doit être traçable via Git
+      et idéalement liée à une OBS/RFC expliquant le changement.
+
+  core_schema:
+    path: "core/schema/"
+    role: "grammaire_du_systeme"
+    immutability_mode: "mutable_avec_gouvernance"
+    allowed_operations:
+      - "create_schema"
+      - "update_schema"
+    governance:
+      required_references:
+        - "ADR"
+        - "RFC"
+      required_fields:
+        - "version"
+        - "previous_hash"
+        - "id_root"
+    notes: >
+      Toute modification de schéma doit produire une nouvelle version explicite
+      avec ancrage cryptographique vers la version précédente, documentée via
+      ADR/RFC dans ssot_canon/docs/adr/.
+
+  core_validation:
+    path: "core/validation/"
+    role: "regles_de_validation"
+    immutability_mode: "mutable_avec_gouvernance"
+    allowed_operations:
+      - "update_rules"
+    governance:
+      required_references:
+        - "ADR"
+      notes: >
+        Les règles de validation structurelle, sémantique, temporelle et de
+        sécurité ne peuvent être modifiées qu'en cohérence avec les évolutions
+        de schémas et les besoins documentés (ADR).
+
+  ssot_canon_docs:
+    path: "ssot_canon/docs/"
+    role: "documents_canoniques"
+    immutability_mode: "succession_versionnee"
+    allowed_operations:
+      - "create_document"
+      - "create_successor"
+      - "minor_edit_with_log"
+    forbidden_operations:
+      - "delete_document_without_successor"
+      - "overwrite_frontmatter"
+    succession_model:
+      schema: "core/schema/document_schema_v1.2.yaml"
+      required_fields:
+        - "id"
+        - "id_root"
+        - "version"
+        - "previous_hash"
+        - "links.supersedes"
+    minor_edit_policy:
+      description: >
+        Les corrections mineures (typos, reformulations sans changement de sens)
+        sont tolérées sans création de nouvelle version, mais doivent générer
+        un événement 'minor_edit' dans event_kernel, incluant les hash avant/après.
+
+  ssot_canon_registry:
+    path: "ssot_canon/registry/"
+    role: "vues_derivées"
+    immutability_mode: "regenerable"
+    allowed_operations:
+      - "regenerate_registry"
+    forbidden_operations:
+      - "hand_edit"
+    notes: >
+      Le registre global et ses index sont entièrement dérivés des documents
+      canoniques. Ils ne doivent jamais être édités à la main.
+
+  analysis_requests:
+    path: "analysis/requests/"
+    role: "journal_requetes_analyse"
+    immutability_mode: "append_only"
+    allowed_operations:
+      - "create_request"
+    forbidden_operations:
+      - "edit_request"
+      - "delete_request"
+    schema: "core/schema/analysis_request_schema_v0.1.yaml"
+    notes: >
+      Chaque demande d'analyse est une pièce de dossier à part entière. Elle
+      documente qui demande, sur quoi, pourquoi, sous quelle politique et avec
+      quels garde-fous.
+
+  analysis_results:
+    path: "analysis/results/"
+    role: "journal_resultats_analyse"
+    immutability_mode: "append_only"
+    allowed_operations:
+      - "create_result"
+    forbidden_operations:
+      - "edit_result"
+      - "delete_result"
+    schema: "core/schema/analysis_result_schema_v0.1.yaml"
+    succession_model:
+      enabled: true
+      fields:
+        - "supersedes"
+        - "id_root"
+        - "version"
+    notes: >
+      Les résultats d'analyse ne suppriment jamais les résultats précédents.
+      En cas de correction ou d'évolution d'un moteur, un nouveau résultat est
+      créé, lié à l'ancien via 'supersedes'. Les résultats doivent distinguer
+      explicitement les faits référencés, les patterns détectés et le narratif.
+
+  policies:
+    path: "policies/"
+    role: "cadre_ethique_legal_gouvernance"
+    immutability_mode: "mutable_versionne"
+    allowed_operations:
+      - "create_policy"
+      - "update_policy"
+    forbidden_operations:
+      - "delete_policy_without_successor"
+    notes: >
+      Les politiques définissent l'usage acceptable de Relinium. Elles ne
+      peuvent être modifiées ou retirées sans trace. Les violations de ces
+      politiques doivent être détectables a posteriori via les journaux
+      d'analyse et les events.
+
+  personal_vault:
+    path: "personal_vault/"
+    role: "coffres_personnels"
+    immutability_mode: "versionnee_chiffree"
+    allowed_operations:
+      - "create_vault_item"
+      - "create_vault_item_version"
+      - "request_unseal"
+    forbidden_operations:
+      - "delete_item_without_audit"
+    notes: >
+      Les contenus du coffre sont chiffrés et hors de portée de l'analyse
+      standard. Les demandes d'ouverture (evidence_unseal) sont append-only
+      et soumises à des politiques strictes.
+
+  tools:
+    path: "tools/"
+    role: "outillage_integration"
+    immutability_mode: "code_mutable"
+    allowed_operations:
+      - "update_code"
+    guardrails:
+      - "Aucun outil ne doit contourner les règles d'immutabilité ci-dessus."
+      - "Tout pipeline doit passer par Ingestion Fabric + Validation Core."

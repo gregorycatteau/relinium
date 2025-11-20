@@ -1,1 +1,2 @@
 # events placeholder
+{"id":"EVT-GENESIS-0001","kind":"schema_event","event_type":"validation_rules_created","timestamp":"2025-11-20T10:21:18Z","tenant_id":"tenant_default","actor_human":"gregory.catteau","actor_agent":"relinium.design.llm","path":"core/validation/rules_immutability_v0.1.yaml","hash_sha256":"38ff337803fa3c415cd962c5f0d210d2cf766a63c62ff27b7a318bf41f97a360","genesis":true,"comment":"Creation du document de genese des regles dimmutabilite Relinium v0.1"}
