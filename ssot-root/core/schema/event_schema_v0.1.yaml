@@ -1,1 +1,91 @@
-# event_schema_v0.1
+# event_schema_v0.1.yaml
+#
+# Schéma canonique des événements Relinium enregistrés dans
+# event_kernel/streams/*/events_raw.ndjson.
+#
+# Objectif : fournir un contrat minimal pour tous les events afin
+# de garantir leur lisibilité, leur vérifiabilité et leur usage
+# forensique à long terme.
+
+schema_id: "SCHEMA-EVENT-V0.1"
+version: "0.1"
+description: >
+  Schéma minimal des événements Relinium. Chaque ligne de
+  events_raw.ndjson doit respecter cette structure (au moins
+  pour les champs requis).
+
+# Champs obligatoires pour tous les événements
+required_fields:
+  id:
+    type: string
+    pattern: "^[A-Z0-9\\-]+$"
+    description: "Identifiant unique de l'événement (ex: EVT-GENESIS-0001)."
+
+  kind:
+    type: string
+    allowed:
+      - "schema_event"
+      - "crypto_event"
+      - "policy_event"
+      - "ingestion_event"
+      - "evidence_event"
+      - "analysis_event"
+    description: "Catégorie générale de l'événement."
+
+  event_type:
+    type: string
+    description: "Type métier plus précis (ex: validation_rules_created, trust_policy_created...)."
+
+  timestamp:
+    type: string
+    format: "date-time"
+    description: "Horodatage ISO 8601 UTC (ex: 2025-11-20T10:21:18Z)."
+
+  tenant_id:
+    type: string
+    description: "Identifiant logique du tenant / espace (ex: tenant_default)."
+
+  actor_human:
+    type: string
+    description: "Identité humaine lisible (ex: gregory.catteau)."
+
+  actor_agent:
+    type: string
+    description: "Agent ou système à l'origine de l'action (ex: relinium.design.llm)."
+
+  hash_sha256:
+    type: string
+    pattern: "^[a-f0-9]{64}$"
+    description: "Empreinte SHA-256 du fichier ou artefact ciblé par l'événement."
+
+  genesis:
+    type: boolean
+    description: "true si l'événement correspond à un acte de genèse (v0.1) pour un artefact donné."
+
+  comment:
+    type: string
+    description: "Commentaire humain court décrivant l'action."
+
+# Champs optionnels courants
+optional_fields:
+  path:
+    type: string
+    description: "Chemin relatif dans ssot-root/ si l'événement cible un fichier spécifique."
+
+  tenant_stream:
+    type: string
+    description: "Nom du flux ou stream si différent du tenant_id."
+
+  context:
+    type: object
+    description: "Données métier additionnelles (clé/valeur) propres au type d'événement."
+
+# Contraintes globales
+constraints:
+  id_must_be_unique_per_stream: true
+  timestamp_must_be_utc: true
+  hash_required_for_file_targeted_events: true
+
+notes:
+  - "Ce schéma est volontairement minimaliste pour rester stable dans le temps."
+  - "Les extensions spécifiques (par type d'event) pourront être définies dans d'autres schémas dérivés."
