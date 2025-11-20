@@ -1,1 +1,361 @@
-# rules_semantic_v0.1
+# =====================================================================
+# rules_semantic_v0.1.yaml
+# Règles SÉMANTIQUES de base pour les documents du SSOT Relinium
+# v0.1 — Cohérence des métadonnées canoniques (document_core_v0.1)
+# =====================================================================
+
+version: "0.1"
+id: "RULES-SEMANTIC-v0.1"
+title: "Règles sémantiques des documents SSOT"
+status: "active"
+
+description: >
+  Ce fichier définit les contraintes SÉMANTIQUES minimales
+  applicables aux métadonnées canoniques des documents
+  (document_core_v0.1). Il s’agit de vérifier que ce que
+  la meta raconte est cohérent, traçable et opposable.
+
+  Les règles couvrent : types de documents, statuts,
+  cohérence id/type, contraintes de tenant/projet, et
+  premières règles de lifecycle (sans gérer encore la
+  succession fine ni la temporalité détaillée).
+
+references:
+  - "core/schema/document_core_v0.1.yaml"
+  - "core/validation/rules_structural_v0.1.yaml"
+  - "core/schema/event_schema_v0.1.yaml"
+
+# ---------------------------------------------------------------------
+# 1. Portée (scope)
+# ---------------------------------------------------------------------
+
+scope:
+  applies_to:
+    - "ssot_canon/registry/registry.yaml"   # meta canonique globale
+  excludes:
+    - "evidence_lake/**"
+    - "event_kernel/**"
+    - "personal_vault/**"
+
+  notes:
+    - "Les règles ici s'appliquent aux ENREGISTREMENTS de meta (document_core)."
+    - "La structure physique des fichiers est gérée par rules_structural_v0.1."
+    - "La succession (previous_hash, id_root, supersedes) sera précisée dans rules_succession_v0.1."
+
+# ---------------------------------------------------------------------
+# 2. Modèle canonique document_core (rappel)
+# ---------------------------------------------------------------------
+
+document_core_model:
+  required_fields:
+    - "id"
+    - "type"
+    - "status"
+    - "title"
+    - "tenant_id"
+    - "created_at"
+    - "hash_sha256"
+    - "path"
+  optional_fields:
+    - "summary"
+    - "project_id"
+    - "scope"
+    - "tags"
+    - "category"
+    - "updated_at"
+    - "id_root"
+    - "previous_hash"
+    - "supersedes"
+    - "lifecycle_history"
+
+  types:
+    id: "string (non vide)"
+    type: "string (enum contrôlé)"
+    status: "string (enum contrôlé)"
+    title: "string (non vide)"
+    summary: "string (optionnel)"
+    tenant_id: "string (non vide, référence à org/tenant_template)"
+    project_id: "string (optionnel)"
+    scope: "string (optionnel, ex: ssot, product, legal, org)"
+    tags: "liste de strings"
+    category: "string (optionnel)"
+    created_at: "datetime ISO8601 (UTC recommandé)"
+    updated_at: "datetime ISO8601 (>= created_at si présent)"
+    hash_sha256: "string (64 hex chars, SHA-256)"
+    path: "chemin relatif vers le document canonique"
+    id_root: "string (optionnel, identifiant de la racine de la lignée)"
+    previous_hash: "string (optionnel, liaison vers version précédente)"
+    supersedes: "string (optionnel, id du document explicitement supplanté)"
+    lifecycle_history: "liste d’événements internes (statut, date, acteur...)"
+
+# ---------------------------------------------------------------------
+# 3. Types de documents et cohérence id/type
+# ---------------------------------------------------------------------
+
+doc_types:
+  allowed_types:
+    - "adr"
+    - "rfc"
+    - "obs"
+    - "poc"
+    - "sprint"
+    - "forensic"
+    - "policy"
+    - "org_profile"
+    - "analysis_request"
+    - "analysis_result"
+
+  # Règles de cohérence entre `type` et `id`
+  id_patterns:
+    adr:
+      regex: "^ADR-[0-9]{4}$"
+      case_sensitive: true
+    rfc:
+      regex: "^RFC-[0-9]{4}$"
+      case_sensitive: true
+    obs:
+      regex: "^OBS-[0-9]{4}$"
+      case_sensitive: true
+    poc:
+      regex: "^POC-[0-9]{4}$"
+      case_sensitive: true
+    sprint:
+      regex: "^SPRINT-[0-9]{4}$"
+      case_sensitive: true
+    forensic:
+      regex: "^FORENSIC-[0-9]{4}$"
+      case_sensitive: true
+    policy:
+      regex: "^POL-[A-Z0-9-]+-[0-9]{4}$"
+      case_sensitive: true
+    org_profile:
+      regex: "^ORG-[A-Z0-9_-]+$"
+      case_sensitive: true
+    analysis_request:
+      regex: "^ANREQ-[0-9]{4}$"
+      case_sensitive: true
+    analysis_result:
+      regex: "^ANRES-[0-9]{4}$"
+      case_sensitive: true
+
+  invariants:
+    - "Le champ type doit être l’un des allowed_types."
+    - "Le champ id doit respecter le pattern associé au type."
+    - "Un même (tenant_id, id) ne doit pas être réutilisé pour plusieurs documents concurrents."
+    - "Un id peut désigner plusieurs versions SUCCESSIVES, mais UNE SEULE version active à la fois."
+
+  behavior:
+    unknown_type_behavior: "error"
+    id_pattern_mismatch_behavior: "error"
+    duplicate_active_id_behavior: "error"
+
+# ---------------------------------------------------------------------
+# 4. Statuts et lifecycle de base
+# ---------------------------------------------------------------------
+
+status_model:
+  allowed_status:
+    - "draft"
+    - "in_review"
+    - "accepted"
+    - "rejected"
+    - "deprecated"
+    - "archived"
+    - "superseded"
+    - "synthesized"
+
+  categories:
+    draft_like:
+      - "draft"
+      - "in_review"
+    stable:
+      - "accepted"
+      - "synthesized"
+    terminal:
+      - "rejected"
+      - "deprecated"
+      - "archived"
+      - "superseded"
+
+  invariants:
+    - "Chaque document doit avoir un status dans allowed_status."
+    - "Un document en status terminal ne peut plus revenir vers un statut draft_like."
+    - "Les statuts stables (accepted, synthesized) impliquent une meta complète et cohérente."
+    - "Un document superseded doit pointer (supersedes) vers l’id qu’il remplace."
+
+  # Transitions autorisées v0.1 (version simplifiée)
+  allowed_transitions:
+    draft:
+      - "in_review"
+      - "rejected"
+    in_review:
+      - "accepted"
+      - "rejected"
+      - "deprecated"
+    accepted:
+      - "deprecated"
+      - "superseded"
+    synthesized:
+      - "deprecated"
+      - "superseded"
+    rejected:
+      - "archived"
+    deprecated:
+      - "archived"
+    superseded:
+      - "archived"
+    archived:
+      - # aucun
+
+  behavior:
+    invalid_transition_behavior: "error"
+    missing_status_behavior: "error"
+
+# ---------------------------------------------------------------------
+# 5. Contrainte tenant / project / scope
+# ---------------------------------------------------------------------
+
+tenant_project_scope:
+  tenant_id:
+    required: true
+    format_hint: "slug ASCII (ex: m_comme_medoc, pixelprowlers)"
+  project_id:
+    required_for_types:
+      - "adr"
+      - "rfc"
+      - "poc"
+      - "sprint"
+      - "analysis_request"
+      - "analysis_result"
+    format_hint: "slug projet (ex: relinium_genesis)"
+  scope:
+    allowed_values:
+      - "ssot"
+      - "product"
+      - "org"
+      - "legal"
+      - "analysis"
+    required_for_types:
+      - "policy"
+      - "forensic"
+      - "analysis_request"
+      - "analysis_result"
+
+  invariants:
+    - "tenant_id doit pointer vers une entrée valide dans org/tenant_template/config."
+    - "project_id, lorsqu’il est requis, doit être non vide."
+    - "scope doit être cohérent avec le type (ex: policy -> legal ou org)."
+
+  behavior:
+    unknown_tenant_behavior: "error"
+    missing_required_project_behavior: "error"
+    invalid_scope_behavior: "error"
+
+# ---------------------------------------------------------------------
+# 6. Liens de version et de succession (vue sémantique simple)
+# ---------------------------------------------------------------------
+
+version_links:
+  fields:
+    - "id_root"
+    - "previous_hash"
+    - "supersedes"
+
+  invariants:
+    - "id_root est obligatoire pour tout document non initial d’une lignée."
+    - "previous_hash n’est présent que s’il existe effectivement une version précédente."
+    - "supersedes ne doit pointer que vers un id valide et existant dans le registre."
+    - "Un document avec status 'superseded' doit lui-même avoir été 'accepted' ou 'synthesized' auparavant."
+
+  behavior:
+    invalid_supersedes_behavior: "error"
+    missing_id_root_for_non_genesis_behavior: "warn"   # v0.1 : tolérant mais signalé
+    inconsistent_previous_hash_behavior: "error"
+
+  notes:
+    - >
+      La logique complète de succession (chaînes de hash,
+      preuves de non-falsification, branches concurrentes, etc.)
+      sera détaillée dans rules_succession_v0.1.yaml.
+    - >
+      Ces invariants s’assurent déjà que les liens basiques
+      sont cohérents, ce qui est crucial pour un audit forensique.
+
+# ---------------------------------------------------------------------
+# 7. Cohérence hash / chemin / type
+# ---------------------------------------------------------------------
+
+hash_and_path:
+  invariants:
+    - "hash_sha256 doit être une chaîne hexadécimale de 64 caractères."
+    - "path doit pointer vers un fichier existant sous ssot_canon/docs ou équivalent."
+    - "Le préfixe du nom de fichier (adr-, rfc-, etc.) doit être cohérent avec type et id."
+    - "Le hash déclaré en meta doit correspondre au hash calculé après normalisation (voir rules_structural_v0.1)."
+
+  behavior:
+    hash_format_invalid_behavior: "error"
+    missing_path_behavior: "error"
+    file_not_found_behavior: "error"
+    hash_mismatch_behavior: "error"
+
+# ---------------------------------------------------------------------
+# 8. Sanity checks orientés sécurité / abus
+# ---------------------------------------------------------------------
+
+security_sanity:
+  checks:
+    - name: "too_frequent_status_flips"
+      description: >
+        Détecter les documents dont le status change anormalement
+        souvent (ex: accepted -> deprecated -> accepted -> ...),
+        signe potentiel de manipulation abusive.
+      severity: "warn"
+
+    - name: "orphan_documents"
+      description: >
+        Documents sans tenant_id, sans project_id requis, ou isolés
+        de toute lignée claire (id_root manquant).
+      severity: "warn"
+
+    - name: "inconsistent_type_usage"
+      description: >
+        Cas où un type de document est utilisé hors de son périmètre
+        habituel (ex: policy avec scope=product mais sans référentiel).
+      severity: "warn"
+
+  notes:
+    - >
+      Ces contrôles ne bloquent pas l’acceptation en v0.1,
+      mais doivent être surfaces dans l’UI / les rapports
+      d’audit comme signaux faibles à investiguer.
+
+# ---------------------------------------------------------------------
+# 9. Intégration dans les pipelines de validation
+# ---------------------------------------------------------------------
+
+validation_pipeline:
+  ordering_hint:
+    - "rules_structural_v0.1"
+    - "rules_semantic_v0.1"
+    - "rules_succession_v0.1"
+    - "rules_temporal_v0.1"
+    - "rules_security_v0.1"
+
+  mandatory_for:
+    - "publication dans ssot_canon/docs"
+    - "génération de releases Relinium"
+    - "analyse forensique officielle"
+
+  behavior:
+    on_error: "reject_document"
+    on_warn: "accept_with_flag"
+
+  notes:
+    - >
+      Toute implémentation concrète (CLI, service web, n8n, etc.)
+      doit suivre cet ordre logique de validation pour garantir
+      un comportement reproductible et auditable.
+
+# =====================================================================
+# Fin de rules_semantic_v0.1.yaml
+# =====================================================================
