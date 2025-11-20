@@ -1,1 +1,213 @@
-# rules_security_v0.1
+# =====================================================================
+# rules_security_v0.1.yaml
+# Règles de SÉCURITÉ pour les documents du SSOT Relinium
+# v0.1 — Intégrité, signatures, immutabilité, supply chain
+# =====================================================================
+
+version: "0.1"
+id: "RULES-SECURITY-v0.1"
+title: "Règles de sécurité des documents SSOT"
+status: "active"
+
+description: >
+  Ce fichier définit les garanties minimales de sécurité appliquées aux
+  documents canoniques du SSOT Relinium : intégrité par hash, signatures,
+  immutabilité des versions publiées, journalisation des événements
+  sensibles et alignement avec la politique GPG officielle.
+
+  Objectif : rendre extrêmement coûteuse, visible et fragile toute
+  tentative de réécriture de l’histoire ou de détournement de Relinium.
+
+references:
+  - "core/schema/document_core_v0.1.yaml"
+  - "core/schema/event_schema_v0.1.yaml"
+  - "core/validation/rules_immutability_v0.1.yaml"
+  - "core/validation/rules_structural_v0.1.yaml"
+  - "core/validation/rules_semantic_v0.1.yaml"
+  - "core/validation/rules_succession_v0.1.yaml"
+  - "core/validation/rules_temporal_v0.1.yaml"
+  - "policies/legal/POL-GPG-TRUST-0001.md"
+
+# ---------------------------------------------------------------------
+# 1. Portée
+# ---------------------------------------------------------------------
+
+scope:
+  applies_to:
+    - "ssot_canon/**"
+    - "core/**"
+    - "policies/**"
+    - "event_kernel/**"
+  excludes:
+    - "evidence_lake/**"       # Règle : append-only, traitée séparément.
+    - "personal_vault/**"      # Coffres perso : modèle de sécurité dédié.
+
+# ---------------------------------------------------------------------
+# 2. Modèle d’intégrité (hash)
+# ---------------------------------------------------------------------
+
+integrity_model:
+  hash_algorithm: "sha256"
+  requirements:
+    - "Tout document canonique présent dans ssot_canon/docs doit avoir son hash_sha256 déclaré dans le registry."
+    - "Le hash stocké doit être strictement égal au hash recalculé sur le contenu courant du fichier."
+    - "Toute modification du contenu (y compris frontmatter) implique un nouveau hash ET une nouvelle version logique."
+    - "Les checksums de snapshots (evidence_lake/legacy/**) doivent être listés dans checksums.sha256."
+
+  behavior:
+    hash_mismatch_behavior: "error"
+    missing_hash_in_registry_behavior: "warn"
+    missing_file_for_registry_entry_behavior: "error"
+
+# ---------------------------------------------------------------------
+# 3. Signatures cryptographiques (GPG, commits, tags)
+# ---------------------------------------------------------------------
+
+signature_policy:
+  commit_signing:
+    required: true
+    description: >
+      Tous les commits de la branche canonique (main) du dépôt officiel
+      Relinium doivent être signés par une clé listée dans
+      POL-GPG-TRUST-0001.
+
+  tag_signing:
+    required: true
+    description: >
+      Tous les tags de version « officiels » (ex: v0.1-ssot-genesis)
+      doivent être signés par une clé de confiance.
+
+  trusted_identities:
+    source: "policies/legal/POL-GPG-TRUST-0001.md"
+    behavior:
+      unknown_signer_behavior: "reject_in_release"
+      unsigned_commit_behavior: "warn"
+      unsigned_tag_behavior: "reject_release_artifact"
+
+  document_level_signatures:
+    enabled: false          # v0.1 : option future, non obligatoire.
+    description: >
+      Le modèle v0.1 ne requiert pas encore de signature par document,
+      mais la structure doit anticiper la possibilité de stocker des
+      signatures de contenu (détachées) en complément du hash.
+
+# ---------------------------------------------------------------------
+# 4. Immutabilité et modifications autorisées
+# ---------------------------------------------------------------------
+
+immutability:
+  reference_rules: "core/validation/rules_immutability_v0.1.yaml"
+
+  immutable_statuses:
+    - "accepted"
+    - "certified"
+    - "published"
+    - "archived"
+
+  invariants:
+    - "Un document canon en statut immutable ne peut plus être modifié en place."
+    - "Toute évolution significative implique la création d’une nouvelle version (id versionné, previous_hash, succession)."
+    - "Les champs de métadonnées critiques (id_root, previous_hash, created_at, genesis_actor, genesis_event_id) sont immuables dès qu’ils sont définis."
+    - "Les documents de type 'policy' et 'schema' sont considérés comme critiques et suivent systématiquement un modèle versionné."
+
+  behavior:
+    attempt_mutation_of_immutable_behavior: "error"
+    missing_previous_hash_on_new_version_behavior: "error"
+
+# ---------------------------------------------------------------------
+# 5. Journalisation des événements de sécurité
+# ---------------------------------------------------------------------
+
+security_event_logging:
+  required_for:
+    - "création/modification de règles de validation (rules_*.yaml)"
+    - "création/modification de schémas core (document_core, event_schema, etc.)"
+    - "création/modification de politiques critiques (POL-*.md)"
+    - "création/rotation/révocation de clés GPG officielles"
+    - "changement de statut d’un document canonique"
+
+  event_types:
+    - "schema_event"
+    - "policy_event"
+    - "security_event"
+    - "crypto_event"
+
+  invariants:
+    - "Chaque changement de sécurité critique doit correspondre à au moins un event dans event_kernel/streams."
+    - "L’event doit contenir : id, kind, event_type, timestamp, tenant_id, actor_human, actor_agent, path, hash_sha256."
+    - "Les timestamps d’event doivent respecter les règles temporelles (rules_temporal_v0.1)."
+
+  behavior:
+    missing_security_event_behavior: "warn"
+    inconsistent_event_hash_behavior: "error"
+    inconsistent_event_timestamp_behavior: "warn"
+
+# ---------------------------------------------------------------------
+# 6. Rôles, privilèges et surface d’attaque
+# ---------------------------------------------------------------------
+
+roles_and_privileges:
+  reference_files:
+    - "org/tenant_template/config/roles.yaml"
+    - "policies/governance/POL-ROLES-RESPONSIBILITIES-0001.md"
+
+  principles:
+    - "Principe du moindre privilège pour tous les acteurs."
+    - "Séparation des rôles : édition, validation, déploiement."
+    - "Aucune personne ne devrait pouvoir, seule, rédiger, valider et déployer une politique critique en production."
+
+  critical_actions_requirements:
+    - action: "modification des règles core/validation/*.yaml"
+      requirement: "au moins 2 reviewers distincts + commit signé."
+    - action: "modification des politiques POL-*.md"
+      requirement: "revue par un référent éthique + commit signé."
+    - action: "rotation de clé GPG officielle"
+      requirement: "event crypto_event + mise à jour POL-GPG-TRUST-0001."
+
+  behavior:
+    missing_reviews_behavior: "warn"
+    detected_self_approval_pattern_behavior: "warn"
+
+# ---------------------------------------------------------------------
+# 7. CI, supply chain et releases
+# ---------------------------------------------------------------------
+
+ci_and_supply_chain:
+  requirements:
+    - "Les jobs CI de validation des documents (lint + règles core) doivent être obligatoires pour les branches protégées."
+    - "Les artefacts de release (archives, images, etc.) doivent être produits uniquement à partir de commits signés et validés."
+    - "Les artefacts publiés doivent être accompagnés de leurs hash et, si possible, de signatures détachées."
+    - "La configuration CI elle-même doit être versionnée et couverte par ces règles."
+
+  behavior:
+    release_from_unsigned_commit_behavior: "reject"
+    release_from_failed_validation_behavior: "reject"
+    missing_artifact_hash_behavior: "warn"
+
+# ---------------------------------------------------------------------
+# 8. Intégration dans le pipeline de validation
+# ---------------------------------------------------------------------
+
+validation_pipeline:
+  ordering_hint:
+    - "rules_structural_v0.1"
+    - "rules_semantic_v0.1"
+    - "rules_succession_v0.1"
+    - "rules_temporal_v0.1"
+    - "rules_immutability_v0.1"
+    - "rules_security_v0.1"
+
+  mandatory_for:
+    - "publication dans ssot_canon/docs"
+    - "modification de core/schema/**"
+    - "modification de core/validation/**"
+    - "modification de policies/**"
+    - "génération de releases Relinium"
+
+  behavior:
+    on_error: "reject_document"
+    on_warn: "accept_with_flag"
+
+# =====================================================================
+# Fin de rules_security_v0.1.yaml
+# =====================================================================
