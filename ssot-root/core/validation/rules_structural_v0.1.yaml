@@ -1,1 +1,208 @@
-# rules_structural_v0.1
+# =====================================================================
+# rules_structural_v0.1.yaml
+# Règles STRUCTURELLES de base pour les documents du SSOT Relinium
+# v0.1 — Orientation forensique / vérité opposable
+# =====================================================================
+
+version: "0.1"
+id: "RULES-STRUCTURAL-v0.1"
+title: "Règles structurelles des documents SSOT"
+status: "active"
+
+description: >
+  Ce fichier définit les contraintes STRUCTURELLES minimales
+  applicables aux documents gérés par le noyau SSOT Relinium.
+  Il couvre : encodage, fins de lignes, extensions, conventions
+  de nommage, et usage OPTIONNEL du frontmatter.
+
+  Les métadonnées CANONIQUES (id, type, statut, hash, etc.)
+  ne résident PAS dans le frontmatter mais dans le registre SSOT.
+  Le frontmatter, lorsqu’il est présent, est toléré pour la
+  compatibilité avec certains outils, mais n’est jamais source
+  de vérité.
+
+# ---------------------------------------------------------------------
+# 1. Portée (scope)
+# ---------------------------------------------------------------------
+
+scope:
+  # Chemins où ces règles s’appliquent directement.
+  # D’autres règles plus fines peuvent exister par overlay.
+  applies_to:
+    - "ssot_canon/docs/**"
+    - "policies/**"
+    - "org/**"
+    - "analysis/**"
+
+  # Zones explicitement exclues de ce ruleset structurel.
+  excludes:
+    - "evidence_lake/**"     # Archives brutes : règles spécifiques
+    - "event_kernel/**"      # Géré par event_schema_v0.1
+    - "personal_vault/**"    # Coffres personnels : règles dédiées
+    - "core/**"              # Schémas & règles eux-mêmes
+
+# ---------------------------------------------------------------------
+# 2. Encodage & fins de ligne
+# ---------------------------------------------------------------------
+
+encoding:
+  charset: "UTF-8"
+  forbid_bom: true            # Interdit les BOM UTF-8 (stabilité des hash)
+
+newline:
+  style: "LF"                 # '\n' uniquement, style Unix
+  normalize_on_ingest: true   # Les pipelines peuvent normaliser CRLF -> LF
+
+lines:
+  max_line_length_hint: 120   # Recommandation de lisibilité, pas bloquant
+  hard_limit_behavior: "warn" # Alerte mais n’empêche pas l’acceptation
+
+# ---------------------------------------------------------------------
+# 3. Fichiers: extensions, taille, nommage
+# ---------------------------------------------------------------------
+
+files:
+  # Extensions autorisées dans le périmètre de ce ruleset.
+  allowed_extensions:
+    - ".md"
+
+  # Taille maximum indicative (utile pour prévenir les abus).
+  max_size_mb: 5
+  max_size_behavior: "warn"   # v0.1 : on loggue, on n’interdit pas encore
+
+  naming:
+    # Contraintes générales
+    case: "lowercase"         # Les noms de fichiers doivent être en minuscules
+    allow_spaces: false
+    allowed_chars_regex: "^[a-z0-9._-]+$"
+
+    # Patterns spécifiques par famille de documents
+    patterns:
+
+      canonical_doc:
+        description: >
+          Documents canoniques du SSOT (ADR, RFC, OBS, POC, SPRINT, FORENSIC).
+          Le nom de fichier doit refléter le type et l’identifiant logique.
+        applies_to:
+          - "ssot_canon/docs/**"
+        regex: "^(adr|rfc|obs|poc|sprint|forensic)-[0-9]{4}-[a-z0-9-]+\\.md$"
+        severity: "error"     # Non conforme => document structurellement invalide
+
+      policy_doc:
+        description: >
+          Documents de politique (éthique, gouvernance, légal).
+          Pattern : POL-<SUJET>-<NUMÉRO>.md
+        applies_to:
+          - "policies/**"
+        regex: "^pol-[a-z0-9-]+-[0-9]{4}\\.md$"
+        case_sensitive: false
+        severity: "error"
+
+      org_template:
+        description: >
+          Fichiers modèles d’organisation (ORG-TEMPLATE-config, etc.).
+        applies_to:
+          - "org/templates/**"
+        regex: "^org-template-[a-z0-9-]+\\.yaml$"
+        severity: "warn"
+
+# ---------------------------------------------------------------------
+# 4. Frontmatter (OPTIONNEL, non canonique)
+# ---------------------------------------------------------------------
+
+frontmatter:
+  # Le frontmatter est TOLÉRÉ, mais n’est PAS une source de vérité.
+  allowed: true
+  required: false
+
+  # Format attendu lorsque présent.
+  format: "yaml"
+  position: "top_of_file"
+
+  delimiters:
+    start: "^---\\s*$"
+    end: "^---\\s*$"
+    allow_trailing_content: true  # Corps du document après le bloc
+
+  semantics:
+    # Ces champs peuvent être présents mais sont considérés comme
+    # "informations de confort" pour les outils front-end.
+    tolerated_fields:
+      - "title"
+      - "summary"
+      - "tags"
+      - "category"
+      - "authors"
+      - "created_at"
+      - "updated_at"
+    forbidden_fields:
+      - "id"
+      - "type"
+      - "status"
+      - "hash"
+      - "previous_hash"
+      - "id_root"
+
+    behavior:
+      forbidden_fields_behavior: "error"   # Si l’un de ces champs apparaît dans le frontmatter => invalide
+      tolerated_fields_behavior: "warn"    # On peut logguer mais pas bloquer en v0.1
+
+  notes:
+    - "Le frontmatter ne doit jamais contenir les champs critiques du document_core_v0.1."
+    - "Les identifiants, statuts et hash sont définis et vérifiés via le registre SSOT."
+
+# ---------------------------------------------------------------------
+# 5. Liaison document ↔ métadonnées canoniques (meta_binding)
+# ---------------------------------------------------------------------
+
+meta_binding:
+  # Principe : chaque document CANONIQUE doit être lié à une entrée
+  # de registre (meta) qui suit le schéma document_core_v0.1.
+  required_for_canonical_docs: true
+
+  # Stratégie v0.1 : registre global (fichier unique),
+  # des évolutions ultérieures pourront préférer un fichier par doc.
+  registry:
+    strategy: "single_registry_file"
+    location: "ssot_canon/registry/registry.yaml"
+
+  invariants:
+    - "Chaque document canonique doit avoir un enregistrement dans le registre."
+    - "Le champ hash dans l’enregistrement de meta doit correspondre au SHA-256 du fichier."
+    - "Le chemin déclaré dans la meta (path) doit pointer vers le fichier réel."
+    - "Les champs id, type et status proviennent EXCLUSIVEMENT de la meta, jamais du frontmatter."
+
+  behavior:
+    missing_meta_behavior: "error"        # Document canonique sans meta => invalide
+    hash_mismatch_behavior: "error"       # Hash meta ≠ hash fichier => suspicion de falsification
+    path_mismatch_behavior: "error"       # Chemin incohérent => structure corrompue
+    extra_meta_behavior: "warn"           # Meta sans fichier associé => warning (zombie)
+
+# ---------------------------------------------------------------------
+# 6. Intégration avec les pipelines d’ingestion
+# ---------------------------------------------------------------------
+
+ingestion:
+  normalize_before_hash: true
+  steps_hint:
+    - "Normaliser encodage (UTF-8 sans BOM)."
+    - "Normaliser fins de ligne (LF)."
+    - "Vérifier extension et pattern de nommage."
+    - "Calculer SHA-256 du fichier normalisé."
+    - "Créer/mettre à jour l’enregistrement de meta dans le registre."
+    - "Émettre un événement dans event_kernel (event_schema_v0.1)."
+
+  notes:
+    - >
+      Ces règles décrivent le contrat de STRUCTURE. La logique
+      de validation sémantique (cohérence des champs, statuts,
+      succession, temporalité) est définie dans
+      rules_semantic_v0.1.yaml et rules_succession_v0.1.yaml.
+    - >
+      Toute implémentation de pipeline (Python, Rust, Go, n8n, etc.)
+      doit respecter strictement ces invariants structurels pour que
+      le SSOT reste fiable et opposable.
+
+# =====================================================================
+# Fin de rules_structural_v0.1.yaml
+# =====================================================================
