@@ -5,3 +5,6 @@ created_by: "agent:codex"
 validated_by: "human:Gregory Catteau"
 git_commit: "8fe0cd1857013f0029029ded363b8c8c34ef866d"
 repo_root: "/home/striker/Documents/developpement_web/relinium"
+fs_encapsulation:
+  description: "Encapsulation physique de l'arborescence historique dans l'archive pour marquer l'état legacy."
+  path: "archives/archive-001/fs-root/"
