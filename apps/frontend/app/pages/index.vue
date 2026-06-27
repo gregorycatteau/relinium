@@ -224,7 +224,10 @@ function statutRoadmap(status: string): string {
             <h1 class="mt-1 text-3xl font-semibold tracking-normal text-slate-950">Tableau de bord SSOT</h1>
             <p class="mt-2 max-w-2xl text-base text-slate-600">Observation locale du socle fichier, des événements et des contrôles.</p>
           </div>
-          <div class="flex flex-col gap-2 rounded-2xl bg-slate-50 px-4 py-3 ring-1 ring-slate-200 md:items-end">
+          <div class="flex flex-col gap-3 rounded-2xl bg-slate-50 px-4 py-3 ring-1 ring-slate-200 md:items-end">
+            <NuxtLink class="w-fit rounded-lg bg-teal-700 px-3 py-2 text-sm font-semibold text-white" to="/anti-scam">
+              Relinium Anti-Scam
+            </NuxtLink>
             <span class="inline-flex w-fit items-center rounded-full px-3 py-1 text-sm font-semibold ring-1" :class="apiConnectee ? classeTon('ok') : classeTon(erreurApi ? 'danger' : 'info')">
               {{ apiConnectee ? 'API connectée' : erreurApi ? 'API indisponible' : 'Connexion API…' }}
             </span>
