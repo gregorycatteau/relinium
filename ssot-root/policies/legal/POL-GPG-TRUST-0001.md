@@ -29,18 +29,33 @@ Elle ne couvre pas :
 
 ## 3. Identité cryptographique officielle
 
-L’identité cryptographique de référence du projet Relinium SSOT est :
+L’identité cryptographique active de référence du projet Relinium SSOT est :
 
-- Nom : Pixelprowlers (Relinium SSOT)
+- Nom : Grégory Catteau
 - Adresse : contact@pixelprowlers.io
-- Type de clé : ed25519 (signatures) + sous-clé cv25519 (chiffrement)
-- KeyID long : B6AB0FC82888D157
+- Commentaire : Relinium signing key
+- Type de clé : RSA 4096 (certification et signature)
+- KeyID long : ECA9DED1A62C6F2B
 - Empreinte (fingerprint) :
-  A5A1 6737 3F3A 800B 4861 034B B6AB 0FC8 2888 D157
+  DBFE E90E 85B2 2B7F 4209 E47E ECA9 DED1 A62C 6F2B
+- Date de rotation : 2026-06-27
+- Expiration : 2029-06-26
 
 Toute signature GPG revendiquée comme "officielle Relinium" doit être
 émise par cette clé (ou une clé déclarée comme successeure dans une
 future politique de rotation).
+
+L’ancienne clé documentée ci-dessous est remplacée parce que sa clé privée
+n’est pas disponible localement pour signer les commits Relinium courants :
+
+- Ancien KeyID long : B6AB0FC82888D157
+- Ancienne empreinte :
+  A5A1 6737 3F3A 800B 4861 034B B6AB 0FC8 2888 D157
+- Statut : remplacée ; à révoquer si le certificat de révocation correspondant
+  est retrouvé.
+
+Aucune clé privée, passphrase, sauvegarde de clé ou certificat de révocation
+ne doit être stocké dans ce dépôt.
 
 ## 4. Engagements du mainteneur
 
@@ -49,8 +64,10 @@ Le mainteneur s’engage à :
 1. Signer les commits canoniques.
 2. Signer les tags de version canoniques.
 3. Ne jamais réécrire l’historique signé (pas de push --force sur main).
-4. Documenter toute rotation de clé dans une nouvelle politique de type
-   POL-GPG-TRUST-0002.
+4. Utiliser la clé active documentée dans cette politique pour les commits
+   Relinium canoniques.
+5. Documenter toute rotation de clé dans une nouvelle politique de type
+   POL-GPG-TRUST-0002 ou par mise à jour contrôlée de cette politique.
 
 ## 5. Vérification par les utilisateurs
 
@@ -112,4 +129,3 @@ Cette politique est versionnée comme tout document SSOT :
 - tout changement substantiel donne lieu à une nouvelle version numérotée,
 - chaque version est signée, horodatée et enregistrée dans le registre
   et dans le Event Kernel.
-
