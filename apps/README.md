@@ -179,6 +179,44 @@ MVP scope:
 - generate Markdown reports for victim, authorities, bank and technical review;
 - correlate cases on shared indicators.
 
+### Source Registry
+
+`source_registry` is the enterprise onboarding registry for data sources that
+Relinium may observe later. It is PostgreSQL-backed and exposed through GraphQL.
+
+GraphQL queries:
+
+- `dataSources`
+- `dataSource(id)`
+
+GraphQL mutations:
+
+- `createDataSource`
+- `updateDataSource`
+- `markDataSourceReady`
+- `disableDataSource`
+
+MVP scope:
+
+- declare a source as local folder, network share/NAS, server/VPS, cloud/GED, or
+  other;
+- store a label, non-secret locator reference, status, read-only rules,
+  exclusions, and redacted notes;
+- compute a SHA-256 hash of the locator reference;
+- record redacted audit events;
+- keep source records read-only and avoid launching scans automatically.
+
+Secrets are explicitly out of scope for v0.1. Do not store passwords, API keys,
+OAuth tokens, cookies, or bearer tokens in source records. Future credentials
+must use encrypted backend storage with rotation, access audit, and
+operator/admin separation.
+
+Future scanner integration is prepared but not executed by the backend yet:
+
+```bash
+relinium-cartography-scan --root <source> --mode presence --out <snapshot.ndjson>
+```
+
 Security limits:
 
 - no automatic click or remote content fetch;

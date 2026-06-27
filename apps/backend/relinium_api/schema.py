@@ -9,6 +9,9 @@ from strawberry.scalars import JSON
 from cockpit import services
 from scam_trace import services as scam_services
 from scam_trace.models import CaseCorrelation, EvidenceArtifact, GeneratedReport, ScamCase, ScamQuestionnaireAnswer, TechnicalIndicator, TimelineEvent
+from source_registry import services as source_services
+from source_registry.models import DataSource as DataSourceModel
+from source_registry.models import DataSourceAuditEvent as DataSourceAuditEventModel
 
 
 DEFAULT_LIMIT = 50
@@ -21,6 +24,24 @@ class HashStatus(Enum):
     BASELINE = "baseline"
     ANOMALY = "anomaly"
     UNCHECKED = "unchecked"
+
+
+@strawberry.enum
+class DataSourceType(Enum):
+    LOCAL_FOLDER = "local_folder"
+    NETWORK_SHARE = "network_share"
+    SERVER = "server"
+    CLOUD_GED = "cloud_ged"
+    OTHER = "other"
+
+
+@strawberry.enum
+class DataSourceStatus(Enum):
+    DRAFT = "draft"
+    READY = "ready"
+    OBSERVED = "observed"
+    ERROR = "error"
+    DISABLED = "disabled"
 
 
 @strawberry.type
@@ -283,6 +304,34 @@ class CaseCorrelationType:
 
 
 @strawberry.type
+class DataSourceAuditEvent:
+    id: str
+    event_type: str
+    actor_label: str | None
+    details_redacted: JSON
+    created_at: str
+
+
+@strawberry.type
+class DataSource:
+    id: str
+    label: str
+    source_type: DataSourceType
+    status: DataSourceStatus
+    locator_ref: str
+    locator_hash: str
+    read_only: bool
+    include_hidden: bool
+    follow_symlinks: bool
+    exclusions: list[str]
+    notes_redacted: str
+    last_observed_at: str | None
+    created_at: str
+    updated_at: str
+    audit_events: list[DataSourceAuditEvent]
+
+
+@strawberry.type
 class AddScamArtifactResult:
     artifact: EvidenceArtifactType
     custody_events: list[ScamCustodyEventType]
@@ -316,6 +365,26 @@ class AnswerScamQuestionInput:
     value: JSON
     notes_redacted: str = ""
     confidence: float = 0.8
+
+
+@strawberry.input
+class CreateDataSourceInput:
+    label: str
+    source_type: DataSourceType
+    locator_ref: str = ""
+    include_hidden: bool = True
+    exclusions: list[str] = strawberry.field(default_factory=list)
+    notes_redacted: str = ""
+
+
+@strawberry.input
+class UpdateDataSourceInput:
+    label: str | None = None
+    source_type: DataSourceType | None = None
+    locator_ref: str | None = None
+    include_hidden: bool | None = None
+    exclusions: list[str] | None = None
+    notes_redacted: str | None = None
 
 
 def bounded_slice(items: list[Any], limit: int, offset: int) -> tuple[list[Any], int, int]:
@@ -532,6 +601,68 @@ def scam_correlation_from_model(item: CaseCorrelation) -> CaseCorrelationType:
     )
 
 
+def data_source_audit_from_model(item: DataSourceAuditEventModel) -> DataSourceAuditEvent:
+    return DataSourceAuditEvent(
+        id=str(item.id),
+        event_type=item.event_type,
+        actor_label=item.actor_label,
+        details_redacted=item.details_redacted,
+        created_at=item.created_at.isoformat(),
+    )
+
+
+def data_source_from_model(item: DataSourceModel) -> DataSource:
+    return DataSource(
+        id=str(item.id),
+        label=item.label,
+        source_type=DataSourceType(item.source_type),
+        status=DataSourceStatus(item.status),
+        locator_ref=item.locator_ref,
+        locator_hash=item.locator_hash,
+        read_only=item.read_only,
+        include_hidden=item.include_hidden,
+        follow_symlinks=item.follow_symlinks,
+        exclusions=item.exclusions if isinstance(item.exclusions, list) else [],
+        notes_redacted=item.notes_redacted,
+        last_observed_at=item.last_observed_at.isoformat() if item.last_observed_at else None,
+        created_at=item.created_at.isoformat(),
+        updated_at=item.updated_at.isoformat(),
+        audit_events=[data_source_audit_from_model(event) for event in item.audit_events.all()[:20]],
+    )
+
+
+def create_data_source_input_to_dict(input: CreateDataSourceInput) -> dict[str, Any]:
+    return {
+        "label": input.label,
+        "source_type": input.source_type.value,
+        "locator_ref": input.locator_ref,
+        "include_hidden": input.include_hidden,
+        "exclusions": input.exclusions,
+        "notes_redacted": input.notes_redacted,
+        "read_only": True,
+        "follow_symlinks": False,
+    }
+
+
+def update_data_source_input_to_dict(input: UpdateDataSourceInput) -> dict[str, Any]:
+    data: dict[str, Any] = {}
+    if input.label is not None:
+        data["label"] = input.label
+    if input.source_type is not None:
+        data["source_type"] = input.source_type.value
+    if input.locator_ref is not None:
+        data["locator_ref"] = input.locator_ref
+    if input.include_hidden is not None:
+        data["include_hidden"] = input.include_hidden
+    if input.exclusions is not None:
+        data["exclusions"] = input.exclusions
+    if input.notes_redacted is not None:
+        data["notes_redacted"] = input.notes_redacted
+    data["read_only"] = True
+    data["follow_symlinks"] = False
+    return data
+
+
 @strawberry.type
 class Query:
     @strawberry.field
@@ -641,9 +772,38 @@ class Query:
             for item in scam_services.QUESTIONNAIRE_TEMPLATE
         ]
 
+    @strawberry.field
+    def data_sources(self) -> list[DataSource]:
+        return [data_source_from_model(item) for item in source_services.list_data_sources()]
+
+    @strawberry.field
+    def data_source(self, id: str) -> DataSource | None:
+        item = DataSourceModel.objects.prefetch_related("audit_events").filter(id=id).first()
+        return data_source_from_model(item) if item else None
+
 
 @strawberry.type
 class Mutation:
+    @strawberry.mutation
+    def create_data_source(self, input: CreateDataSourceInput) -> DataSource:
+        source = source_services.create_data_source(create_data_source_input_to_dict(input))
+        return data_source_from_model(DataSourceModel.objects.prefetch_related("audit_events").get(id=source.id))
+
+    @strawberry.mutation
+    def update_data_source(self, id: str, input: UpdateDataSourceInput) -> DataSource:
+        source = source_services.update_data_source(id, update_data_source_input_to_dict(input))
+        return data_source_from_model(DataSourceModel.objects.prefetch_related("audit_events").get(id=source.id))
+
+    @strawberry.mutation
+    def mark_data_source_ready(self, id: str) -> DataSource:
+        source = source_services.mark_data_source_ready(id)
+        return data_source_from_model(DataSourceModel.objects.prefetch_related("audit_events").get(id=source.id))
+
+    @strawberry.mutation
+    def disable_data_source(self, id: str) -> DataSource:
+        source = source_services.disable_data_source(id)
+        return data_source_from_model(DataSourceModel.objects.prefetch_related("audit_events").get(id=source.id))
+
     @strawberry.mutation
     def create_scam_case(self, input: CreateScamCaseInput) -> ScamCaseType:
         case = scam_services.create_case(

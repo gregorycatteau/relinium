@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "jobs",
     "auditlog",
     "scam_trace",
+    "source_registry",
 ]
 
 MIDDLEWARE = [

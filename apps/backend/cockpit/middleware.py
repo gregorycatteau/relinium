@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from django.http import HttpResponse
+
 
 class LocalCorsMiddleware:
-    """Allow local Nuxt dev servers to read the read-only API."""
+    """Allow local Nuxt dev servers to call the local API and GraphQL."""
 
     ALLOWED_ORIGINS = {
         "http://localhost:3000",
@@ -17,11 +19,11 @@ class LocalCorsMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        response = self.get_response(request)
+        response = HttpResponse() if request.method == "OPTIONS" else self.get_response(request)
         origin = request.headers.get("Origin")
         if origin in self.ALLOWED_ORIGINS:
             response["Access-Control-Allow-Origin"] = origin
             response["Vary"] = "Origin"
-            response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+            response["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
             response["Access-Control-Allow-Headers"] = "Content-Type"
         return response
