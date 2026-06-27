@@ -69,6 +69,15 @@ cd apps/backend
 docker compose up -d postgres
 ```
 
+If `127.0.0.1:5432` is already used by another local PostgreSQL, keep that
+service untouched and start Relinium on another local port:
+
+```bash
+cd apps/backend
+RELINIUM_POSTGRES_PORT=5433 docker compose up -d postgres
+export DATABASE_URL=postgresql://relinium_app:relinium_app_dev@127.0.0.1:5433/relinium_app
+```
+
 The local service uses:
 
 - database: `relinium_app`
