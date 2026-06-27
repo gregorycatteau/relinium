@@ -18,8 +18,23 @@ body {
   overflow-wrap: anywhere;
 }
 
-main {
+html,
+body,
+#__nuxt {
+  min-width: 0;
   max-width: 100vw;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+main {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   overflow-wrap: anywhere;
 }
 
@@ -27,7 +42,9 @@ article,
 section,
 header,
 div,
-button {
+button,
+nav,
+aside {
   min-width: 0;
 }
 
@@ -47,4 +64,5 @@ input,
 select,
 textarea {
   font: inherit;
+  max-width: 100%;
 }

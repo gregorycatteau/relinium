@@ -142,7 +142,7 @@ async function chargerBase(): Promise<void> {
       await chargerDossierLie()
     }
   } catch (err) {
-    erreur.value = err instanceof Error ? err.message : 'Erreur de chargement'
+    erreur.value = messageErreurGraphql(err, 'Le module Anti-Scam attend les dépendances GraphQL du backend. Les écrans restent consultables, mais les dossiers ne peuvent pas être chargés pour l’instant.')
   } finally {
     chargement.value = false
   }
@@ -193,7 +193,7 @@ async function creerDossier(): Promise<void> {
     etapeActive.value = 'preuve'
     await chargerDossierLie()
   } catch (err) {
-    erreur.value = err instanceof Error ? err.message : 'Création impossible'
+    erreur.value = messageErreurGraphql(err, 'Création impossible tant que GraphQL est indisponible.')
   } finally {
     chargement.value = false
   }
@@ -232,7 +232,7 @@ async function ajouterPreuve(): Promise<void> {
     etapeActive.value = 'questionnaire'
     await chargerDossierLie()
   } catch (err) {
-    erreur.value = err instanceof Error ? err.message : 'Ingestion impossible'
+    erreur.value = messageErreurGraphql(err, 'Ingestion impossible tant que GraphQL est indisponible.')
   } finally {
     chargement.value = false
   }
@@ -258,7 +258,7 @@ async function repondre(question: QuestionnaireItem): Promise<void> {
     message.value = 'Réponse enregistrée et timeline mise à jour.'
     await chargerDossierLie()
   } catch (err) {
-    erreur.value = err instanceof Error ? err.message : 'Réponse non enregistrée'
+    erreur.value = messageErreurGraphql(err, 'Réponse non enregistrée tant que GraphQL est indisponible.')
   }
 }
 
@@ -279,7 +279,7 @@ async function genererRapports(): Promise<void> {
     await chargerBase()
     await chargerDossierLie()
   } catch (err) {
-    erreur.value = err instanceof Error ? err.message : 'Génération impossible'
+    erreur.value = messageErreurGraphql(err, 'Génération impossible tant que GraphQL est indisponible.')
   } finally {
     chargement.value = false
   }
@@ -346,32 +346,34 @@ function classeRisque(value?: string): string {
   return 'bg-emerald-50 text-emerald-800 ring-emerald-200'
 }
 
+function messageErreurGraphql(err: unknown, fallback: string): string {
+  const responseData = (err as { response?: { _data?: { error?: string } } })?.response?._data
+  if (responseData?.error?.includes('GraphQL dependencies')) {
+    return 'GraphQL indisponible: dépendances backend non installées. Le shell Relinium reste utilisable; les actions Anti-Scam seront disponibles quand GraphQL sera prêt.'
+  }
+  if (err instanceof Error && err.message) return err.message
+  return fallback
+}
+
 onMounted(chargerBase)
 </script>
 
 <template>
-  <main class="min-h-screen bg-[#eef2f5] text-slate-950">
-    <header class="border-b border-slate-200 bg-white">
-      <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 lg:px-8">
-        <div class="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
-          <div>
-            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-700">Relinium Anti-Scam</p>
-            <h1 class="mt-1 text-3xl font-semibold tracking-normal">Filière scam_trace</h1>
-            <p class="mt-2 max-w-3xl text-slate-600">Dossier, preuve, questionnaire, timeline, indicateurs, rapports et corrélations. Aucun lien suspect n’est ouvert automatiquement.</p>
-          </div>
-          <NuxtLink class="w-fit rounded-lg bg-slate-950 px-4 py-3 text-sm font-semibold text-white" to="/">
-            Cockpit SSOT
-          </NuxtLink>
-        </div>
-        <div class="grid gap-3 md:grid-cols-3">
-          <p class="rounded-lg bg-white p-3 text-sm text-slate-700 ring-1 ring-slate-200">Préserver les preuves originales et noter leur source.</p>
-          <p class="rounded-lg bg-white p-3 text-sm text-slate-700 ring-1 ring-slate-200">Ne pas cliquer les liens suspects depuis l’environnement victime.</p>
-          <p class="rounded-lg bg-white p-3 text-sm text-slate-700 ring-1 ring-slate-200">Relire humainement avant tout signalement ou transmission.</p>
+  <section class="w-full max-w-full overflow-x-hidden bg-[#eef2f5] px-4 py-6 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl">
+      <div class="mb-6">
+        <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-700">Relinium Anti-Scam</p>
+        <h1 class="mt-1 text-3xl font-semibold tracking-normal">Relinium Anti-Scam</h1>
+        <p class="mt-2 max-w-3xl text-slate-600">Chaîne de conservation, questionnaire, timeline et rapports.</p>
+        <div class="mt-5 grid gap-3 md:grid-cols-4">
+          <p class="rounded-lg bg-white p-3 text-sm font-semibold text-slate-700 ring-1 ring-slate-200">1. Preuve</p>
+          <p class="rounded-lg bg-white p-3 text-sm font-semibold text-slate-700 ring-1 ring-slate-200">2. Questionnaire</p>
+          <p class="rounded-lg bg-white p-3 text-sm font-semibold text-slate-700 ring-1 ring-slate-200">3. Timeline</p>
+          <p class="rounded-lg bg-white p-3 text-sm font-semibold text-slate-700 ring-1 ring-slate-200">4. Rapports</p>
         </div>
       </div>
-    </header>
 
-    <section class="mx-auto grid max-w-7xl gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[320px_1fr] lg:px-8">
+      <section class="grid max-w-full gap-6 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
       <aside class="space-y-4">
         <section class="rounded-lg bg-white p-4 shadow-sm ring-1 ring-slate-200">
           <div class="flex items-center justify-between gap-3">
@@ -624,6 +626,7 @@ onMounted(chargerBase)
           </div>
         </section>
       </div>
-    </section>
-  </main>
+      </section>
+    </div>
+  </section>
 </template>

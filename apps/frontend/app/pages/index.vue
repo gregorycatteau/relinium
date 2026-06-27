@@ -20,7 +20,6 @@ const validationReq = useAsyncData('validation', () => fetchJson<ValidationPaylo
 
 const chargement = computed(() => summaryReq.pending.value || streamsReq.pending.value || eventsReq.pending.value || validationReq.pending.value)
 const erreurApi = computed(() => summaryReq.error.value || streamsReq.error.value || eventsReq.error.value || validationReq.error.value)
-const apiConnectee = computed(() => !chargement.value && !erreurApi.value)
 
 const summary = computed(() => summaryReq.data.value)
 const streams = computed(() => streamsReq.data.value?.streams ?? [])
@@ -215,29 +214,13 @@ function statutRoadmap(status: string): string {
 </script>
 
 <template>
-  <main class="min-h-screen overflow-x-hidden bg-[#edf3f8] text-slate-950">
-    <header class="border-b border-white/70 bg-white/85 backdrop-blur">
-      <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 lg:px-8">
-        <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-          <div>
-            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-700">Relinium</p>
-            <h1 class="mt-1 text-3xl font-semibold tracking-normal text-slate-950">Tableau de bord SSOT</h1>
-            <p class="mt-2 max-w-2xl text-base text-slate-600">Observation locale du socle fichier, des événements et des contrôles.</p>
-          </div>
-          <div class="flex flex-col gap-3 rounded-2xl bg-slate-50 px-4 py-3 ring-1 ring-slate-200 md:items-end">
-            <NuxtLink class="w-fit rounded-lg bg-teal-700 px-3 py-2 text-sm font-semibold text-white" to="/anti-scam">
-              Relinium Anti-Scam
-            </NuxtLink>
-            <span class="inline-flex w-fit items-center rounded-full px-3 py-1 text-sm font-semibold ring-1" :class="apiConnectee ? classeTon('ok') : classeTon(erreurApi ? 'danger' : 'info')">
-              {{ apiConnectee ? 'API connectée' : erreurApi ? 'API indisponible' : 'Connexion API…' }}
-            </span>
-            <span class="break-all font-mono text-sm text-slate-500">{{ apiBase }}</span>
-          </div>
-        </div>
+  <section class="w-full max-w-full overflow-x-hidden bg-[#edf3f8] px-4 py-6 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl">
+      <div class="mb-6">
+        <p class="text-sm font-semibold uppercase tracking-[0.16em] text-cyan-800">Tableau de bord</p>
+        <h1 class="mt-1 text-3xl font-semibold tracking-normal text-slate-950">Cockpit SSOT</h1>
+        <p class="mt-2 max-w-3xl text-base text-slate-600">Observation locale du socle fichier, des événements et des contrôles.</p>
       </div>
-    </header>
-
-    <section class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <div v-if="chargement" class="rounded-3xl bg-white p-6 text-slate-700 shadow-sm ring-1 ring-slate-200">
         Chargement du tableau de bord SSOT…
       </div>
@@ -307,7 +290,7 @@ function statutRoadmap(status: string): string {
           </div>
         </section>
 
-        <nav class="sticky top-0 z-10 -mx-4 border-y border-slate-200 bg-[#edf3f8]/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <nav class="sticky top-[65px] z-10 rounded-3xl border border-slate-200 bg-[#edf3f8]/95 px-3 py-3 backdrop-blur">
           <div class="flex gap-2 overflow-x-auto pb-1">
             <button
               v-for="onglet in onglets"
@@ -561,6 +544,6 @@ function statutRoadmap(status: string): string {
           </div>
         </section>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
 </template>
