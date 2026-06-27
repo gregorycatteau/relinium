@@ -2,18 +2,17 @@
 type NavItem = {
   label: string
   to?: string
-  soon?: boolean
+  disabled?: boolean
 }
 
 const route = useRoute()
+const NuxtLinkComponent = resolveComponent('NuxtLink')
 
 const items: NavItem[] = [
-  { label: 'Tableau de bord', to: '/' },
   { label: 'Anti-Scam', to: '/anti-scam' },
-  { label: 'Cartographie documentaire', soon: true },
-  { label: 'Détecteur de mouvement', soon: true },
-  { label: 'Rapports', soon: true },
-  { label: 'Administration', soon: true }
+  { label: 'Cartographie', disabled: true },
+  { label: 'Mouvements', disabled: true },
+  { label: 'Rapports', disabled: true }
 ]
 
 function isActive(item: NavItem): boolean {
@@ -24,31 +23,25 @@ function isActive(item: NavItem): boolean {
 
 <template>
   <nav aria-label="Navigation applicative" class="min-w-0">
-    <div class="flex gap-1.5 overflow-x-auto pb-1 md:flex-wrap md:overflow-visible md:pb-0">
+    <div class="flex flex-col gap-1 md:flex-row md:items-center md:gap-1.5">
       <component
-        :is="item.to ? 'NuxtLink' : 'button'"
+        :is="item.to ? NuxtLinkComponent : 'button'"
         v-for="item in items"
         :key="item.label"
         :to="item.to"
-        :disabled="item.soon || undefined"
-        class="group inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition"
+        :disabled="item.disabled || undefined"
+        class="group inline-flex h-9 w-full items-center justify-between rounded-md px-3 text-sm font-medium transition outline-none focus-visible:ring-2 focus-visible:ring-cyan-700 focus-visible:ring-offset-2 md:h-8 md:w-[112px] md:max-w-[112px] md:justify-center md:px-2 md:text-[13px]"
         :class="[
           isActive(item)
-            ? 'bg-cyan-950 text-white shadow-sm ring-1 ring-cyan-950'
-            : item.soon
-              ? 'cursor-not-allowed bg-slate-50 text-slate-400 ring-1 ring-slate-200'
-              : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50',
+            ? 'bg-cyan-50 text-cyan-950 ring-1 ring-cyan-100'
+            : item.disabled
+              ? 'cursor-not-allowed text-slate-400'
+              : 'text-slate-700 hover:bg-slate-50 hover:text-slate-950',
         ]"
         type="button"
       >
-        <span>{{ item.label }}</span>
-        <span
-          v-if="item.soon"
-          class="rounded-full bg-white px-1.5 py-0.5 text-[0.68rem] font-semibold text-slate-500 ring-1 ring-slate-200"
-        >
-          Bientôt
-        </span>
-        <span v-if="isActive(item)" class="h-1.5 w-1.5 rounded-full bg-cyan-200" aria-hidden="true" />
+        <span class="whitespace-nowrap">{{ item.label }}</span>
+        <span v-if="isActive(item)" class="h-1 w-1 rounded-full bg-cyan-700 md:hidden" aria-hidden="true" />
       </component>
     </div>
   </nav>

@@ -1,20 +1,36 @@
+<script setup lang="ts">
+const ouvert = ref(false)
+
+const actions = ['Profil', 'Préférences', 'Sécurité', 'Déconnexion']
+</script>
+
 <template>
-  <div class="flex min-w-0 items-center gap-2">
-    <span class="hidden rounded-full bg-cyan-50 px-2.5 py-1 text-xs font-semibold text-cyan-800 ring-1 ring-cyan-200 sm:inline-flex">
-      Local
-    </span>
+  <div class="relative">
     <button
-      class="min-w-0 rounded-full bg-slate-50 px-3 py-1.5 text-sm font-semibold text-slate-700 ring-1 ring-slate-200 transition hover:bg-white"
-      title="Authentification simulée pour le MVP local"
+      class="inline-flex h-8 items-center gap-1 rounded-md px-1.5 text-slate-700 transition outline-none hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-cyan-700 focus-visible:ring-offset-2"
+      :aria-expanded="ouvert"
+      aria-haspopup="menu"
+      aria-label="Menu utilisateur"
+      title="Menu utilisateur"
       type="button"
+      @click="ouvert = !ouvert"
     >
-      Opérateur local
+      <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-cyan-950 text-xs font-bold text-white">GC</span>
+      <svg aria-hidden="true" class="hidden h-3.5 w-3.5 text-slate-500 sm:block" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
+      </svg>
     </button>
-    <button
-      class="hidden rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 ring-1 ring-slate-200 transition hover:bg-slate-50 md:inline-flex"
-      type="button"
-    >
-      Connexion
-    </button>
+
+    <div v-if="ouvert" class="absolute right-0 top-10 z-50 w-44 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-lg" role="menu">
+      <button
+        v-for="action in actions"
+        :key="action"
+        class="block w-full px-3 py-2 text-left text-sm text-slate-700 outline-none hover:bg-slate-50 focus-visible:bg-slate-50"
+        role="menuitem"
+        type="button"
+      >
+        {{ action }}
+      </button>
+    </div>
   </div>
 </template>

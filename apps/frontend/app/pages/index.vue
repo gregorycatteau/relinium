@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { DocumentRecord, EventRecord, EventsPayload, EventStream, Finding, Summary, ValidationPayload } from '~/types/cockpit'
+import heroBackground from '~/assets/images/relinium-hero-bg.png'
 
 type Onglet = 'vue-ensemble' | 'evenements' | 'documents' | 'validation' | 'roadmap'
 
@@ -8,6 +9,13 @@ const apiBase = computed(() => String(config.public.apiBase || 'http://127.0.0.1
 
 const ongletActif = ref<Onglet>('vue-ensemble')
 const evenementSelectionne = ref<string | null>(null)
+const sectionDetails = ref<HTMLElement | null>(null)
+const panneauSourcesOuvert = ref(false)
+const rechercheVisible = ref(false)
+const sectionRecherche = ref<HTMLElement | null>(null)
+const heroStyle = computed(() => ({
+  backgroundImage: `linear-gradient(90deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.9) 42%, rgba(240,248,252,0.72) 68%, rgba(235,247,252,0.58) 100%), url(${heroBackground})`
+}))
 
 const fetchJson = async <T,>(path: string): Promise<T> => {
   return await $fetch<T>(`${apiBase.value}${path}`)
@@ -181,6 +189,29 @@ function selectionnerEvenement(event: EventRecord): void {
   ongletActif.value = 'evenements'
 }
 
+function ouvrirOnglet(onglet: Onglet): void {
+  ongletActif.value = onglet
+  nextTick(() => {
+    sectionDetails.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
+}
+
+function ouvrirSources(): void {
+  panneauSourcesOuvert.value = true
+  rechercheVisible.value = false
+  nextTick(() => {
+    document.getElementById('source-setup-title')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
+}
+
+function ouvrirRecherche(): void {
+  rechercheVisible.value = true
+  panneauSourcesOuvert.value = false
+  nextTick(() => {
+    sectionRecherche.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
+}
+
 // Classe visuelle centralisée pour garder une palette cohérente.
 function classeTon(ton?: string): string {
   const classes: Record<string, string> = {
@@ -216,11 +247,108 @@ function statutRoadmap(status: string): string {
 <template>
   <section class="w-full max-w-full overflow-x-hidden bg-[#edf3f8] px-4 py-6 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-7xl">
-      <div class="mb-6">
-        <p class="text-sm font-semibold uppercase tracking-[0.16em] text-cyan-800">Tableau de bord</p>
-        <h1 class="mt-1 text-3xl font-semibold tracking-normal text-slate-950">Cockpit SSOT</h1>
-        <p class="mt-2 max-w-3xl text-base text-slate-600">Observation locale du socle fichier, des événements et des contrôles.</p>
+      <section class="-mx-4 -mt-6 mb-6 overflow-hidden border-b border-slate-200 bg-white bg-cover bg-[position:67%_center] sm:-mx-6 md:bg-[position:center_center] lg:relative lg:left-1/2 lg:w-screen lg:-translate-x-1/2" :style="heroStyle">
+        <div class="mx-auto grid max-w-7xl gap-5 px-4 py-5 sm:px-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:px-8 lg:py-4">
+          <div class="min-w-0">
+            <div>
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-800">
+                <span>Tableau de bord</span>
+                <span class="inline-flex items-center gap-2 text-emerald-800">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                  Données lues en local
+                </span>
+              </div>
+              <h1 class="mt-4 max-w-3xl text-3xl font-semibold leading-tight tracking-normal text-slate-950 sm:text-4xl">
+                Tableau de bord des preuves
+              </h1>
+              <p class="mt-3 max-w-3xl text-base leading-7 text-slate-600">
+                Commencez par déclarer les sources à observer. Relinium les lit en lecture seule, calcule les empreintes utiles et vous permet ensuite de suivre les événements ou de rechercher des informations.
+              </p>
+              <p class="mt-3 rounded-xl bg-cyan-50 px-3 py-2 text-sm leading-5 text-cyan-950 ring-1 ring-cyan-100 lg:hidden">
+                Lecture seule: Relinium observe vos fichiers sans les modifier.
+              </p>
+            </div>
+
+            <div class="mt-4 flex flex-col gap-2 sm:flex-row">
+              <button class="inline-flex h-10 items-center justify-center rounded-lg bg-cyan-950 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-700 focus-visible:ring-offset-2" type="button" @click="ouvrirSources">
+                Charger mes données
+              </button>
+              <button class="inline-flex h-10 items-center justify-center rounded-lg bg-white px-4 text-sm font-semibold text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-700 focus-visible:ring-offset-2" type="button" @click="ouvrirOnglet('evenements')">
+                Consulter les événements
+              </button>
+              <button class="inline-flex h-10 items-center justify-center rounded-lg bg-white px-4 text-sm font-semibold text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-700 focus-visible:ring-offset-2" type="button" @click="ouvrirRecherche">
+                Rechercher des données
+              </button>
+            </div>
+
+            <div class="mt-4 grid gap-2 sm:grid-cols-3 sm:gap-3">
+              <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 sm:px-4 lg:grid lg:grid-cols-[auto_1fr] lg:items-center lg:gap-x-3 lg:py-2.5">
+                <p class="text-2xl font-semibold leading-none text-slate-950">{{ summary?.counts.streams ?? '—' }}</p>
+                <div>
+                  <p class="mt-2 text-sm font-semibold text-slate-800 lg:mt-0">{{ (summary?.counts.streams ?? 0) > 1 ? 'sources observées' : 'source observée' }}</p>
+                  <p class="mt-1 text-xs leading-5 text-slate-500">Source observée</p>
+                </div>
+              </div>
+              <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 sm:px-4 lg:grid lg:grid-cols-[auto_1fr] lg:items-center lg:gap-x-3 lg:py-2.5">
+                <p class="text-2xl font-semibold leading-none text-slate-950">{{ summary?.counts.events ?? '—' }}</p>
+                <div>
+                  <p class="mt-2 text-sm font-semibold text-slate-800 lg:mt-0">{{ (summary?.counts.events ?? 0) > 1 ? 'événements enregistrés' : 'événement enregistré' }}</p>
+                  <p class="mt-1 text-xs leading-5 text-slate-500">Historique disponible</p>
+                </div>
+              </div>
+              <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 sm:px-4 lg:grid lg:grid-cols-[auto_1fr] lg:items-center lg:gap-x-3 lg:py-2.5">
+                <p class="text-2xl font-semibold leading-none text-slate-950">{{ summary?.validation.known_finding_count ?? '—' }}</p>
+                <div>
+                  <p class="mt-2 text-sm font-semibold text-slate-800 lg:mt-0">{{ (summary?.validation.known_finding_count ?? 0) > 1 ? 'écarts connus' : 'écart connu' }}</p>
+                  <p class="mt-1 text-xs leading-5 text-slate-500">Exception contrôlée</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="hidden rounded-2xl border border-cyan-100 bg-cyan-50/60 p-3.5 lg:block">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="text-sm font-semibold text-cyan-950">Comment lire ce tableau de bord</p>
+                <p class="mt-1 text-xs leading-5 text-cyan-900">Lecture seule: Relinium observe vos fichiers sans les modifier.</p>
+              </div>
+              <span class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-emerald-800 ring-1 ring-emerald-100">Lecture seule</span>
+            </div>
+            <ol class="mt-3 space-y-2">
+              <li class="flex gap-3">
+                <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-xs font-semibold text-cyan-900 ring-1 ring-cyan-100">1</span>
+                <div>
+                  <p class="text-sm font-semibold text-slate-950">Vous indiquez les sources</p>
+                  <p class="mt-1 text-sm leading-5 text-slate-600">Dossiers locaux, réseau, serveur ou cloud.</p>
+                </div>
+              </li>
+              <li class="flex gap-3">
+                <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-xs font-semibold text-cyan-900 ring-1 ring-cyan-100">2</span>
+                <div>
+                  <p class="text-sm font-semibold text-slate-950">Relinium observe en lecture seule</p>
+                  <p class="mt-1 text-sm leading-5 text-slate-600">Les fichiers ne sont pas copiés ni modifiés.</p>
+                </div>
+              </li>
+              <li class="flex gap-3">
+                <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-xs font-semibold text-cyan-900 ring-1 ring-cyan-100">3</span>
+                <div>
+                  <p class="text-sm font-semibold text-slate-950">Vous exploitez les preuves</p>
+                  <p class="mt-1 text-sm leading-5 text-slate-600">Événements, recherches, écarts et rapports.</p>
+                </div>
+              </li>
+            </ol>
+          </aside>
+        </div>
+      </section>
+
+      <div v-if="panneauSourcesOuvert" class="mb-6">
+        <SourceSetupPanel @close="panneauSourcesOuvert = false" />
       </div>
+
+      <div v-if="rechercheVisible" ref="sectionRecherche" class="mb-6">
+        <DataSearchPanel />
+      </div>
+
       <div v-if="chargement" class="rounded-3xl bg-white p-6 text-slate-700 shadow-sm ring-1 ring-slate-200">
         Chargement du tableau de bord SSOT…
       </div>
@@ -290,7 +418,7 @@ function statutRoadmap(status: string): string {
           </div>
         </section>
 
-        <nav class="sticky top-[65px] z-10 rounded-3xl border border-slate-200 bg-[#edf3f8]/95 px-3 py-3 backdrop-blur">
+        <nav ref="sectionDetails" class="sticky top-[65px] z-10 rounded-3xl border border-slate-200 bg-[#edf3f8]/95 px-3 py-3 backdrop-blur">
           <div class="flex gap-2 overflow-x-auto pb-1">
             <button
               v-for="onglet in onglets"
