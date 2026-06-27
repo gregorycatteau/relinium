@@ -1,0 +1,14 @@
+{
+  "schema_version": "1",
+  "description": "Strict baseline for known historical validation findings. Each entry is bound to an exact stream line and raw line hash.",
+  "findings": [
+    {
+      "stream_path": "event_kernel/streams/tenant_default/events_raw.ndjson",
+      "line": 10,
+      "code": "EVENT_HASH_SHA256_FORMAT",
+      "event_id": "EVT-SECURITY-CORE-0001",
+      "message_fragment": "hash_sha256 must be 64 lowercase hex characters",
+      "raw_line_sha256": "c2c387ad4df40993d3b9b3709040d024bd743e9b87d3bfb0a129063b0dc13286"
+    }
+  ]
+}

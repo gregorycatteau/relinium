@@ -1,1 +1,5 @@
-# Placeholder script: validate_documents
+# Placeholder retained for v0.1 traceability.
+# Run strict validation with:
+#   python3 ssot-root/core/scripts/validate_documents.py
+# Run local/CI validation with the known historical findings baseline:
+#   python3 ssot-root/core/scripts/validate_documents.py --baseline ssot-root/core/validation/known_findings.json

@@ -2,10 +2,14 @@
 .env*
 node_modules/
 dist/
+.nuxt/
+.output/
 __pycache__/
+db.sqlite3
 .DS_Store
 *.swp
 *.swo
+.~lock.*#
 *~
 .vscode/
 .idea/
