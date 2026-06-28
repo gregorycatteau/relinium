@@ -106,12 +106,15 @@ GraphQL auth guards are centralized in `apps/backend/accounts/graphql_security.p
 ### Access and onboarding UX
 
 The frontend access entry is `/connexion`. It is an access hub, not an error
-page. Anonymous users get three explicit paths:
+page. Anonymous users get four explicit paths:
 
 - existing user: organization identity login when an OIDC provider is
   configured;
-- company account creation: `/creation-compte`, used to prepare an organization
-  validation request;
+- individual account creation: `/creation-compte?type=individual`, used to
+  prepare a personal access request for people applying without an existing
+  organization workspace;
+- company account creation: `/creation-compte?type=company`, used to prepare
+  an organization validation request;
 - administrator access: `/admin-acces`, used to prepare a reinforced request
   for leaders who will invite users and manage rights.
 

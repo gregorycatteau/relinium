@@ -19,12 +19,14 @@ Relinium, pas de TOTP, pas de WebAuthn et pas de stockage de token OAuth.
 
 ## Parcours d'acces
 
-Le frontend expose `/connexion` comme hub d'acces avec trois chemins:
+Le frontend expose `/connexion` comme hub d'acces avec quatre chemins:
 
 - utilisateur existant: connexion par identite organisationnelle quand OIDC
   sera raccorde;
+- creation compte individuel: preparation d'une candidature personnelle via
+  `/creation-compte?type=individual`;
 - creation compte entreprise: preparation d'une demande d'ouverture
-  d'organisation via `/creation-compte`;
+  d'organisation via `/creation-compte?type=company`;
 - acces administrateur: preparation d'une demande renforcee via `/admin-acces`.
 
 Ces parcours ne creent pas de mot de passe Relinium et ne collectent pas de
