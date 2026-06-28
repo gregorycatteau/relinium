@@ -25,6 +25,7 @@ def graphql_unavailable(request):
 
 urlpatterns = [
     path("api/health", views.health),
+    path("api/csrf", views.csrf_token),
     path("api/ssot/summary", views.ssot_summary),
     path("api/events/streams", views.event_streams),
     path("api/events", views.events),

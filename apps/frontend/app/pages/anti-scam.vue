@@ -63,8 +63,7 @@ type Correlation = {
   explanation: string
 }
 
-const config = useRuntimeConfig()
-const apiBase = computed(() => String(config.public.apiBase || 'http://127.0.0.1:8000'))
+const { graphql } = useGraphqlRequest()
 
 const etapes: Array<{ id: Etape, label: string }> = [
   { id: 'dossier', label: 'Dossier' },
@@ -110,20 +109,6 @@ const rapportActif = ref<string | null>(null)
 const dossierActif = computed(() => dossiers.value.find((dossier) => dossier.id === dossierSelectionne.value) || dossiers.value[0] || null)
 const rapportsTries = computed(() => rapports.value.slice().sort((a, b) => a.reportType.localeCompare(b.reportType)))
 const rapportPreview = computed(() => rapportsTries.value.find((rapport) => rapport.id === rapportActif.value) || rapportsTries.value[0] || null)
-
-async function graphql<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
-  const response = await $fetch<{ data?: T, errors?: Array<{ message: string }> }>(`${apiBase.value}/graphql`, {
-    method: 'POST',
-    body: { query, variables }
-  })
-  if (response.errors?.length) {
-    throw new Error(response.errors.map((item) => item.message).join(' | '))
-  }
-  if (!response.data) {
-    throw new Error('Réponse GraphQL vide')
-  }
-  return response.data
-}
 
 async function chargerBase(): Promise<void> {
   erreur.value = ''

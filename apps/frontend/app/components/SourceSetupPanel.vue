@@ -11,7 +11,7 @@ type DataSource = {
   label: string
   sourceType: SourceType
   status: SourceStatus
-  locatorRef: string
+  locatorDisplay: string
   locatorHash: string
   readOnly: boolean
   includeHidden: boolean
@@ -22,13 +22,7 @@ type DataSource = {
   updatedAt: string
 }
 
-type GraphqlResponse<T> = {
-  data?: T
-  errors?: Array<{ message: string }>
-}
-
-const config = useRuntimeConfig()
-const apiBase = computed(() => String(config.public.apiBase || 'http://127.0.0.1:8000'))
+const { apiBase, graphql: graphqlRequest } = useGraphqlRequest()
 
 const typeOptions: Array<{ value: SourceType, nom: string, description: string, exemple: string, statut: string }> = [
   {
@@ -87,18 +81,6 @@ const mutationEnCours = ref(false)
 const message = ref('')
 const erreur = ref('')
 
-async function graphqlRequest<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
-  const response = await $fetch<GraphqlResponse<T>>(`${apiBase.value}/graphql`, {
-    method: 'POST',
-    body: { query, variables }
-  })
-  if (response.errors?.length) {
-    throw new Error(response.errors.map((item) => item.message).join(' '))
-  }
-  if (!response.data) throw new Error('Réponse GraphQL vide.')
-  return response.data
-}
-
 const dataSourcesReq = useAsyncData(
   'source-registry-data-sources',
   () => graphqlRequest<{ dataSources: DataSource[] }>(`
@@ -108,7 +90,7 @@ const dataSourcesReq = useAsyncData(
         label
         sourceType
         status
-        locatorRef
+        locatorDisplay
         locatorHash
         readOnly
         includeHidden
@@ -350,7 +332,7 @@ async function marquerPrete(source: DataSource): Promise<void> {
           <dl class="mt-4 space-y-2 text-sm">
             <div>
               <dt class="font-semibold text-slate-500">Référence</dt>
-              <dd class="mt-1 break-all text-slate-700">{{ source.locatorRef || 'Non renseignée' }}</dd>
+              <dd class="mt-1 break-all text-slate-700">{{ source.locatorDisplay || 'Non renseignée' }}</dd>
             </div>
             <div>
               <dt class="font-semibold text-slate-500">Empreinte</dt>

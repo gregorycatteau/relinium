@@ -60,6 +60,62 @@ This mode keeps REST and GraphQL inspection working from `ssot-root/`, but it
 does not run migrations or database-backed workflows. There is no SQLite
 fallback.
 
+### Auth/IAM
+
+Relinium Phase 1 uses `django.contrib.auth` as the identity foundation and the
+`accounts` app for organizations, profiles, memberships, RBAC permissions,
+access requests and redacted auth audit events.
+
+Authentication modes:
+
+```bash
+export RELINIUM_AUTH_MODE=disabled
+export RELINIUM_DEV_AUTH_ENABLED=false
+export RELINIUM_DEV_USER_EMAIL=dev@relinium.local
+export RELINIUM_DEV_USER_NAME="Relinium Dev"
+export RELINIUM_DEV_USER_ROLE=owner
+export RELINIUM_DEFAULT_ORG="Relinium Local"
+export RELINIUM_MFA_REQUIRED_DEFAULT=false
+export RELINIUM_SESSION_COOKIE_SECURE=false
+export RELINIUM_CSRF_COOKIE_SECURE=false
+export RELINIUM_GRAPHQL_INTROSPECTION_ENABLED=true
+```
+
+`RELINIUM_AUTH_MODE=dev` is only effective when
+`RELINIUM_DEV_AUTH_ENABLED=true`. This is intentionally explicit. No developer
+identity is created implicitly.
+
+OAuth/OIDC is prepared but not implemented in Phase 1. Future providers should
+cover Microsoft Entra ID, Google Workspace and generic OIDC. Relinium must not
+store professional passwords, OAuth access tokens or OAuth refresh tokens.
+The prepared OIDC environment variables are `OIDC_PROVIDER_NAME`,
+`OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_DISCOVERY_URL` and
+`OIDC_REDIRECT_URI`. Empty values mean `authStatus.providerConfigured=false`;
+the frontend must not present the organization login as active.
+
+MFA is prepared through profile and organization policy fields. TOTP must be
+implemented later with a proven library such as `django-otp` or
+`django-two-factor-auth`; no custom TOTP implementation is allowed.
+`authStatus.mfaProviderStatus` remains `planned` in Phase 1.
+
+RBAC permissions are centralized in `apps/backend/accounts/permissions.py`.
+Sensitive GraphQL mutations now require an authenticated user, an active
+organization membership and the matching permission.
+GraphQL auth guards are centralized in `apps/backend/accounts/graphql_security.py`.
+
+Production hardening variables:
+
+- `DJANGO_DEBUG=false`
+- `DJANGO_ALLOWED_HOSTS=<strict host list>`
+- `RELINIUM_SESSION_COOKIE_SECURE=true`
+- `RELINIUM_CSRF_COOKIE_SECURE=true`
+- `RELINIUM_CORS_ALLOWED_ORIGINS=<strict origin list>`
+- `RELINIUM_GRAPHQL_INTROSPECTION_ENABLED=false`
+
+`RELINIUM_GRAPHQL_INTROSPECTION_ENABLED` is documented for the production
+profile. Full introspection blocking remains a follow-up if the Strawberry view
+is exposed beyond trusted operator networks.
+
 ### Local PostgreSQL
 
 Start local PostgreSQL:
@@ -203,6 +259,8 @@ MVP scope:
 - store a label, non-secret locator reference, status, read-only rules,
   exclusions, and redacted notes;
 - compute a SHA-256 hash of the locator reference;
+- expose only `locatorDisplay` and `locatorHash` in source lists, never the raw
+  locator reference;
 - record redacted audit events;
 - keep source records read-only and avoid launching scans automatically.
 
@@ -210,6 +268,8 @@ Secrets are explicitly out of scope for v0.1. Do not store passwords, API keys,
 OAuth tokens, cookies, or bearer tokens in source records. Future credentials
 must use encrypted backend storage with rotation, access audit, and
 operator/admin separation.
+Locators containing URI userinfo or markers such as `password=`, `token=`,
+`api_key=`, `secret=` or `Bearer` are rejected.
 
 Future scanner integration is prepared but not executed by the backend yet:
 
@@ -229,6 +289,10 @@ Security limits:
 ### Security limits
 
 - No SQLite fallback.
+- No password-based GraphQL login.
+- No implicit development user.
+- No OAuth token storage.
+- No custom MFA implementation.
 - No arbitrary filesystem path input.
 - No exposure of `personal_vault`, `vault_index`, or `users/user_template`.
 - No vault content in PostgreSQL.

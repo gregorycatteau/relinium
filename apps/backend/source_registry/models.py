@@ -4,6 +4,8 @@ import uuid
 
 from django.db import models
 
+from accounts.models import Organization
+
 
 class DataSource(models.Model):
     class SourceType(models.TextChoices):
@@ -21,6 +23,7 @@ class DataSource(models.Model):
         DISABLED = "disabled", "Disabled"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    organization = models.ForeignKey(Organization, null=True, blank=True, related_name="data_sources", on_delete=models.SET_NULL)
     label = models.CharField(max_length=220)
     source_type = models.CharField(max_length=32, choices=SourceType.choices)
     status = models.CharField(max_length=32, choices=Status.choices, default=Status.DRAFT)
@@ -37,6 +40,7 @@ class DataSource(models.Model):
 
     class Meta:
         indexes = [
+            models.Index(fields=["organization", "status"]),
             models.Index(fields=["source_type"]),
             models.Index(fields=["status"]),
             models.Index(fields=["locator_hash"]),

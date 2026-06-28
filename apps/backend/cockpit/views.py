@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from django.http import JsonResponse
+from django.middleware.csrf import get_token
 
 from cockpit import services
 
@@ -11,6 +12,10 @@ def api_response(data, status=200):
 
 def health(request):
     return api_response({"status": "ok", **services.json_response_data()})
+
+
+def csrf_token(request):
+    return api_response({"csrfToken": get_token(request)})
 
 
 def ssot_summary(request):

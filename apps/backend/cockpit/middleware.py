@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from django.conf import settings
 from django.http import HttpResponse
 
 
@@ -21,9 +22,11 @@ class LocalCorsMiddleware:
     def __call__(self, request):
         response = HttpResponse() if request.method == "OPTIONS" else self.get_response(request)
         origin = request.headers.get("Origin")
-        if origin in self.ALLOWED_ORIGINS:
+        allowed_origins = getattr(settings, "RELINIUM_CORS_ALLOWED_ORIGINS", self.ALLOWED_ORIGINS)
+        if origin in allowed_origins:
             response["Access-Control-Allow-Origin"] = origin
             response["Vary"] = "Origin"
             response["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-            response["Access-Control-Allow-Headers"] = "Content-Type"
+            response["Access-Control-Allow-Headers"] = "Content-Type, X-CSRFToken"
+            response["Access-Control-Allow-Credentials"] = "true"
         return response

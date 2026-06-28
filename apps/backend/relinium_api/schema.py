@@ -4,8 +4,17 @@ from enum import Enum
 from typing import Any
 
 import strawberry
+from django.contrib.auth import logout as django_logout
+from django.core.exceptions import PermissionDenied, ValidationError
 from strawberry.scalars import JSON
+from strawberry.types import Info
 
+from accounts import permissions as auth_permissions
+from accounts import graphql_security
+from accounts import services as auth_services
+from accounts.models import AccessRequest as AccessRequestModel
+from accounts.models import Organization as OrganizationModel
+from accounts.models import OrganizationMembership, UserProfile
 from cockpit import services
 from scam_trace import services as scam_services
 from scam_trace.models import CaseCorrelation, EvidenceArtifact, GeneratedReport, ScamCase, ScamQuestionnaireAnswer, TechnicalIndicator, TimelineEvent
@@ -318,7 +327,7 @@ class DataSource:
     label: str
     source_type: DataSourceType
     status: DataSourceStatus
-    locator_ref: str
+    locator_display: str
     locator_hash: str
     read_only: bool
     include_hidden: bool
@@ -329,6 +338,69 @@ class DataSource:
     created_at: str
     updated_at: str
     audit_events: list[DataSourceAuditEvent]
+
+
+@strawberry.type
+class Organization:
+    id: str
+    slug: str
+    name: str
+    status: str
+    mfa_policy: str
+
+
+@strawberry.type
+class Membership:
+    id: str
+    organization: Organization
+    role: str
+    status: str
+    created_at: str
+
+
+@strawberry.type
+class CurrentUser:
+    id: str
+    email_redacted: str
+    display_name: str
+    avatar_initials: str
+    locale: str
+    timezone: str
+    mfa_required: bool
+    mfa_enrolled: bool
+    selected_organization: Organization | None
+
+
+@strawberry.type
+class AuthStatus:
+    authenticated: bool
+    mode: str
+    oidc_configured: bool
+    provider_configured: bool
+    provider_name: str
+    dev_auth_enabled: bool
+    mfa_required: bool
+    mfa_enrolled: bool
+    mfa_provider_status: str
+    user: CurrentUser | None
+    current_organization: Organization | None
+    permissions: list[str]
+
+
+@strawberry.type
+class PermissionSet:
+    organization: Organization | None
+    permissions: list[str]
+
+
+@strawberry.type
+class AccessRequest:
+    id: str
+    email_redacted: str
+    organization_hint: str
+    requested_role: str
+    status: str
+    requested_at: str
 
 
 @strawberry.type
@@ -385,6 +457,21 @@ class UpdateDataSourceInput:
     include_hidden: bool | None = None
     exclusions: list[str] | None = None
     notes_redacted: str | None = None
+
+
+@strawberry.input
+class RequestAccessInput:
+    email: str
+    organization_hint: str = ""
+    requested_role: str = "viewer"
+    message_redacted: str = ""
+
+
+@strawberry.input
+class UpdateMyProfileInput:
+    display_name: str = ""
+    locale: str = "fr-FR"
+    timezone: str = "Europe/Paris"
 
 
 def bounded_slice(items: list[Any], limit: int, offset: int) -> tuple[list[Any], int, int]:
@@ -617,7 +704,7 @@ def data_source_from_model(item: DataSourceModel) -> DataSource:
         label=item.label,
         source_type=DataSourceType(item.source_type),
         status=DataSourceStatus(item.status),
-        locator_ref=item.locator_ref,
+        locator_display=source_services.locator_display(item.locator_ref),
         locator_hash=item.locator_hash,
         read_only=item.read_only,
         include_hidden=item.include_hidden,
@@ -628,6 +715,67 @@ def data_source_from_model(item: DataSourceModel) -> DataSource:
         created_at=item.created_at.isoformat(),
         updated_at=item.updated_at.isoformat(),
         audit_events=[data_source_audit_from_model(event) for event in item.audit_events.all()[:20]],
+    )
+
+
+def organization_from_model(item: OrganizationModel | None) -> Organization | None:
+    if item is None:
+        return None
+    return Organization(id=str(item.id), slug=item.slug, name=item.name, status=item.status, mfa_policy=item.mfa_policy)
+
+
+def membership_from_model(item: OrganizationMembership) -> Membership:
+    return Membership(
+        id=str(item.id),
+        organization=organization_from_model(item.organization),
+        role=item.role,
+        status=item.status,
+        created_at=item.created_at.isoformat(),
+    )
+
+
+def current_user_from_model(user) -> CurrentUser | None:
+    if not getattr(user, "is_authenticated", False):
+        return None
+    profile: UserProfile = auth_services.ensure_profile(user)
+    return CurrentUser(
+        id=str(user.id),
+        email_redacted=auth_services.redact_email(user.email or user.get_username()),
+        display_name=profile.display_name,
+        avatar_initials=profile.avatar_initials,
+        locale=profile.locale,
+        timezone=profile.timezone,
+        mfa_required=profile.mfa_required,
+        mfa_enrolled=profile.mfa_enrolled,
+        selected_organization=organization_from_model(profile.selected_organization),
+    )
+
+
+def auth_status_from_dict(data: dict[str, Any]) -> AuthStatus:
+    return AuthStatus(
+        authenticated=data["authenticated"],
+        mode=data["mode"],
+        oidc_configured=data["oidc_configured"],
+        provider_configured=data["provider_configured"],
+        provider_name=data["provider_name"],
+        dev_auth_enabled=data["dev_auth_enabled"],
+        mfa_required=data["mfa_required"],
+        mfa_enrolled=data["mfa_enrolled"],
+        mfa_provider_status=data["mfa_provider_status"],
+        user=current_user_from_model(data["user"]),
+        current_organization=organization_from_model(data["organization"]),
+        permissions=data["permissions"],
+    )
+
+
+def access_request_from_model(item: AccessRequestModel) -> AccessRequest:
+    return AccessRequest(
+        id=str(item.id),
+        email_redacted=item.email_redacted,
+        organization_hint=item.organization_hint,
+        requested_role=item.requested_role,
+        status=item.status,
+        requested_at=item.requested_at.isoformat(),
     )
 
 
@@ -665,6 +813,39 @@ def update_data_source_input_to_dict(input: UpdateDataSourceInput) -> dict[str, 
 
 @strawberry.type
 class Query:
+    @strawberry.field
+    def auth_status(self, info: Info) -> AuthStatus:
+        return auth_status_from_dict(auth_services.get_auth_status(graphql_security.request_from_info(info)))
+
+    @strawberry.field
+    def current_user(self, info: Info) -> CurrentUser | None:
+        return current_user_from_model(graphql_security.current_request_user(info))
+
+    @strawberry.field
+    def current_organization(self, info: Info) -> Organization | None:
+        return organization_from_model(auth_permissions.get_user_organization(graphql_security.current_request_user(info)))
+
+    @strawberry.field
+    def my_memberships(self, info: Info) -> list[Membership]:
+        user = graphql_security.current_request_user(info)
+        if not getattr(user, "is_authenticated", False):
+            return []
+        return [
+            membership_from_model(item)
+            for item in OrganizationMembership.objects.select_related("organization")
+            .filter(user=user)
+            .order_by("organization__name")
+        ]
+
+    @strawberry.field
+    def my_permissions(self, info: Info) -> PermissionSet:
+        user = graphql_security.current_request_user(info)
+        organization = auth_permissions.get_user_organization(user)
+        return PermissionSet(
+            organization=organization_from_model(organization),
+            permissions=sorted(auth_permissions.get_user_permissions(user, organization)),
+        )
+
     @strawberry.field
     def health(self) -> Health:
         return Health(status="ok", **services.json_response_data())
@@ -735,28 +916,43 @@ class Query:
         return [RoadmapItem(**item) for item in services.collect_summary()["roadmap"]]
 
     @strawberry.field
-    def scam_cases(self) -> list[ScamCaseType]:
-        return [scam_case_from_model(item) for item in ScamCase.objects.prefetch_related("custody_events").all()[:100]]
+    def scam_cases(self, info: Info) -> list[ScamCaseType]:
+        _, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SCAM_CASE_READ)
+        queryset = ScamCase.objects.prefetch_related("custody_events").filter(organization=organization)
+        return [scam_case_from_model(item) for item in queryset[:100]]
 
     @strawberry.field
-    def scam_case(self, id: str) -> ScamCaseType | None:
-        item = ScamCase.objects.prefetch_related("custody_events").filter(id=id).first()
+    def scam_case(self, info: Info, id: str) -> ScamCaseType | None:
+        _, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SCAM_CASE_READ)
+        item = ScamCase.objects.prefetch_related("custody_events").filter(id=id, organization=organization).first()
         return scam_case_from_model(item) if item else None
 
     @strawberry.field
-    def scam_case_timeline(self, case_id: str) -> list[TimelineEventType]:
+    def scam_case_timeline(self, info: Info, case_id: str) -> list[TimelineEventType]:
+        _, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SCAM_CASE_READ)
+        if not ScamCase.objects.filter(id=case_id, organization=organization).exists():
+            return []
         return [scam_timeline_from_model(item) for item in TimelineEvent.objects.filter(case_id=case_id)[:200]]
 
     @strawberry.field
-    def scam_case_indicators(self, case_id: str) -> list[TechnicalIndicatorType]:
+    def scam_case_indicators(self, info: Info, case_id: str) -> list[TechnicalIndicatorType]:
+        _, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SCAM_CASE_READ)
+        if not ScamCase.objects.filter(id=case_id, organization=organization).exists():
+            return []
         return [scam_indicator_from_model(item) for item in TechnicalIndicator.objects.filter(case_id=case_id)[:200]]
 
     @strawberry.field
-    def scam_case_reports(self, case_id: str) -> list[GeneratedReportType]:
+    def scam_case_reports(self, info: Info, case_id: str) -> list[GeneratedReportType]:
+        _, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SCAM_CASE_READ)
+        if not ScamCase.objects.filter(id=case_id, organization=organization).exists():
+            return []
         return [scam_report_from_model(item) for item in GeneratedReport.objects.filter(case_id=case_id)[:20]]
 
     @strawberry.field
-    def scam_case_correlations(self, case_id: str) -> list[CaseCorrelationType]:
+    def scam_case_correlations(self, info: Info, case_id: str) -> list[CaseCorrelationType]:
+        _, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SCAM_CASE_READ)
+        if not ScamCase.objects.filter(id=case_id, organization=organization).exists():
+            return []
         return [scam_correlation_from_model(item) for item in CaseCorrelation.objects.select_related("target_case").filter(source_case_id=case_id)[:100]]
 
     @strawberry.field
@@ -773,39 +969,102 @@ class Query:
         ]
 
     @strawberry.field
-    def data_sources(self) -> list[DataSource]:
-        return [data_source_from_model(item) for item in source_services.list_data_sources()]
+    def data_sources(self, info: Info) -> list[DataSource]:
+        _, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SOURCE_READ)
+        include_unscoped = auth_services.get_auth_status(graphql_security.request_from_info(info))["mode"] == "dev"
+        return [data_source_from_model(item) for item in source_services.list_data_sources(organization=organization, include_unscoped=include_unscoped)]
 
     @strawberry.field
-    def data_source(self, id: str) -> DataSource | None:
-        item = DataSourceModel.objects.prefetch_related("audit_events").filter(id=id).first()
+    def data_source(self, info: Info, id: str) -> DataSource | None:
+        _, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SOURCE_READ)
+        item = DataSourceModel.objects.prefetch_related("audit_events").filter(id=id, organization=organization).first()
         return data_source_from_model(item) if item else None
 
 
 @strawberry.type
 class Mutation:
     @strawberry.mutation
-    def create_data_source(self, input: CreateDataSourceInput) -> DataSource:
-        source = source_services.create_data_source(create_data_source_input_to_dict(input))
+    def request_access(self, info: Info, input: RequestAccessInput) -> AccessRequest:
+        try:
+            item = auth_services.request_access(
+                {
+                    "email": input.email,
+                    "organization_hint": input.organization_hint,
+                    "requested_role": input.requested_role,
+                    "message_redacted": input.message_redacted,
+                },
+                request=graphql_security.request_from_info(info),
+            )
+        except (PermissionDenied, ValidationError) as error:
+            raise graphql_security.safe_graphql_error(error) from None
+        return access_request_from_model(item)
+
+    @strawberry.mutation
+    def update_my_profile(self, info: Info, input: UpdateMyProfileInput) -> CurrentUser:
+        user = graphql_security.current_request_user(info)
+        try:
+            auth_services.update_profile(
+                user,
+                {"display_name": input.display_name, "locale": input.locale, "timezone": input.timezone},
+            )
+        except (PermissionDenied, ValidationError) as error:
+            raise graphql_security.safe_graphql_error(error) from None
+        return current_user_from_model(user)
+
+    @strawberry.mutation
+    def select_organization(self, info: Info, organization_id: str) -> Organization:
+        user = graphql_security.current_request_user(info)
+        try:
+            organization = auth_services.select_organization(user, organization_id)
+        except PermissionDenied as error:
+            raise graphql_security.safe_graphql_error(error) from None
+        return organization_from_model(organization)
+
+    @strawberry.mutation
+    def logout(self, info: Info) -> AuthStatus:
+        request = graphql_security.request_from_info(info)
+        django_logout(request)
+        return auth_status_from_dict(auth_services.get_auth_status(request))
+
+    @strawberry.mutation
+    def create_data_source(self, info: Info, input: CreateDataSourceInput) -> DataSource:
+        user, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SOURCE_CREATE)
+        source = source_services.create_data_source(create_data_source_input_to_dict(input), organization=organization)
+        auth_services.audit_auth_event(
+            request=graphql_security.request_from_info(info),
+            actor_user=user,
+            organization=organization,
+            action="source_created",
+            target_type="data_source",
+            target_ref=str(source.id),
+            metadata_redacted={"source_type": source.source_type},
+        )
         return data_source_from_model(DataSourceModel.objects.prefetch_related("audit_events").get(id=source.id))
 
     @strawberry.mutation
-    def update_data_source(self, id: str, input: UpdateDataSourceInput) -> DataSource:
-        source = source_services.update_data_source(id, update_data_source_input_to_dict(input))
+    def update_data_source(self, info: Info, id: str, input: UpdateDataSourceInput) -> DataSource:
+        user, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SOURCE_UPDATE)
+        source = source_services.update_data_source(id, update_data_source_input_to_dict(input), organization=organization)
+        auth_services.audit_auth_event(request=graphql_security.request_from_info(info), actor_user=user, organization=organization, action="source_updated", target_type="data_source", target_ref=str(source.id))
         return data_source_from_model(DataSourceModel.objects.prefetch_related("audit_events").get(id=source.id))
 
     @strawberry.mutation
-    def mark_data_source_ready(self, id: str) -> DataSource:
-        source = source_services.mark_data_source_ready(id)
+    def mark_data_source_ready(self, info: Info, id: str) -> DataSource:
+        user, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SCAN_PREPARE)
+        source = source_services.mark_data_source_ready(id, organization=organization)
+        auth_services.audit_auth_event(request=graphql_security.request_from_info(info), actor_user=user, organization=organization, action="source_marked_ready", target_type="data_source", target_ref=str(source.id))
         return data_source_from_model(DataSourceModel.objects.prefetch_related("audit_events").get(id=source.id))
 
     @strawberry.mutation
-    def disable_data_source(self, id: str) -> DataSource:
-        source = source_services.disable_data_source(id)
+    def disable_data_source(self, info: Info, id: str) -> DataSource:
+        user, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SOURCE_DISABLE)
+        source = source_services.disable_data_source(id, organization=organization)
+        auth_services.audit_auth_event(request=graphql_security.request_from_info(info), actor_user=user, organization=organization, action="source_disabled", target_type="data_source", target_ref=str(source.id))
         return data_source_from_model(DataSourceModel.objects.prefetch_related("audit_events").get(id=source.id))
 
     @strawberry.mutation
-    def create_scam_case(self, input: CreateScamCaseInput) -> ScamCaseType:
+    def create_scam_case(self, info: Info, input: CreateScamCaseInput) -> ScamCaseType:
+        user, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SCAM_CASE_CREATE)
         case = scam_services.create_case(
             {
                 "title": input.title,
@@ -814,12 +1073,17 @@ class Mutation:
                 "victim_label_redacted": input.victim_label_redacted,
                 "summary": input.summary,
                 "operator_notes_redacted": input.operator_notes_redacted,
-            }
+            },
+            organization=organization,
         )
+        auth_services.audit_auth_event(request=graphql_security.request_from_info(info), actor_user=user, organization=organization, action="scam_case_created", target_type="scam_case", target_ref=str(case.id))
         return scam_case_from_model(ScamCase.objects.prefetch_related("custody_events").get(id=case.id))
 
     @strawberry.mutation
-    def add_scam_artifact(self, input: AddScamArtifactInput) -> AddScamArtifactResult:
+    def add_scam_artifact(self, info: Info, input: AddScamArtifactInput) -> AddScamArtifactResult:
+        user, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SCAM_CASE_UPDATE)
+        if not ScamCase.objects.filter(id=input.case_id, organization=organization).exists():
+            raise graphql_security.safe_graphql_error(PermissionDenied("Permission insuffisante."))
         artifact = scam_services.add_artifact(
             input.case_id,
             {
@@ -831,6 +1095,7 @@ class Mutation:
             },
         )
         scam_services.correlate_case(input.case_id)
+        auth_services.audit_auth_event(request=graphql_security.request_from_info(info), actor_user=user, organization=organization, action="scam_artifact_added", target_type="scam_case", target_ref=input.case_id)
         return AddScamArtifactResult(
             artifact=scam_artifact_from_model(artifact),
             custody_events=[scam_custody_from_model(item) for item in artifact.custody_events.all()],
@@ -838,17 +1103,30 @@ class Mutation:
         )
 
     @strawberry.mutation
-    def answer_scam_question(self, input: AnswerScamQuestionInput) -> ScamQuestionnaireAnswerType:
+    def answer_scam_question(self, info: Info, input: AnswerScamQuestionInput) -> ScamQuestionnaireAnswerType:
+        user, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_SCAM_CASE_UPDATE)
+        if not ScamCase.objects.filter(id=input.case_id, organization=organization).exists():
+            raise graphql_security.safe_graphql_error(PermissionDenied("Permission insuffisante."))
         answer = scam_services.add_questionnaire_answer(input.case_id, input.question_key, input.value, input.notes_redacted, input.confidence)
+        auth_services.audit_auth_event(request=graphql_security.request_from_info(info), actor_user=user, organization=organization, action="scam_question_answered", target_type="scam_case", target_ref=input.case_id, metadata_redacted={"question_key": input.question_key})
         return scam_answer_from_model(answer)
 
     @strawberry.mutation
-    def generate_scam_reports(self, case_id: str) -> list[GeneratedReportType]:
+    def generate_scam_reports(self, info: Info, case_id: str) -> list[GeneratedReportType]:
+        user, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_REPORT_GENERATE)
+        if not ScamCase.objects.filter(id=case_id, organization=organization).exists():
+            raise graphql_security.safe_graphql_error(PermissionDenied("Permission insuffisante."))
         scam_services.correlate_case(case_id)
+        auth_services.audit_auth_event(request=graphql_security.request_from_info(info), actor_user=user, organization=organization, action="scam_reports_generated", target_type="scam_case", target_ref=case_id)
         return [scam_report_from_model(item) for item in scam_services.generate_case_reports(case_id)]
 
     @strawberry.mutation
-    def mark_report_reviewed(self, report_id: str) -> GeneratedReportType:
+    def mark_report_reviewed(self, info: Info, report_id: str) -> GeneratedReportType:
+        user, organization = graphql_security.require_permission(info, auth_permissions.PERMISSION_REPORT_REVIEW)
+        report = GeneratedReport.objects.select_related("case").filter(id=report_id, case__organization=organization).first()
+        if report is None:
+            raise graphql_security.safe_graphql_error(PermissionDenied("Permission insuffisante."))
+        auth_services.audit_auth_event(request=graphql_security.request_from_info(info), actor_user=user, organization=organization, action="scam_report_reviewed", target_type="generated_report", target_ref=report_id)
         return scam_report_from_model(scam_services.mark_report_reviewed(report_id))
 
 schema = strawberry.Schema(query=Query, mutation=Mutation)

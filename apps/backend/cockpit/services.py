@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import sys
+import threading
 from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
@@ -17,20 +18,30 @@ REPO_ROOT: Path = settings.REPO_ROOT
 VALIDATOR_PATH = SSOT_ROOT / "core" / "scripts" / "validate_documents.py"
 KNOWN_FINDINGS_PATH = SSOT_ROOT / "core" / "validation" / "known_findings.json"
 PROTECTED_PREFIXES = ("personal_vault/", "vault_index/", "users/user_template/")
+VALIDATOR_LOAD_LOCK = threading.Lock()
 
 
 def load_validator() -> ModuleType:
     module_name = "relinium_core_validate_documents"
-    if module_name in sys.modules:
-        return sys.modules[module_name]
+    existing = sys.modules.get(module_name)
+    if existing is not None and hasattr(existing, "discover_event_streams"):
+        return existing
 
-    spec = importlib.util.spec_from_file_location(module_name, VALIDATOR_PATH)
-    if spec is None or spec.loader is None:
-        raise RuntimeError(f"cannot load validator from {VALIDATOR_PATH}")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[module_name] = module
-    spec.loader.exec_module(module)
-    return module
+    with VALIDATOR_LOAD_LOCK:
+        existing = sys.modules.get(module_name)
+        if existing is not None and hasattr(existing, "discover_event_streams"):
+            return existing
+        spec = importlib.util.spec_from_file_location(module_name, VALIDATOR_PATH)
+        if spec is None or spec.loader is None:
+            raise RuntimeError(f"cannot load validator from {VALIDATOR_PATH}")
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = module
+        try:
+            spec.loader.exec_module(module)
+        except Exception:
+            sys.modules.pop(module_name, None)
+            raise
+        return module
 
 
 def relative_to_ssot(path: Path) -> str:
