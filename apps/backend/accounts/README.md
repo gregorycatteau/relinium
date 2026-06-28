@@ -29,6 +29,11 @@ RELINIUM_DEV_USER_NAME="Relinium Dev"
 RELINIUM_DEV_USER_ROLE=owner
 RELINIUM_DEFAULT_ORG="Relinium Local"
 RELINIUM_MFA_REQUIRED_DEFAULT=false
+OIDC_PROVIDER_NAME=
+OIDC_CLIENT_ID=
+OIDC_CLIENT_SECRET=
+OIDC_DISCOVERY_URL=
+OIDC_REDIRECT_URI=
 ```
 
 `RELINIUM_AUTH_MODE` accepte:
@@ -40,6 +45,11 @@ RELINIUM_MFA_REQUIRED_DEFAULT=false
 Le mode dev ne s'active que si `RELINIUM_AUTH_MODE=dev` et
 `RELINIUM_DEV_AUTH_ENABLED=true`. Sans ces deux signaux, aucune identite
 fallback n'est creee.
+
+`authStatus` expose `providerConfigured` et `providerName` pour signaler si un
+provider OIDC est réellement configure. Phase 1 ne fournit pas de callback OIDC
+et ne doit donc afficher aucune connexion organisationnelle comme fonctionnelle
+tant que ce raccordement n'est pas ajoute.
 
 ## RBAC
 
@@ -71,6 +81,14 @@ Permissions initiales:
 Les helpers dans `accounts.permissions` sont le point d'entree unique pour les
 resolvers GraphQL et les futurs services applicatifs.
 
+Les guards GraphQL sont centralises dans `accounts.graphql_security`:
+
+- `require_authenticated`;
+- `require_permission`;
+- `current_request_user`;
+- `current_organization_or_error`;
+- `safe_graphql_error`.
+
 ## Secrets
 
 Ne jamais stocker:
@@ -99,3 +117,6 @@ de token brut.
 
 TOTP devra passer par une librairie eprouvee comme `django-otp` ou
 `django-two-factor-auth`. Aucun pseudo-TOTP maison ne doit etre ajoute.
+En Phase 1, `authStatus.mfaProviderStatus` vaut `planned`; une politique
+organisationnelle `mfa_policy=required` rend `mfaRequired` visible sans activer
+de verification TOTP factice.
