@@ -103,6 +103,40 @@ Sensitive GraphQL mutations now require an authenticated user, an active
 organization membership and the matching permission.
 GraphQL auth guards are centralized in `apps/backend/accounts/graphql_security.py`.
 
+### Access and onboarding UX
+
+The frontend access entry is `/connexion`. It is an access hub, not an error
+page. Anonymous users get three explicit paths:
+
+- existing user: organization identity login when an OIDC provider is
+  configured;
+- company account creation: `/creation-compte`, used to prepare an organization
+  validation request;
+- administrator access: `/admin-acces`, used to prepare a reinforced request
+  for leaders who will invite users and manage rights.
+
+Phase 1 does not implement a real OIDC callback, automatic KYC, or file upload
+for legal documents. The UI must present unavailable capabilities as request
+preparation, not as completed activation. Relinium does not ask for or store
+professional passwords, API tokens, banking information, or raw OAuth tokens.
+
+The company creation flow collects only request metadata through
+`requestAccess`: organization identity, professional contact, role context, and
+declared verification information. Legal document upload is displayed as a
+future secure upload area and does not store files in v0.1.
+
+Planned organization verification steps are:
+
+- professional email verification;
+- professional phone verification;
+- official domain or website control;
+- legal document review;
+- human validation before activation.
+
+Administrator access remains a preparation flow until the organization,
+responsible contact, MFA posture, RBAC role and audit requirements are
+validated.
+
 Production hardening variables:
 
 - `DJANGO_DEBUG=false`

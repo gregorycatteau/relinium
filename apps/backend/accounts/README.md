@@ -17,6 +17,26 @@
 Phase 1 n'implemente pas de provider OAuth reel, pas de mot de passe applicatif
 Relinium, pas de TOTP, pas de WebAuthn et pas de stockage de token OAuth.
 
+## Parcours d'acces
+
+Le frontend expose `/connexion` comme hub d'acces avec trois chemins:
+
+- utilisateur existant: connexion par identite organisationnelle quand OIDC
+  sera raccorde;
+- creation compte entreprise: preparation d'une demande d'ouverture
+  d'organisation via `/creation-compte`;
+- acces administrateur: preparation d'une demande renforcee via `/admin-acces`.
+
+Ces parcours ne creent pas de mot de passe Relinium et ne collectent pas de
+secret. La mutation `requestAccess` peut etre reutilisee pour enregistrer une
+demande redigee et contextualisee, mais elle ne valide pas automatiquement une
+organisation, un responsable ou un role administrateur.
+
+Le KYC organisationnel reste futur. Les etapes attendues sont la verification
+email professionnel, la verification telephone, le controle du domaine ou site
+officiel, le controle justificatif et une validation humaine. Aucun upload de
+justificatif n'est stocke en v0.1.
+
 ## Modes d'authentification
 
 Variables:

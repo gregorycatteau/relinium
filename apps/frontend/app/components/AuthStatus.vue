@@ -13,7 +13,7 @@ const {
 } = useAuthStatus()
 
 const showLoading = computed(() => pending.value && !isAuthenticated.value && !error.value)
-const loginTitle = computed(() => error.value ? 'Etat auth indisponible' : 'Connexion')
+const loginTitle = computed(() => error.value ? 'Connexion organisation à configurer' : 'Connexion')
 
 watch(
   () => route.fullPath,

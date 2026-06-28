@@ -13,7 +13,7 @@ watch(
 </script>
 
 <template>
-  <header class="sticky top-0 z-40 w-screen max-w-full overflow-x-hidden border-b border-slate-200 bg-white/95 backdrop-blur">
+  <header class="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/95 backdrop-blur">
     <div class="mx-auto flex h-[55px] w-full max-w-7xl items-center gap-2 px-3 sm:gap-4 sm:px-6 md:h-[63px] lg:px-8">
       <NuxtLink class="inline-flex min-w-0 shrink-0 items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-cyan-700 focus-visible:ring-offset-2" to="/" aria-label="Accueil Relinium">
         <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-950 text-sm font-bold text-white">R</span>
@@ -24,7 +24,7 @@ watch(
         <AppNav />
       </div>
 
-      <div class="ml-auto flex w-[132px] min-w-0 shrink-0 items-center justify-end gap-1 md:w-auto">
+      <div class="ml-auto flex min-w-0 shrink-0 items-center justify-end gap-1">
         <button class="hidden h-8 w-8 items-center justify-center rounded-md text-slate-600 transition outline-none hover:bg-slate-50 hover:text-slate-950 focus-visible:ring-2 focus-visible:ring-cyan-700 focus-visible:ring-offset-2 md:inline-flex" aria-label="Rechercher" type="button">
           <svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="7" />
@@ -70,6 +70,7 @@ watch(
         </div>
         <div v-else class="space-y-1">
           <NuxtLink class="block rounded-md px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50" to="/connexion">Connexion</NuxtLink>
+          <NuxtLink class="block rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50" to="/creation-compte">Créer un compte</NuxtLink>
           <NuxtLink class="block rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50" to="/demande-acces">Demander un accès</NuxtLink>
         </div>
       </div>

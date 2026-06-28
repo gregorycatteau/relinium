@@ -4,62 +4,107 @@ const {
   error,
   isAuthenticated,
   displayName,
-  mode,
   providerConfigured,
   providerName,
-  devAuthEnabled,
   currentOrganization
 } = useAuthStatus()
+
+const loginNote = computed(() => {
+  if (pending.value) return 'Vérification de la connexion organisation.'
+  if (error.value) return 'La connexion organisation n’est pas encore disponible depuis cet environnement.'
+  if (providerConfigured.value) return `Connexion organisation prête${providerName.value ? ` avec ${providerName.value}` : ''}.`
+  return 'Connexion organisation à configurer.'
+})
+
+const loginReadyMessage = ref('')
+
+function prepareOrganizationLogin(): void {
+  loginReadyMessage.value = 'La redirection vers le fournisseur d’identité sera raccordée lors de l’activation OIDC.'
+}
 </script>
 
 <template>
   <section class="w-full bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
-    <div class="mx-auto max-w-3xl">
-      <h1 class="text-3xl font-semibold text-slate-950">Connexion à Relinium</h1>
-      <p class="mt-3 max-w-2xl text-slate-700">
-        Relinium utilise l’identité de votre organisation. Vos mots de passe professionnels ne sont pas stockés ici.
-      </p>
+    <div class="mx-auto max-w-6xl">
+      <div class="max-w-3xl">
+        <p v-if="isAuthenticated" class="mb-3 text-sm font-semibold text-emerald-800">
+          Session active pour {{ displayName }} · {{ currentOrganization?.name || 'Organisation non sélectionnée' }}
+        </p>
+        <h1 class="text-3xl font-semibold text-slate-950">Accéder à Relinium</h1>
+        <p class="mt-3 max-w-2xl text-slate-700">
+          Connectez-vous avec votre organisation, créez un accès entreprise ou préparez une demande de validation.
+        </p>
+      </div>
 
-      <div class="mt-6 rounded-lg border border-slate-200 bg-white p-5">
-        <p v-if="pending" class="text-sm text-slate-600">Vérification de l’état d’authentification.</p>
-
-        <div v-else-if="isAuthenticated" class="space-y-3">
+      <div class="mt-7 grid gap-4 lg:grid-cols-3">
+        <article class="flex min-h-[260px] min-w-0 flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
           <div>
-            <p class="font-semibold text-emerald-800">Session active.</p>
-            <p class="mt-1 text-sm text-slate-600">{{ displayName }} · {{ currentOrganization?.name || 'Organisation non sélectionnée' }}</p>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <NuxtLink class="inline-flex h-9 items-center justify-center rounded-md bg-cyan-950 px-3 text-sm font-semibold text-white" to="/profil">Ouvrir le profil</NuxtLink>
-            <NuxtLink class="inline-flex h-9 items-center justify-center rounded-md bg-white px-3 text-sm font-semibold text-slate-700 ring-1 ring-slate-200" to="/">Retour au tableau de bord</NuxtLink>
-          </div>
-        </div>
-
-        <div v-else class="space-y-4">
-          <div v-if="error" class="rounded-md bg-amber-50 p-3 text-sm text-amber-900 ring-1 ring-amber-200">
-            État auth indisponible. La connexion organisation ne peut pas être confirmée pour cet environnement.
-          </div>
-          <div v-else-if="mode === 'dev' && devAuthEnabled" class="rounded-md bg-slate-50 p-3 text-sm text-slate-700 ring-1 ring-slate-200">
-            <p class="font-semibold text-slate-950">Mode développement local</p>
-            <p class="mt-1">Cette identité locale sert au développement et ne correspond pas à une connexion production.</p>
-          </div>
-          <div v-else class="rounded-md bg-amber-50 p-3 text-sm text-amber-900 ring-1 ring-amber-200">
-            <p v-if="mode === 'oidc' && providerConfigured">Connexion organisation préparée pour {{ providerName || 'le provider configuré' }}.</p>
-            <p v-else>Connexion organisation non configurée dans cet environnement.</p>
+            <p class="text-xs font-semibold uppercase tracking-normal text-cyan-800">Utilisateur existant</p>
+            <h2 class="mt-2 text-xl font-semibold text-slate-950">J’ai déjà un compte</h2>
+            <p class="mt-3 break-words text-sm leading-6 text-slate-700">
+              Utilisez l’identité de votre organisation pour accéder à votre espace Relinium.
+            </p>
           </div>
 
-          <div class="flex flex-wrap gap-2">
+          <div class="mt-auto pt-5">
             <button
-              class="inline-flex h-10 items-center justify-center rounded-md bg-cyan-950 px-4 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500"
+              class="inline-flex h-10 w-full items-center justify-center rounded-md bg-cyan-950 px-4 text-sm font-semibold text-white transition hover:bg-cyan-900 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500"
               type="button"
               :disabled="!providerConfigured"
+              @click="prepareOrganizationLogin"
             >
-              Continuer avec l’identité de l’organisation
+              Se connecter
             </button>
-            <NuxtLink class="inline-flex h-10 items-center justify-center rounded-md bg-white px-4 text-sm font-semibold text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50" to="/demande-acces">Demander un accès</NuxtLink>
-            <NuxtLink class="inline-flex h-10 items-center justify-center rounded-md px-2 text-sm font-semibold text-slate-600 hover:text-slate-950" to="/">Retour au tableau de bord</NuxtLink>
+            <p class="mt-3 text-sm text-slate-600">{{ loginNote }}</p>
+            <p v-if="loginReadyMessage" class="mt-2 text-sm text-slate-600">{{ loginReadyMessage }}</p>
+            <NuxtLink class="mt-4 inline-flex text-sm font-semibold text-slate-600 hover:text-slate-950" to="/">Retour au tableau de bord</NuxtLink>
           </div>
-        </div>
+        </article>
+
+        <article class="flex min-h-[260px] min-w-0 flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-normal text-cyan-800">Organisation</p>
+            <h2 class="mt-2 text-xl font-semibold text-slate-950">Créer un compte entreprise</h2>
+            <p class="mt-3 break-words text-sm leading-6 text-slate-700">
+              Déclarez votre organisation et préparez les informations nécessaires à la vérification.
+            </p>
+          </div>
+
+          <div class="mt-auto pt-5">
+            <NuxtLink
+              class="inline-flex h-10 w-full items-center justify-center rounded-md bg-white px-4 text-sm font-semibold text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-50"
+              to="/creation-compte"
+            >
+              Créer mon espace
+            </NuxtLink>
+            <p class="mt-3 text-sm text-slate-600">Un administrateur devra valider votre organisation avant activation.</p>
+          </div>
+        </article>
+
+        <article class="flex min-h-[260px] min-w-0 flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-normal text-cyan-800">Responsable</p>
+            <h2 class="mt-2 text-xl font-semibold text-slate-950">Accès administrateur</h2>
+            <p class="mt-3 break-words text-sm leading-6 text-slate-700">
+              Réservé aux responsables autorisés à inviter des collaborateurs et gérer les droits.
+            </p>
+          </div>
+
+          <div class="mt-auto pt-5">
+            <NuxtLink
+              class="inline-flex h-10 w-full items-center justify-center rounded-md bg-white px-4 text-sm font-semibold text-slate-800 ring-1 ring-slate-200 transition hover:bg-slate-50"
+              to="/admin-acces"
+            >
+              Accès admin
+            </NuxtLink>
+            <p class="mt-3 text-sm text-slate-600">La validation renforcée est requise avant tout privilège administrateur.</p>
+          </div>
+        </article>
       </div>
+
+      <p class="mt-6 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm leading-6 text-slate-700">
+        Relinium ne stocke pas vos mots de passe professionnels. L’accès définitif passe par une validation de l’organisation et des droits.
+      </p>
     </div>
   </section>
 </template>
