@@ -150,13 +150,17 @@ def get_auth_status(request) -> dict[str, Any]:
     user = effective_user(request)
     organization = get_user_organization(user) if user else None
     profile = getattr(user, "relinium_profile", None) if user else None
+    organization_mfa_required = bool(organization and organization.mfa_policy == Organization.MfaPolicy.REQUIRED)
     return {
         "authenticated": bool(getattr(user, "is_authenticated", False)),
         "mode": "dev" if settings.RELINIUM_DEV_AUTH_ENABLED and settings.RELINIUM_AUTH_MODE == "dev" else settings.RELINIUM_AUTH_MODE,
-        "oidc_configured": settings.RELINIUM_AUTH_MODE == "oidc",
+        "oidc_configured": settings.RELINIUM_AUTH_MODE == "oidc" and settings.RELINIUM_OIDC_PROVIDER_CONFIGURED,
+        "provider_configured": settings.RELINIUM_AUTH_MODE == "oidc" and settings.RELINIUM_OIDC_PROVIDER_CONFIGURED,
+        "provider_name": settings.OIDC_PROVIDER_NAME or "",
         "dev_auth_enabled": settings.RELINIUM_DEV_AUTH_ENABLED,
-        "mfa_required": bool(getattr(profile, "mfa_required", False)),
+        "mfa_required": bool(getattr(profile, "mfa_required", False)) or organization_mfa_required,
         "mfa_enrolled": bool(getattr(profile, "mfa_enrolled", False)),
+        "mfa_provider_status": "planned",
         "user": user,
         "organization": organization,
         "permissions": sorted(get_user_permissions(user, organization)) if user else [],

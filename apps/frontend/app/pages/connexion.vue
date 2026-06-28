@@ -3,6 +3,8 @@ type AuthStatus = {
   authenticated: boolean
   mode: string
   oidcConfigured: boolean
+  providerConfigured: boolean
+  providerName: string
   devAuthEnabled: boolean
   user?: { displayName: string } | null
   currentOrganization?: { name: string } | null
@@ -16,6 +18,8 @@ const authReq = useAsyncData('auth-status-page', () => graphql<{ authStatus: Aut
       authenticated
       mode
       oidcConfigured
+      providerConfigured
+      providerName
       devAuthEnabled
       user { displayName }
       currentOrganization { name }
@@ -43,8 +47,9 @@ const status = computed(() => authReq.data.value?.authStatus)
         </div>
         <div v-else class="space-y-4">
           <div class="rounded-md bg-amber-50 p-3 text-sm text-amber-900 ring-1 ring-amber-200">
-            <p v-if="status?.mode === 'oidc' && !status?.oidcConfigured">OIDC est sélectionné mais le provider n’est pas encore configuré.</p>
+            <p v-if="status?.mode === 'oidc' && !status?.providerConfigured">OIDC est sélectionné mais le provider d’organisation n’est pas encore configuré.</p>
             <p v-else-if="status?.mode === 'dev' && !status?.devAuthEnabled">Le mode développement est sélectionné mais l’identité dev explicite est désactivée.</p>
+            <p v-else-if="status?.mode === 'oidc'">Connexion organisation préparée pour {{ status.providerName || 'le provider configuré' }}.</p>
             <p v-else>La connexion OIDC sera activée après configuration du provider d’organisation.</p>
           </div>
           <div class="flex flex-wrap gap-2">

@@ -17,6 +17,10 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").sp
 ROOT_URLCONF = "relinium_api.urls"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+def env_bool(name: str, default: str = "false") -> bool:
+    return os.environ.get(name, default).lower() in {"1", "true", "yes", "on"}
+
 INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -46,8 +50,17 @@ SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = False
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_SECURE = os.environ.get("DJANGO_SESSION_COOKIE_SECURE", "false").lower() in {"1", "true", "yes", "on"}
-CSRF_COOKIE_SECURE = os.environ.get("DJANGO_CSRF_COOKIE_SECURE", "false").lower() in {"1", "true", "yes", "on"}
+SESSION_COOKIE_SECURE = env_bool("RELINIUM_SESSION_COOKIE_SECURE", os.environ.get("DJANGO_SESSION_COOKIE_SECURE", "false"))
+CSRF_COOKIE_SECURE = env_bool("RELINIUM_CSRF_COOKIE_SECURE", os.environ.get("DJANGO_CSRF_COOKIE_SECURE", "false"))
+RELINIUM_GRAPHQL_INTROSPECTION_ENABLED = env_bool("RELINIUM_GRAPHQL_INTROSPECTION_ENABLED", "true" if DEBUG else "false")
+RELINIUM_CORS_ALLOWED_ORIGINS = {
+    origin.strip()
+    for origin in os.environ.get(
+        "RELINIUM_CORS_ALLOWED_ORIGINS",
+        "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001,http://localhost:3002,http://127.0.0.1:3002",
+    ).split(",")
+    if origin.strip()
+}
 
 RELINIUM_AUTH_MODE = os.environ.get("RELINIUM_AUTH_MODE", "disabled").lower()
 if RELINIUM_AUTH_MODE not in {"dev", "oidc", "disabled"}:
@@ -58,7 +71,14 @@ RELINIUM_DEV_USER_EMAIL = os.environ.get("RELINIUM_DEV_USER_EMAIL", "dev@reliniu
 RELINIUM_DEV_USER_NAME = os.environ.get("RELINIUM_DEV_USER_NAME", "Relinium Dev")
 RELINIUM_DEV_USER_ROLE = os.environ.get("RELINIUM_DEV_USER_ROLE", "owner")
 RELINIUM_DEFAULT_ORG = os.environ.get("RELINIUM_DEFAULT_ORG", "Relinium Local")
-RELINIUM_MFA_REQUIRED_DEFAULT = os.environ.get("RELINIUM_MFA_REQUIRED_DEFAULT", "false").lower() in {"1", "true", "yes", "on"}
+RELINIUM_MFA_REQUIRED_DEFAULT = env_bool("RELINIUM_MFA_REQUIRED_DEFAULT")
+
+OIDC_PROVIDER_NAME = os.environ.get("OIDC_PROVIDER_NAME", "").strip()
+OIDC_CLIENT_ID = os.environ.get("OIDC_CLIENT_ID", "").strip()
+OIDC_CLIENT_SECRET = os.environ.get("OIDC_CLIENT_SECRET", "").strip()
+OIDC_DISCOVERY_URL = os.environ.get("OIDC_DISCOVERY_URL", "").strip()
+OIDC_REDIRECT_URI = os.environ.get("OIDC_REDIRECT_URI", "").strip()
+RELINIUM_OIDC_PROVIDER_CONFIGURED = all([OIDC_PROVIDER_NAME, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_DISCOVERY_URL, OIDC_REDIRECT_URI])
 
 
 def build_postgres_database(url: str) -> dict[str, object]:

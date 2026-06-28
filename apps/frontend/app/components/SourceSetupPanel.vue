@@ -11,7 +11,7 @@ type DataSource = {
   label: string
   sourceType: SourceType
   status: SourceStatus
-  locatorRef: string
+  locatorDisplay: string
   locatorHash: string
   readOnly: boolean
   includeHidden: boolean
@@ -90,7 +90,7 @@ const dataSourcesReq = useAsyncData(
         label
         sourceType
         status
-        locatorRef
+        locatorDisplay
         locatorHash
         readOnly
         includeHidden
@@ -332,7 +332,7 @@ async function marquerPrete(source: DataSource): Promise<void> {
           <dl class="mt-4 space-y-2 text-sm">
             <div>
               <dt class="font-semibold text-slate-500">Référence</dt>
-              <dd class="mt-1 break-all text-slate-700">{{ source.locatorRef || 'Non renseignée' }}</dd>
+              <dd class="mt-1 break-all text-slate-700">{{ source.locatorDisplay || 'Non renseignée' }}</dd>
             </div>
             <div>
               <dt class="font-semibold text-slate-500">Empreinte</dt>

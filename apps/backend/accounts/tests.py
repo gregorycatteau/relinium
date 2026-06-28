@@ -62,6 +62,28 @@ class AuthServiceTests(TestCase):
         self.assertEqual(status["organization"].slug, "relinium-local")
         self.assertTrue(AuthAuditEvent.objects.filter(action="dev_identity_resolved").exists())
 
+    @override_settings(
+        RELINIUM_AUTH_MODE="dev",
+        RELINIUM_DEV_AUTH_ENABLED=True,
+        RELINIUM_DEV_USER_EMAIL="dev@example.test",
+        RELINIUM_DEV_USER_NAME="Dev Operator",
+        RELINIUM_DEFAULT_ORG="Relinium Local",
+        RELINIUM_DEV_USER_ROLE="owner",
+        RELINIUM_MFA_REQUIRED_DEFAULT=False,
+        RELINIUM_OIDC_PROVIDER_CONFIGURED=False,
+        OIDC_PROVIDER_NAME="",
+    )
+    def test_auth_status_reflects_required_org_mfa_without_fake_provider(self):
+        status = get_auth_status(DummyRequest())
+        status["organization"].mfa_policy = Organization.MfaPolicy.REQUIRED
+        status["organization"].save(update_fields=["mfa_policy", "updated_at"])
+
+        status = get_auth_status(DummyRequest())
+        self.assertTrue(status["mfa_required"])
+        self.assertFalse(status["mfa_enrolled"])
+        self.assertEqual(status["mfa_provider_status"], "planned")
+        self.assertFalse(status["provider_configured"])
+
 
 class GraphqlAuthTests(TestCase):
     def graphql(self, query: str, variables: dict | None = None):
@@ -84,6 +106,7 @@ class GraphqlAuthTests(TestCase):
         )
         self.assertIsNone(payload["data"])
         self.assertEqual(payload["errors"][0]["message"], "Authentification requise.")
+        self.assertNotIn("Traceback", json.dumps(payload["errors"]))
 
     @override_settings(
         RELINIUM_AUTH_MODE="dev",
@@ -116,6 +139,44 @@ class GraphqlAuthTests(TestCase):
         self.assertNotIn("api_key", metadata)
         self.assertNotIn("secret", metadata)
 
+    @override_settings(
+        RELINIUM_AUTH_MODE="dev",
+        RELINIUM_DEV_AUTH_ENABLED=True,
+        RELINIUM_DEV_USER_EMAIL="dev@relinium.local",
+        RELINIUM_DEV_USER_NAME="Operateur Relinium",
+        RELINIUM_DEFAULT_ORG="relinium-local",
+        RELINIUM_DEV_USER_ROLE="owner",
+        RELINIUM_MFA_REQUIRED_DEFAULT=False,
+    )
+    def test_data_sources_do_not_expose_raw_locator_ref(self):
+        payload = self.graphql(
+            """
+            mutation {
+              createDataSource(input: {label: "Source privee", sourceType: NETWORK_SHARE, locatorRef: "//nas/comptabilite/confidentiel"}) {
+                id
+              }
+            }
+            """
+        )
+        self.assertNotIn("errors", payload)
+
+        payload = self.graphql(
+            """
+            query {
+              dataSources {
+                label
+                locatorDisplay
+                locatorHash
+              }
+            }
+            """
+        )
+        self.assertNotIn("errors", payload)
+        source = payload["data"]["dataSources"][0]
+        self.assertNotIn("locatorRef", source)
+        self.assertEqual(source["locatorDisplay"], "//nas/.../confidentiel")
+        self.assertNotEqual(source["locatorDisplay"], "//nas/comptabilite/confidentiel")
+
     def test_generate_scam_reports_without_permission_is_rejected(self):
         User = get_user_model()
         user = User.objects.create_user(username="viewer@example.test", email="viewer@example.test")
@@ -134,3 +195,4 @@ class GraphqlAuthTests(TestCase):
         payload = response.json()
         self.assertIsNone(payload["data"])
         self.assertEqual(payload["errors"][0]["message"], "Permission insuffisante.")
+        self.assertNotIn("Traceback", json.dumps(payload["errors"]))

@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import re
 from typing import Any
+from urllib.parse import urlparse
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
@@ -18,12 +19,51 @@ SECRET_PATTERNS = (
     re.compile(r"\bBearer\b", re.IGNORECASE),
 )
 
+URI_SCHEMES_WITH_USERINFO_RISK = {"ftp", "ftps", "http", "https", "sftp", "smb", "ssh", "webdav", "webdavs"}
+
 
 def compute_locator_hash(locator_ref: str) -> str:
     normalized = (locator_ref or "").strip()
     if not normalized:
         return ""
     return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+
+
+def locator_display(locator_ref: str) -> str:
+    normalized = (locator_ref or "").strip()
+    if not normalized:
+        return ""
+
+    parsed = urlparse(normalized)
+    if parsed.scheme and parsed.netloc:
+        host = parsed.hostname or parsed.netloc.rsplit("@", 1)[-1]
+        path_tail = parsed.path.rstrip("/").rsplit("/", 1)[-1] if parsed.path.rstrip("/") else ""
+        suffix = f"/.../{path_tail}" if path_tail else "/..."
+        return f"{parsed.scheme}://{host}{suffix}"
+
+    if normalized.startswith("//"):
+        parts = [part for part in normalized.strip("/").split("/") if part]
+        if len(parts) >= 2:
+            return f"//{parts[0]}/.../{parts[-1]}"
+        return normalized
+
+    if "/" in normalized:
+        tail = normalized.rstrip("/").rsplit("/", 1)[-1]
+        return f".../{tail}" if tail else "..."
+
+    if "\\" in normalized:
+        tail = normalized.rstrip("\\").rsplit("\\", 1)[-1]
+        return f"...\\{tail}" if tail else "..."
+
+    if len(normalized) > 80:
+        return f"{normalized[:32]}...{normalized[-16:]}"
+    return normalized
+
+
+def _ensure_no_userinfo_uri(value: str, field: str) -> None:
+    parsed = urlparse(value)
+    if parsed.scheme.lower() in URI_SCHEMES_WITH_USERINFO_RISK and (parsed.username or parsed.password):
+        raise ValidationError({field: "Cette URI contient des identifiants. Ne saisissez aucun utilisateur, mot de passe ni token dans le locator."})
 
 
 def _ensure_no_secret(value: Any, field: str) -> None:
@@ -33,6 +73,7 @@ def _ensure_no_secret(value: Any, field: str) -> None:
     for pattern in SECRET_PATTERNS:
         if pattern.search(text):
             raise ValidationError({field: "Cette valeur ressemble à un secret. Ne saisissez aucun mot de passe ni token."})
+    _ensure_no_userinfo_uri(text, field)
 
 
 def _clean_exclusions(value: Any) -> list[str]:

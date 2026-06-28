@@ -5,11 +5,13 @@ type AuthStatus = {
   mfaRequired: boolean
   mfaEnrolled: boolean
   oidcConfigured: boolean
+  providerConfigured: boolean
+  mfaProviderStatus: string
 }
 
 const { graphql } = useGraphqlRequest()
 const req = useAsyncData('security-page', async () => {
-  const response = await graphql<{ authStatus: AuthStatus }>('query SecurityPage { authStatus { authenticated mode mfaRequired mfaEnrolled oidcConfigured } }')
+  const response = await graphql<{ authStatus: AuthStatus }>('query SecurityPage { authStatus { authenticated mode mfaRequired mfaEnrolled oidcConfigured providerConfigured mfaProviderStatus } }')
   return response.authStatus
 })
 </script>
@@ -28,6 +30,7 @@ const req = useAsyncData('security-page', async () => {
           <div>
             <h2 class="text-lg font-semibold text-slate-950">MFA</h2>
             <p class="mt-1 text-sm text-slate-600">Requis: {{ req.data.value.mfaRequired ? 'oui' : 'non' }} · Enrôlé: {{ req.data.value.mfaEnrolled ? 'oui' : 'non' }}</p>
+            <p class="mt-1 text-sm text-slate-600">Provider MFA: {{ req.data.value.mfaProviderStatus === 'planned' ? 'prévu' : req.data.value.mfaProviderStatus }}</p>
             <p class="mt-2 rounded-md bg-amber-50 p-3 text-sm text-amber-900 ring-1 ring-amber-200">
               TOTP sera ajouté avec une librairie éprouvée. Aucun pseudo-MFA maison n’est actif dans cette phase.
             </p>
