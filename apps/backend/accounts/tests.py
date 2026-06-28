@@ -196,3 +196,51 @@ class GraphqlAuthTests(TestCase):
         self.assertIsNone(payload["data"])
         self.assertEqual(payload["errors"][0]["message"], "Permission insuffisante.")
         self.assertNotIn("Traceback", json.dumps(payload["errors"]))
+
+
+class GraphqlHardeningTests(TestCase):
+    def graphql_response(self, query: str):
+        return Client().post(
+            "/graphql",
+            data=json.dumps({"query": query}),
+            content_type="application/json",
+        )
+
+    @override_settings(DEBUG=True, RELINIUM_GRAPHQL_INTROSPECTION_ENABLED=True)
+    def test_introspection_is_allowed_in_dev_when_enabled(self):
+        response = self.graphql_response("{ __schema { queryType { name } } }")
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertNotIn("errors", payload)
+        self.assertEqual(payload["data"]["__schema"]["queryType"]["name"], "Query")
+
+    @override_settings(DEBUG=False, RELINIUM_GRAPHQL_INTROSPECTION_ENABLED=False)
+    def test_introspection_is_rejected_in_prod(self):
+        response = self.graphql_response("{ __schema { queryType { name } } }")
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertIsNone(payload["data"])
+        self.assertEqual(payload["errors"][0]["message"], "GraphQL introspection is disabled.")
+        self.assertNotIn("Traceback", json.dumps(payload["errors"]))
+
+    @override_settings(
+        DEBUG=False,
+        RELINIUM_GRAPHQL_INTROSPECTION_ENABLED=False,
+        RELINIUM_AUTH_MODE="disabled",
+        RELINIUM_DEV_AUTH_ENABLED=False,
+    )
+    def test_normal_queries_still_work_when_introspection_is_disabled(self):
+        response = self.graphql_response("{ authStatus { authenticated mode } }")
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertNotIn("errors", payload)
+        self.assertFalse(payload["data"]["authStatus"]["authenticated"])
+        self.assertEqual(payload["data"]["authStatus"]["mode"], "disabled")
+
+    @override_settings(RELINIUM_GRAPHQL_MAX_REQUEST_BYTES=20)
+    def test_oversized_graphql_request_is_rejected(self):
+        response = self.graphql_response("{ authStatus { authenticated mode } }")
+        self.assertEqual(response.status_code, 413)
+        payload = response.json()
+        self.assertIsNone(payload["data"])
+        self.assertEqual(payload["errors"][0]["message"], "GraphQL request is too large.")

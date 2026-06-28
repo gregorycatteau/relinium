@@ -89,6 +89,14 @@ Les guards GraphQL sont centralises dans `accounts.graphql_security`:
 - `current_organization_or_error`;
 - `safe_graphql_error`.
 
+Le durcissement de transport GraphQL est applique par
+`relinium_api.graphql_view.ReliniumGraphQLView`. En production
+(`DJANGO_DEBUG=false`), `RELINIUM_GRAPHQL_INTROSPECTION_ENABLED` doit rester
+absent ou valoir `false`: les requetes contenant `__schema` ou `__type` sont
+refusees avec le message generique `GraphQL introspection is disabled.`. Les
+requêtes applicatives normales restent autorisees. La taille des corps POST est
+limitee par `RELINIUM_GRAPHQL_MAX_REQUEST_BYTES` (`1048576` par defaut).
+
 ## Secrets
 
 Ne jamais stocker:

@@ -111,10 +111,13 @@ Production hardening variables:
 - `RELINIUM_CSRF_COOKIE_SECURE=true`
 - `RELINIUM_CORS_ALLOWED_ORIGINS=<strict origin list>`
 - `RELINIUM_GRAPHQL_INTROSPECTION_ENABLED=false`
+- `RELINIUM_GRAPHQL_MAX_REQUEST_BYTES=1048576`
 
-`RELINIUM_GRAPHQL_INTROSPECTION_ENABLED` is documented for the production
-profile. Full introspection blocking remains a follow-up if the Strawberry view
-is exposed beyond trusted operator networks.
+`RELINIUM_GRAPHQL_INTROSPECTION_ENABLED` defaults to `true` in debug mode and
+`false` when `DJANGO_DEBUG=false`. When disabled, `/graphql` rejects
+introspection requests containing `__schema` or `__type` with a generic client
+message. `RELINIUM_GRAPHQL_MAX_REQUEST_BYTES` limits POST request bodies before
+GraphQL execution.
 
 ### Local PostgreSQL
 

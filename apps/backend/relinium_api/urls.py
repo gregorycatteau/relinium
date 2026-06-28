@@ -6,11 +6,10 @@ from django.urls import path
 from cockpit import views
 
 try:
-    from strawberry.django.views import GraphQLView
-
+    from relinium_api.graphql_view import ReliniumGraphQLView
     from relinium_api.schema import schema
 except ImportError:
-    GraphQLView = None
+    ReliniumGraphQLView = None
     schema = None
 
 
@@ -31,5 +30,5 @@ urlpatterns = [
     path("api/events", views.events),
     path("api/validation/status", views.validation_status),
     path("api/validation/known-findings", views.known_findings),
-    path("graphql", GraphQLView.as_view(schema=schema) if GraphQLView else graphql_unavailable),
+    path("graphql", ReliniumGraphQLView.as_view(schema=schema) if ReliniumGraphQLView else graphql_unavailable),
 ]
