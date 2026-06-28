@@ -7,19 +7,25 @@ export function useGraphqlRequest() {
   const config = useRuntimeConfig()
   const apiBase = computed(() => String(config.public.apiBase || 'http://127.0.0.1:8000'))
 
-  async function csrfToken(): Promise<string> {
-    const response = await $fetch<{ csrfToken: string }>(`${apiBase.value}/api/csrf`, {
+  async function csrfHeaders(): Promise<Record<string, string>> {
+    const response = await $fetch.raw<{ csrfToken: string }>(`${apiBase.value}/api/csrf`, {
       credentials: 'include'
     })
-    return response.csrfToken
+    const token = response._data?.csrfToken || ''
+    const headers: Record<string, string> = { 'X-CSRFToken': token }
+    if (import.meta.server) {
+      const setCookie = response.headers.get('set-cookie')
+      if (setCookie) headers.Cookie = setCookie.split(';', 1)[0]
+    }
+    return headers
   }
 
   async function graphql<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
-    const token = await csrfToken()
+    const headers = await csrfHeaders()
     const response = await $fetch<GraphqlResponse<T>>(`${apiBase.value}/graphql`, {
       method: 'POST',
       credentials: 'include',
-      headers: { 'X-CSRFToken': token },
+      headers,
       body: { query, variables }
     })
     if (response.errors?.length) {
