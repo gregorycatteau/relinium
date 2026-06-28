@@ -42,8 +42,11 @@ async function envoyer(): Promise<void> {
   <section class="w-full bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-3xl">
       <h1 class="text-3xl font-semibold text-slate-950">Demande d’accès</h1>
-      <p class="mt-3 text-slate-700">Indiquez votre email professionnel et l’organisation concernée. Ne saisissez aucun mot de passe ni token.</p>
+      <p class="mt-3 text-slate-700">Indiquez votre email professionnel, l’organisation concernée et le rôle attendu.</p>
       <form class="mt-6 space-y-4 rounded-lg border border-slate-200 bg-white p-5" @submit.prevent="envoyer">
+        <p class="rounded-md bg-amber-50 p-3 text-sm text-amber-900 ring-1 ring-amber-200">
+          Ne saisissez aucun mot de passe ni information confidentielle dans cette demande.
+        </p>
         <label class="block text-sm font-semibold text-slate-700">Email professionnel
           <input v-model="email" class="mt-1 h-10 w-full rounded-md border border-slate-300 px-3 text-sm" type="email" required>
         </label>
