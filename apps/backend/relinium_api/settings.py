@@ -18,7 +18,11 @@ ROOT_URLCONF = "relinium_api.urls"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 INSTALLED_APPS = [
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
     "cockpit",
+    "accounts",
     "ssot_validation",
     "ssot_index",
     "jobs",
@@ -29,11 +33,32 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
     "cockpit.middleware.LocalCorsMiddleware",
 ]
 
 USE_TZ = True
 TIME_ZONE = "UTC"
+
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = False
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SECURE = os.environ.get("DJANGO_SESSION_COOKIE_SECURE", "false").lower() in {"1", "true", "yes", "on"}
+CSRF_COOKIE_SECURE = os.environ.get("DJANGO_CSRF_COOKIE_SECURE", "false").lower() in {"1", "true", "yes", "on"}
+
+RELINIUM_AUTH_MODE = os.environ.get("RELINIUM_AUTH_MODE", "disabled").lower()
+if RELINIUM_AUTH_MODE not in {"dev", "oidc", "disabled"}:
+    raise ImproperlyConfigured("RELINIUM_AUTH_MODE must be dev, oidc, or disabled.")
+
+RELINIUM_DEV_AUTH_ENABLED = os.environ.get("RELINIUM_DEV_AUTH_ENABLED", "false").lower() in {"1", "true", "yes", "on"}
+RELINIUM_DEV_USER_EMAIL = os.environ.get("RELINIUM_DEV_USER_EMAIL", "dev@relinium.local")
+RELINIUM_DEV_USER_NAME = os.environ.get("RELINIUM_DEV_USER_NAME", "Relinium Dev")
+RELINIUM_DEV_USER_ROLE = os.environ.get("RELINIUM_DEV_USER_ROLE", "owner")
+RELINIUM_DEFAULT_ORG = os.environ.get("RELINIUM_DEFAULT_ORG", "Relinium Local")
+RELINIUM_MFA_REQUIRED_DEFAULT = os.environ.get("RELINIUM_MFA_REQUIRED_DEFAULT", "false").lower() in {"1", "true", "yes", "on"}
 
 
 def build_postgres_database(url: str) -> dict[str, object]:
@@ -71,3 +96,6 @@ if RELINIUM_DATABASE_MODE == "db" and not DATABASE_URL:
     raise ImproperlyConfigured("DATABASE_URL is required when RELINIUM_DATABASE_MODE=db. SQLite is not supported.")
 
 DATABASES = {"default": build_postgres_database(DATABASE_URL)} if DATABASE_URL else {}
+
+if RELINIUM_DATABASE_MODE == "readonly":
+    SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"

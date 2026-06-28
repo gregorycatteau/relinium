@@ -4,6 +4,8 @@ import uuid
 
 from django.db import models
 
+from accounts.models import Organization
+
 
 class ScamCase(models.Model):
     class Status(models.TextChoices):
@@ -39,6 +41,7 @@ class ScamCase(models.Model):
         UNKNOWN = "unknown", "Unknown"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    organization = models.ForeignKey(Organization, null=True, blank=True, related_name="scam_cases", on_delete=models.SET_NULL)
     title = models.CharField(max_length=220)
     status = models.CharField(max_length=32, choices=Status.choices, default=Status.DRAFT)
     severity = models.CharField(max_length=16, choices=Severity.choices, default=Severity.MEDIUM)
@@ -53,6 +56,7 @@ class ScamCase(models.Model):
 
     class Meta:
         indexes = [
+            models.Index(fields=["organization", "status"]),
             models.Index(fields=["status", "severity"]),
             models.Index(fields=["initial_vector"]),
             models.Index(fields=["created_at"]),

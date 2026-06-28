@@ -60,6 +60,40 @@ This mode keeps REST and GraphQL inspection working from `ssot-root/`, but it
 does not run migrations or database-backed workflows. There is no SQLite
 fallback.
 
+### Auth/IAM
+
+Relinium Phase 1 uses `django.contrib.auth` as the identity foundation and the
+`accounts` app for organizations, profiles, memberships, RBAC permissions,
+access requests and redacted auth audit events.
+
+Authentication modes:
+
+```bash
+export RELINIUM_AUTH_MODE=disabled
+export RELINIUM_DEV_AUTH_ENABLED=false
+export RELINIUM_DEV_USER_EMAIL=dev@relinium.local
+export RELINIUM_DEV_USER_NAME="Relinium Dev"
+export RELINIUM_DEV_USER_ROLE=owner
+export RELINIUM_DEFAULT_ORG="Relinium Local"
+export RELINIUM_MFA_REQUIRED_DEFAULT=false
+```
+
+`RELINIUM_AUTH_MODE=dev` is only effective when
+`RELINIUM_DEV_AUTH_ENABLED=true`. This is intentionally explicit. No developer
+identity is created implicitly.
+
+OAuth/OIDC is prepared but not implemented in Phase 1. Future providers should
+cover Microsoft Entra ID, Google Workspace and generic OIDC. Relinium must not
+store professional passwords, OAuth access tokens or OAuth refresh tokens.
+
+MFA is prepared through profile and organization policy fields. TOTP must be
+implemented later with a proven library such as `django-otp` or
+`django-two-factor-auth`; no custom TOTP implementation is allowed.
+
+RBAC permissions are centralized in `apps/backend/accounts/permissions.py`.
+Sensitive GraphQL mutations now require an authenticated user, an active
+organization membership and the matching permission.
+
 ### Local PostgreSQL
 
 Start local PostgreSQL:
@@ -229,6 +263,10 @@ Security limits:
 ### Security limits
 
 - No SQLite fallback.
+- No password-based GraphQL login.
+- No implicit development user.
+- No OAuth token storage.
+- No custom MFA implementation.
 - No arbitrary filesystem path input.
 - No exposure of `personal_vault`, `vault_index`, or `users/user_template`.
 - No vault content in PostgreSQL.

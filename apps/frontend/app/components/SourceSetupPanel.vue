@@ -22,13 +22,7 @@ type DataSource = {
   updatedAt: string
 }
 
-type GraphqlResponse<T> = {
-  data?: T
-  errors?: Array<{ message: string }>
-}
-
-const config = useRuntimeConfig()
-const apiBase = computed(() => String(config.public.apiBase || 'http://127.0.0.1:8000'))
+const { apiBase, graphql: graphqlRequest } = useGraphqlRequest()
 
 const typeOptions: Array<{ value: SourceType, nom: string, description: string, exemple: string, statut: string }> = [
   {
@@ -86,18 +80,6 @@ const notesRedacted = ref('')
 const mutationEnCours = ref(false)
 const message = ref('')
 const erreur = ref('')
-
-async function graphqlRequest<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
-  const response = await $fetch<GraphqlResponse<T>>(`${apiBase.value}/graphql`, {
-    method: 'POST',
-    body: { query, variables }
-  })
-  if (response.errors?.length) {
-    throw new Error(response.errors.map((item) => item.message).join(' '))
-  }
-  if (!response.data) throw new Error('Réponse GraphQL vide.')
-  return response.data
-}
 
 const dataSourcesReq = useAsyncData(
   'source-registry-data-sources',

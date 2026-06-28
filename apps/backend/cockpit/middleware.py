@@ -25,5 +25,6 @@ class LocalCorsMiddleware:
             response["Access-Control-Allow-Origin"] = origin
             response["Vary"] = "Origin"
             response["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-            response["Access-Control-Allow-Headers"] = "Content-Type"
+            response["Access-Control-Allow-Headers"] = "Content-Type, X-CSRFToken"
+            response["Access-Control-Allow-Credentials"] = "true"
         return response

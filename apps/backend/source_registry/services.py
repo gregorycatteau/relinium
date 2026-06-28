@@ -106,22 +106,30 @@ def _audit(source: DataSource, event_type: str, *, actor_label: str | None = Non
     )
 
 
-def list_data_sources():
-    return DataSource.objects.prefetch_related("audit_events").all()
+def list_data_sources(*, organization=None, include_unscoped: bool = False):
+    queryset = DataSource.objects.prefetch_related("audit_events").all()
+    if organization is not None:
+        queryset = queryset.filter(organization=organization) | (queryset.filter(organization__isnull=True) if include_unscoped else DataSource.objects.none())
+    return queryset
 
 
-def create_data_source(input_data: dict[str, Any]) -> DataSource:
+def create_data_source(input_data: dict[str, Any], *, organization=None) -> DataSource:
     cleaned = validate_source_input(input_data)
+    if organization is not None:
+        cleaned["organization"] = organization
     with transaction.atomic():
         source = DataSource.objects.create(**cleaned)
         _audit(source, DataSourceAuditEvent.EventType.CREATED, details_redacted={"source_type": source.source_type})
     return source
 
 
-def update_data_source(id: str, input_data: dict[str, Any]) -> DataSource:
+def update_data_source(id: str, input_data: dict[str, Any], *, organization=None) -> DataSource:
     cleaned = validate_source_input(input_data, partial=True)
     with transaction.atomic():
-        source = DataSource.objects.select_for_update().get(id=id)
+        queryset = DataSource.objects.select_for_update()
+        if organization is not None:
+            queryset = queryset.filter(organization=organization)
+        source = queryset.get(id=id)
         for field, value in cleaned.items():
             setattr(source, field, value)
         source.save()
@@ -129,9 +137,12 @@ def update_data_source(id: str, input_data: dict[str, Any]) -> DataSource:
     return source
 
 
-def mark_data_source_ready(id: str) -> DataSource:
+def mark_data_source_ready(id: str, *, organization=None) -> DataSource:
     with transaction.atomic():
-        source = DataSource.objects.select_for_update().get(id=id)
+        queryset = DataSource.objects.select_for_update()
+        if organization is not None:
+            queryset = queryset.filter(organization=organization)
+        source = queryset.get(id=id)
         if not source.label or not source.source_type:
             raise ValidationError("La source doit avoir un nom et un type.")
         source.status = DataSource.Status.READY
@@ -140,9 +151,12 @@ def mark_data_source_ready(id: str) -> DataSource:
     return source
 
 
-def disable_data_source(id: str) -> DataSource:
+def disable_data_source(id: str, *, organization=None) -> DataSource:
     with transaction.atomic():
-        source = DataSource.objects.select_for_update().get(id=id)
+        queryset = DataSource.objects.select_for_update()
+        if organization is not None:
+            queryset = queryset.filter(organization=organization)
+        source = queryset.get(id=id)
         source.status = DataSource.Status.DISABLED
         source.save(update_fields=["status", "updated_at"])
         _audit(source, DataSourceAuditEvent.EventType.DISABLED)

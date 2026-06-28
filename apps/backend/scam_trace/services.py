@@ -88,7 +88,7 @@ def _create_custody_event(case: ScamCase, action: str, artifact: EvidenceArtifac
     )
 
 
-def create_case(input_data: dict[str, Any]) -> ScamCase:
+def create_case(input_data: dict[str, Any], *, organization=None) -> ScamCase:
     allowed_vectors = {choice.value for choice in ScamCase.InitialVector}
     allowed_victims = {choice.value for choice in ScamCase.VictimType}
     title = str(input_data.get("title", "")).strip()
@@ -102,6 +102,7 @@ def create_case(input_data: dict[str, Any]) -> ScamCase:
         raise ValueError("invalid victim_type")
     with transaction.atomic():
         case = ScamCase.objects.create(
+            organization=organization,
             title=title[:220],
             initial_vector=vector,
             victim_type=victim_type,
