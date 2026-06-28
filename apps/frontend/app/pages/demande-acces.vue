@@ -4,7 +4,8 @@ const route = useRoute()
 const email = ref('')
 const organizationHint = ref('')
 const requestedRole = ref(typeof route.query.role === 'string' ? route.query.role : 'viewer')
-const context = ref(typeof route.query.contexte === 'string' ? route.query.contexte : 'utilisateur')
+const initialContext = route.query.type === 'individual' ? 'individuel' : typeof route.query.contexte === 'string' ? route.query.contexte : 'utilisateur'
+const context = ref(initialContext)
 const phone = ref('')
 const messageRedacted = ref('')
 const erreur = ref('')
@@ -61,6 +62,7 @@ async function envoyer(): Promise<void> {
         <label class="block text-sm font-semibold text-slate-700">Contexte
           <select v-model="context" class="mt-1 h-10 w-full rounded-md border border-slate-300 px-3 text-sm">
             <option value="utilisateur">Utilisateur</option>
+            <option value="individuel">Compte individuel</option>
             <option value="administrateur">Administrateur</option>
             <option value="creation-organisation">Création organisation</option>
           </select>
