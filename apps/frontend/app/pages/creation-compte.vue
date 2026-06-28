@@ -1,5 +1,5 @@
 <script setup lang="ts">
-type FieldKey = 'organizationName' | 'legalIdentifier' | 'country' | 'officialWebsite' | 'contactName' | 'email' | 'phone' | 'role'
+type FieldKey = 'firstName' | 'lastName' | 'organizationName' | 'legalIdentifier' | 'country' | 'officialWebsite' | 'contactName' | 'email' | 'phone' | 'role'
 type PasswordStrength = 'faible' | 'correct' | 'fort'
 
 const { graphql } = useGraphqlRequest()
@@ -8,6 +8,8 @@ const route = useRoute()
 const accountType = computed(() => route.query.type === 'individual' ? 'individual' : 'company')
 const isIndividual = computed(() => accountType.value === 'individual')
 
+const firstName = ref('')
+const lastName = ref('')
 const organizationName = ref('')
 const organizationType = ref(isIndividual.value ? 'independant' : 'entreprise')
 const legalIdentifier = ref('')
@@ -19,6 +21,12 @@ const phone = ref('')
 const role = ref('')
 const password = ref('')
 const passwordConfirmation = ref('')
+const avatarInput = ref<HTMLInputElement | null>(null)
+const avatarPreviewUrl = ref('')
+const avatarObjectUrl = ref('')
+const avatarRemoteUrl = ref('')
+const avatarSourceLabel = ref('')
+const avatarError = ref('')
 const authorized = ref(false)
 const loading = ref(false)
 const submitted = ref(false)
@@ -27,6 +35,8 @@ const successMessage = ref('')
 const touched = reactive<Record<string, boolean>>({})
 
 const fieldLabels: Record<FieldKey, string> = {
+  firstName: 'Prénom',
+  lastName: 'Nom',
   organizationName: 'Nom affiché',
   legalIdentifier: 'Identifiant légal',
   country: 'Pays',
@@ -38,6 +48,8 @@ const fieldLabels: Record<FieldKey, string> = {
 }
 
 const maxLengths: Record<FieldKey, number> = {
+  firstName: 48,
+  lastName: 48,
   organizationName: 80,
   legalIdentifier: 80,
   country: 56,
@@ -50,19 +62,21 @@ const maxLengths: Record<FieldKey, number> = {
 
 const suspiciousPattern = /<script|javascript:|onerror=|onload=|bearer\s+|token=|api_key=|secret=|password=/i
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const frenchNameError = 'Veuillez entrer un Nom ou un Prénom valide. Seuls les caractères utf8 FR sont acceptés.'
+const frenchUppercaseLetters = 'A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ'
+const frenchLowercaseLetters = 'a-zàâäçéèêëîïôöùûüÿæœ'
+const frenchNameCharacters = new RegExp(`^[${frenchUppercaseLetters}${frenchLowercaseLetters}-]+$`, 'u')
+const frenchNameUppercaseSegment = new RegExp(`^[${frenchUppercaseLetters}]+$`, 'u')
+const frenchNameCapitalizedSegment = new RegExp(`^[${frenchUppercaseLetters}][${frenchLowercaseLetters}]+$`, 'u')
+const maxAvatarSize = 5 * 1024 * 1024
 
 const pageTitle = computed(() => isIndividual.value ? 'Créer un compte individuel' : 'Créer un compte entreprise')
 const pageIntro = computed(() => isIndividual.value
   ? 'Préparez votre accès personnel en quelques informations. L’activation reste vérifiée avant ouverture.'
   : 'Préparez l’ouverture d’un espace Relinium pour votre organisation. Cette étape ne valide pas automatiquement votre compte.'
 )
-const submitLabel = computed(() => {
-  if (loading.value) return 'Préparation en cours'
-  if (successMessage.value) return 'Demande préparée'
-  return isIndividual.value ? 'Préparer ma demande' : 'Préparer la demande'
-})
-
-const displayName = computed(() => organizationName.value.trim() || contactName.value.trim())
+const individualName = computed(() => [firstName.value.trim(), lastName.value.trim()].filter(Boolean).join(' '))
+const displayName = computed(() => individualName.value || organizationName.value.trim() || contactName.value.trim())
 const avatarInitials = computed(() => {
   const source = displayName.value || 'Votre nom'
   return source
@@ -72,6 +86,7 @@ const avatarInitials = computed(() => {
     .map((part) => part[0]?.toUpperCase())
     .join('') || 'VN'
 })
+const hasAvatarPreview = computed(() => avatarPreviewUrl.value.length > 0)
 
 const verificationSteps = computed(() => isIndividual.value ? [
   'Email vérifié ensuite',
@@ -104,16 +119,18 @@ const passwordValid = computed(() => passwordScore.value === 5)
 const passwordConfirmationValid = computed(() => password.value.length > 0 && password.value === passwordConfirmation.value)
 
 const currentFields = computed<FieldKey[]>(() => isIndividual.value
-  ? ['organizationName', 'email', 'phone', 'role']
+  ? ['lastName', 'firstName', 'email', 'phone', 'role']
   : ['organizationName', 'legalIdentifier', 'country', 'officialWebsite', 'contactName', 'email', 'phone', 'role']
 )
 
 const requiredFields = computed<FieldKey[]>(() => isIndividual.value
-  ? ['organizationName', 'email', 'phone', 'role']
+  ? ['lastName', 'firstName', 'email', 'phone', 'role']
   : ['organizationName', 'country', 'contactName', 'email']
 )
 
 const values = computed<Record<FieldKey, string>>(() => ({
+  firstName: firstName.value,
+  lastName: lastName.value,
   organizationName: organizationName.value,
   legalIdentifier: legalIdentifier.value,
   country: country.value,
@@ -124,10 +141,20 @@ const values = computed<Record<FieldKey, string>>(() => ({
   role: role.value
 }))
 
+function isValidFrenchName(value: string): boolean {
+  if (value.length < 2 || value.length > 48) return false
+  if (!frenchNameCharacters.test(value)) return false
+  return value.split('-').every((segment) => {
+    if (segment.length < 2) return false
+    return frenchNameUppercaseSegment.test(segment) || frenchNameCapitalizedSegment.test(segment)
+  })
+}
+
 // Ces garde-fous UX complètent les validations serveur, ils ne sont pas une frontière de sécurité.
 function fieldIssue(field: FieldKey): string {
   const value = values.value[field].trim()
   if (requiredFields.value.includes(field) && !value) return 'Ce champ est nécessaire.'
+  if ((field === 'firstName' || field === 'lastName') && value && !isValidFrenchName(value)) return frenchNameError
   if (value.length > maxLengths[field]) return `${fieldLabels[field]} doit rester sous ${maxLengths[field]} caractères.`
   if (value && suspiciousPattern.test(value)) {
     return 'Ce champ semble contenir une valeur technique ou sensible. Retirez les secrets avant de continuer.'
@@ -139,6 +166,10 @@ function fieldIssue(field: FieldKey): string {
 
 function fieldValid(field: FieldKey): boolean {
   return fieldIssue(field) === ''
+}
+
+function isFieldComplete(field: FieldKey): boolean {
+  return values.value[field].trim().length > 0 && fieldValid(field)
 }
 
 function shouldShowFieldIssue(field: FieldKey): boolean {
@@ -153,10 +184,80 @@ function normalizeText(field: FieldKey, value: string): string {
   return value.trim().slice(0, maxLengths[field])
 }
 
+function clearAvatarObjectUrl(): void {
+  if (!avatarObjectUrl.value) return
+  URL.revokeObjectURL(avatarObjectUrl.value)
+  avatarObjectUrl.value = ''
+}
+
+function clearAvatar(): void {
+  clearAvatarObjectUrl()
+  avatarPreviewUrl.value = ''
+  avatarRemoteUrl.value = ''
+  avatarSourceLabel.value = ''
+  avatarError.value = ''
+  if (avatarInput.value) avatarInput.value.value = ''
+}
+
+function setAvatarFile(file: File | null): void {
+  avatarError.value = ''
+  if (!file) return
+  if (!file.type.startsWith('image/')) {
+    avatarError.value = 'Choisissez une image valide.'
+    return
+  }
+  if (file.size > maxAvatarSize) {
+    avatarError.value = 'Image trop lourde. Limite: 5 Mo.'
+    return
+  }
+  clearAvatarObjectUrl()
+  const objectUrl = URL.createObjectURL(file)
+  avatarObjectUrl.value = objectUrl
+  avatarPreviewUrl.value = objectUrl
+  avatarRemoteUrl.value = ''
+  avatarSourceLabel.value = file.name
+}
+
+function openAvatarPicker(): void {
+  avatarInput.value?.click()
+}
+
+function handleAvatarInput(event: Event): void {
+  const input = event.target as HTMLInputElement
+  setAvatarFile(input.files?.[0] ?? null)
+}
+
+function handleAvatarDrop(event: DragEvent): void {
+  setAvatarFile(event.dataTransfer?.files?.[0] ?? null)
+}
+
+function useRemoteAvatar(): void {
+  const value = avatarRemoteUrl.value.trim()
+  avatarError.value = ''
+  if (!value) return
+  try {
+    const url = new URL(value)
+    if (!['http:', 'https:'].includes(url.protocol)) {
+      avatarError.value = 'Utilisez une URL image en HTTPS.'
+      return
+    }
+    clearAvatarObjectUrl()
+    avatarPreviewUrl.value = url.toString()
+    avatarSourceLabel.value = url.hostname
+  } catch {
+    avatarError.value = 'URL image invalide.'
+  }
+}
+
+onBeforeUnmount(() => {
+  clearAvatarObjectUrl()
+})
+
 const formValid = computed(() => {
   const fieldsValid = currentFields.value.every((field) => fieldValid(field))
-  if (!authorized.value || !fieldsValid) return false
+  if (!fieldsValid) return false
   if (isIndividual.value) return passwordValid.value && passwordConfirmationValid.value
+  if (!authorized.value) return false
   return true
 })
 
@@ -172,6 +273,16 @@ const confirmationHint = computed(() => {
   return ''
 })
 
+const individualProgressSteps = computed(() => [
+  { key: 'lastName', label: 'Nom', complete: isFieldComplete('lastName') },
+  { key: 'firstName', label: 'Prénom', complete: isFieldComplete('firstName') },
+  { key: 'email', label: 'Email', complete: isFieldComplete('email') },
+  { key: 'phone', label: 'Téléphone', complete: isFieldComplete('phone') },
+  { key: 'password', label: 'Mot de passe', complete: passwordValid.value },
+  { key: 'passwordConfirmation', label: 'Confirmation', complete: passwordConfirmationValid.value },
+  { key: 'role', label: 'Usage prévu', complete: isFieldComplete('role') }
+])
+
 async function submitRequest(): Promise<void> {
   submitted.value = true
   currentFields.value.forEach((field) => markTouched(field))
@@ -185,17 +296,20 @@ async function submitRequest(): Promise<void> {
   errorMessage.value = ''
   successMessage.value = ''
   try {
+    const trimmedFirstName = normalizeText('firstName', firstName.value)
+    const trimmedLastName = normalizeText('lastName', lastName.value)
     const trimmedName = normalizeText('organizationName', organizationName.value)
+    const trimmedIndividualName = [trimmedFirstName, trimmedLastName].filter(Boolean).join(' ')
     const trimmedEmail = normalizeText('email', email.value)
     const trimmedPhone = normalizeText('phone', phone.value)
     const trimmedRole = normalizeText('role', role.value)
     const messageRedacted = isIndividual.value
       ? [
           'Contexte: creation compte individuel',
-          `Nom affiche: ${trimmedName}`,
+          `Prenom: ${trimmedFirstName}`,
+          `Nom: ${trimmedLastName}`,
           `Telephone: ${trimmedPhone}`,
           `Usage prevu: ${trimmedRole}`,
-          `Declaration secrets: ${authorized.value ? 'confirmee' : 'non confirmee'}`,
           'Mot de passe: non transmis par cette mutation'
         ].join('\n')
       : [
@@ -217,7 +331,7 @@ async function submitRequest(): Promise<void> {
     `, {
       input: {
         email: trimmedEmail,
-        organizationHint: trimmedName || (isIndividual.value ? 'Compte individuel' : ''),
+        organizationHint: isIndividual.value ? trimmedIndividualName : trimmedName,
         requestedRole: isIndividual.value ? 'viewer' : 'admin',
         messageRedacted
       }
@@ -227,6 +341,8 @@ async function submitRequest(): Promise<void> {
       ? `Demande préparée pour ${data.requestAccess.emailRedacted}. L’activation nécessitera une validation.`
       : `Demande préparée pour ${data.requestAccess.emailRedacted}. Aucun justificatif n’a été téléversé.`
     organizationName.value = ''
+    firstName.value = ''
+    lastName.value = ''
     legalIdentifier.value = ''
     officialWebsite.value = ''
     contactName.value = ''
@@ -235,6 +351,7 @@ async function submitRequest(): Promise<void> {
     role.value = ''
     password.value = ''
     passwordConfirmation.value = ''
+    clearAvatar()
     authorized.value = false
     submitted.value = false
     Object.keys(touched).forEach((key) => {
@@ -270,28 +387,48 @@ async function submitRequest(): Promise<void> {
             <section>
               <h2 class="text-lg font-semibold text-slate-950">Votre identité</h2>
               <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                <label class="block text-sm font-semibold text-slate-700 sm:col-span-2">
-                  Nom affiché
+                <label class="block text-sm font-semibold transition" :class="isFieldComplete('lastName') ? 'text-emerald-700' : 'text-slate-700'">
+                  <span class="inline-flex items-center gap-1">Nom <span v-if="isFieldComplete('lastName')" aria-hidden="true">✓</span></span>
                   <span class="relative mt-2 block">
                     <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400" aria-hidden="true">◎</span>
                     <input
-                      v-model="organizationName"
-                      :maxlength="maxLengths.organizationName"
-                      :aria-invalid="shouldShowFieldIssue('organizationName')"
+                      v-model="lastName"
+                      :maxlength="maxLengths.lastName"
+                      :aria-invalid="shouldShowFieldIssue('lastName')"
                       class="h-12 w-full rounded-lg bg-slate-50 py-2 pl-10 pr-10 text-sm outline-none ring-1 ring-slate-200 transition focus:bg-white focus:ring-2 focus:ring-cyan-700"
-                      :class="shouldShowFieldIssue('organizationName') ? 'ring-red-300 focus:ring-red-500' : fieldValid('organizationName') && organizationName.trim() ? 'ring-emerald-200' : ''"
+                      :class="shouldShowFieldIssue('lastName') ? 'ring-red-300 focus:ring-red-500' : fieldValid('lastName') && lastName.trim() ? 'ring-emerald-200' : ''"
                       type="text"
-                      autocomplete="name"
-                      placeholder="Ex. Grégory Catteau"
-                      @blur="markTouched('organizationName')"
+                      autocomplete="family-name"
+                      placeholder="Ex. Catteau"
+                      @blur="markTouched('lastName')"
                     >
-                    <span v-if="fieldValid('organizationName') && organizationName.trim()" class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-emerald-600" aria-hidden="true">✓</span>
+                    <span v-if="fieldValid('lastName') && lastName.trim()" class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-emerald-600" aria-hidden="true">✓</span>
                   </span>
-                  <span v-if="shouldShowFieldIssue('organizationName')" class="mt-2 block animate-[fadeIn_.18s_ease-out] text-xs font-medium text-red-700">{{ fieldIssue('organizationName') }}</span>
+                  <span v-if="shouldShowFieldIssue('lastName')" class="mt-2 block animate-[fadeIn_.18s_ease-out] text-xs font-medium text-red-700">{{ fieldIssue('lastName') }}</span>
                 </label>
 
-                <label class="block text-sm font-semibold text-slate-700">
-                  Email
+                <label class="block text-sm font-semibold transition" :class="isFieldComplete('firstName') ? 'text-emerald-700' : 'text-slate-700'">
+                  <span class="inline-flex items-center gap-1">Prénom <span v-if="isFieldComplete('firstName')" aria-hidden="true">✓</span></span>
+                  <span class="relative mt-2 block">
+                    <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400" aria-hidden="true">◎</span>
+                    <input
+                      v-model="firstName"
+                      :maxlength="maxLengths.firstName"
+                      :aria-invalid="shouldShowFieldIssue('firstName')"
+                      class="h-12 w-full rounded-lg bg-slate-50 py-2 pl-10 pr-10 text-sm outline-none ring-1 ring-slate-200 transition focus:bg-white focus:ring-2 focus:ring-cyan-700"
+                      :class="shouldShowFieldIssue('firstName') ? 'ring-red-300 focus:ring-red-500' : fieldValid('firstName') && firstName.trim() ? 'ring-emerald-200' : ''"
+                      type="text"
+                      autocomplete="given-name"
+                      placeholder="Ex. Grégory"
+                      @blur="markTouched('firstName')"
+                    >
+                    <span v-if="fieldValid('firstName') && firstName.trim()" class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-emerald-600" aria-hidden="true">✓</span>
+                  </span>
+                  <span v-if="shouldShowFieldIssue('firstName')" class="mt-2 block animate-[fadeIn_.18s_ease-out] text-xs font-medium text-red-700">{{ fieldIssue('firstName') }}</span>
+                </label>
+
+                <label class="block text-sm font-semibold transition" :class="isFieldComplete('email') ? 'text-emerald-700' : 'text-slate-700'">
+                  <span class="inline-flex items-center gap-1">Email <span v-if="isFieldComplete('email')" aria-hidden="true">✓</span></span>
                   <span class="relative mt-2 block">
                     <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400" aria-hidden="true">@</span>
                     <input
@@ -310,8 +447,8 @@ async function submitRequest(): Promise<void> {
                   <span v-if="shouldShowFieldIssue('email')" class="mt-2 block animate-[fadeIn_.18s_ease-out] text-xs font-medium text-red-700">{{ fieldIssue('email') }}</span>
                 </label>
 
-                <label class="block text-sm font-semibold text-slate-700">
-                  Téléphone
+                <label class="block text-sm font-semibold transition" :class="isFieldComplete('phone') ? 'text-emerald-700' : 'text-slate-700'">
+                  <span class="inline-flex items-center gap-1">Téléphone <span v-if="isFieldComplete('phone')" aria-hidden="true">✓</span></span>
                   <span class="relative mt-2 block">
                     <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400" aria-hidden="true">☎</span>
                     <input
@@ -338,8 +475,8 @@ async function submitRequest(): Promise<void> {
                 Cette version prépare la demande. Le stockage du mot de passe sera activé avec l’authentification définitive.
               </p>
               <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                <label class="block text-sm font-semibold text-slate-700">
-                  Mot de passe
+                <label class="block text-sm font-semibold transition" :class="passwordValid ? 'text-emerald-700' : 'text-slate-700'">
+                  <span class="inline-flex items-center gap-1">Mot de passe <span v-if="passwordValid" aria-hidden="true">✓</span></span>
                   <span class="relative mt-2 block">
                     <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400" aria-hidden="true">⌘</span>
                     <input
@@ -357,8 +494,8 @@ async function submitRequest(): Promise<void> {
                   <span v-if="passwordHint && (touched.password || submitted)" class="mt-2 block animate-[fadeIn_.18s_ease-out] text-xs font-medium text-red-700">{{ passwordHint }}</span>
                 </label>
 
-                <label class="block text-sm font-semibold text-slate-700">
-                  Confirmer le mot de passe
+                <label class="block text-sm font-semibold transition" :class="passwordConfirmationValid ? 'text-emerald-700' : 'text-slate-700'">
+                  <span class="inline-flex items-center gap-1">Confirmer le mot de passe <span v-if="passwordConfirmationValid" aria-hidden="true">✓</span></span>
                   <span class="relative mt-2 block">
                     <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400" aria-hidden="true">✓</span>
                     <input
@@ -391,23 +528,59 @@ async function submitRequest(): Promise<void> {
 
             <section>
               <h2 class="text-lg font-semibold text-slate-950">Photo de profil</h2>
-              <div class="mt-4 flex flex-col items-center gap-4 rounded-lg bg-slate-50 p-5 ring-1 ring-slate-200 sm:flex-row sm:items-center">
-                <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-cyan-950 text-xl font-semibold text-white shadow-sm">
-                  {{ avatarInitials }}
-                </div>
-                <div class="min-w-0 text-center sm:text-left">
-                  <button class="inline-flex h-10 cursor-not-allowed items-center justify-center rounded-lg bg-slate-200 px-4 text-sm font-semibold text-slate-500" type="button" disabled>
-                    Choisir une image
-                  </button>
-                  <p class="mt-2 text-wrap text-sm leading-6 text-slate-600">Avatar optionnel. Le téléversement sécurisé sera activé plus tard.</p>
+              <div
+                class="mt-4 rounded-lg bg-slate-50 p-4 ring-1 ring-slate-200"
+                @dragover.prevent
+                @drop.prevent="handleAvatarDrop"
+              >
+                <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
+                  <div class="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-full bg-cyan-950 text-xl font-semibold text-white shadow-sm ring-4 ring-white">
+                    <img v-if="hasAvatarPreview" class="h-full w-full object-cover" :src="avatarPreviewUrl" alt="Aperçu de la photo de profil">
+                    <span v-else>{{ avatarInitials }}</span>
+                  </div>
+                  <div class="min-w-0 flex-1 text-center sm:text-left">
+                    <div class="rounded-lg border border-dashed border-slate-300 bg-white p-4">
+                      <p class="text-sm font-semibold text-slate-900">Ajoutez une image</p>
+                      <p class="mt-1 text-sm leading-6 text-slate-600">Glissez une image ici, explorez ce PC, ou collez une URL d’image.</p>
+                      <div class="mt-4 flex flex-col gap-2 sm:flex-row">
+                        <button class="inline-flex min-h-10 items-center justify-center rounded-lg bg-cyan-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-900" type="button" @click="openAvatarPicker">
+                          Explorer ce PC
+                        </button>
+                        <button v-if="hasAvatarPreview" class="inline-flex min-h-10 items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 transition hover:bg-slate-50" type="button" @click="clearAvatar">
+                          Retirer l’image
+                        </button>
+                      </div>
+                      <input ref="avatarInput" class="sr-only" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" @change="handleAvatarInput">
+                    </div>
+
+                    <div class="mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+                      <input
+                        v-model="avatarRemoteUrl"
+                        class="h-11 w-full rounded-lg bg-white px-3 text-sm outline-none ring-1 ring-slate-200 transition focus:ring-2 focus:ring-cyan-700"
+                        type="url"
+                        placeholder="https://exemple.fr/photo.jpg"
+                        @keydown.enter.prevent="useRemoteAvatar"
+                      >
+                      <button class="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800" type="button" @click="useRemoteAvatar">
+                        Utiliser l’URL
+                      </button>
+                    </div>
+
+                    <div class="mt-3 flex flex-col gap-2 text-sm sm:flex-row sm:items-center sm:justify-between">
+                      <p class="text-slate-600">PNG, JPG, WebP, GIF ou SVG. 5 Mo maximum.</p>
+                      <p v-if="avatarSourceLabel" class="font-medium text-emerald-700">Image prête: {{ avatarSourceLabel }}</p>
+                    </div>
+                    <p v-if="avatarError" class="mt-2 animate-[fadeIn_.18s_ease-out] text-sm font-medium text-red-700">{{ avatarError }}</p>
+                    <p class="mt-2 text-sm leading-6 text-slate-500">Aucun envoi backend dans cette étape: l’image sert à préparer l’aperçu du profil.</p>
+                  </div>
                 </div>
               </div>
             </section>
 
             <section>
               <h2 class="text-lg font-semibold text-slate-950">Usage prévu</h2>
-              <label class="mt-4 block text-sm font-semibold text-slate-700">
-                Décrivez en une phrase pourquoi vous ouvrez un accès.
+              <label class="mt-4 block text-sm font-semibold transition" :class="isFieldComplete('role') ? 'text-emerald-700' : 'text-slate-700'">
+                <span class="inline-flex items-center gap-1">Décrivez en une phrase pourquoi vous ouvrez un accès. <span v-if="isFieldComplete('role')" aria-hidden="true">✓</span></span>
                 <textarea
                   v-model="role"
                   :maxlength="maxLengths.role"
@@ -492,16 +665,28 @@ async function submitRequest(): Promise<void> {
             </section>
           </div>
 
-          <label class="mt-8 flex gap-3 rounded-lg bg-slate-50 p-4 text-sm leading-6 text-slate-700 ring-1 ring-slate-200">
+          <label v-if="!isIndividual" class="mt-8 flex gap-3 rounded-lg bg-slate-50 p-4 text-sm leading-6 text-slate-700 ring-1 ring-slate-200">
             <input v-model="authorized" class="mt-1 h-4 w-4 rounded border-slate-300 text-cyan-800 focus:ring-cyan-700" type="checkbox">
-            <span>{{ isIndividual ? 'Je confirme que cette demande ne contient aucun mot de passe, token, clé API ou donnée bancaire.' : 'Je suis autorisé à demander l’ouverture d’un espace Relinium pour cette organisation.' }}</span>
+            <span>Je suis autorisé à demander l’ouverture d’un espace Relinium pour cette organisation.</span>
           </label>
         </div>
 
         <aside class="space-y-5 lg:pt-0">
           <section class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-slate-200/70">
-            <h2 class="text-base font-semibold text-slate-950">Vérifications prévues</h2>
-            <ul class="mt-4 space-y-3 text-sm text-slate-700">
+            <h2 class="text-base font-semibold text-slate-950">{{ isIndividual ? 'Champs validés' : 'Vérifications prévues' }}</h2>
+            <ul v-if="isIndividual" class="mt-4 space-y-3 text-sm">
+              <li v-for="step in individualProgressSteps" :key="step.key" class="flex items-center gap-3">
+                <span
+                  class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition"
+                  :class="step.complete ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100' : 'bg-slate-100 text-slate-400 ring-1 ring-slate-200'"
+                  aria-hidden="true"
+                >
+                  {{ step.complete ? '✓' : '' }}
+                </span>
+                <span class="transition" :class="step.complete ? 'font-semibold text-emerald-700' : 'text-slate-600'">{{ step.label }}</span>
+              </li>
+            </ul>
+            <ul v-else class="mt-4 space-y-3 text-sm text-slate-700">
               <li v-for="step in verificationSteps" :key="step" class="flex items-center gap-3">
                 <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-50 text-xs font-semibold text-cyan-800 ring-1 ring-cyan-100">✓</span>
                 <span>{{ step }}</span>
@@ -509,22 +694,6 @@ async function submitRequest(): Promise<void> {
             </ul>
           </section>
 
-          <section class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-slate-200/70">
-            <p class="text-sm leading-6 text-slate-700">
-              Le front aide à éviter les erreurs, mais la validation serveur reste indispensable avant activation.
-            </p>
-            <p v-if="errorMessage" class="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-800 ring-1 ring-red-200">{{ errorMessage }}</p>
-            <p v-if="successMessage" class="mt-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800 ring-1 ring-emerald-200">{{ successMessage }}</p>
-            <button
-              class="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-lg px-4 py-2 text-center text-sm font-semibold transition disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500"
-              :class="formValid ? 'bg-cyan-950 text-white shadow-sm hover:bg-cyan-900' : 'bg-slate-200 text-slate-500'"
-              type="submit"
-              :disabled="loading || !formValid"
-            >
-              {{ submitLabel }}
-            </button>
-            <NuxtLink class="mt-3 inline-flex text-sm font-semibold text-slate-600 hover:text-slate-950" to="/connexion">Retour aux accès</NuxtLink>
-          </section>
         </aside>
       </form>
     </div>
